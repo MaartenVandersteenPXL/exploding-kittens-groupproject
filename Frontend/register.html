@@ -2,7 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Exploding Kittens</title>
+    <title>Exploding Kittens Registratie </title>
+    <link rel="stylesheet" href="css/register.css" />
+    <script src="js/register.js" defer></script>
 </head>
-<body></body>
+<body>
+<main class="register-page">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="./assets/45879093-kat-logo-ontwerp-kunst-pictogrammen-en-grafiek-vector.jpg" alt="logo">
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="index.html">WELCOME</a>
+            <a href="register.html">REGISTER</a>
+            <a href="login.html">LOGIN</a>
+        </nav>
+    </aside>
+
+    <section class="content">
+        <form id="registerForm" class="register-form" novalidate>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+            <p class="error" id="emailError"></p>
+
+            <label for="username">Gebruikersnaam</label>
+            <input type="text" id="username" name="username" required />
+            <p class="error" id="usernameError"></p>
+
+            <label for="password">Wachtwoord</label>
+            <input type="password" id="password" name="password" minlength="6" required />
+            <p class="error" id="passwordError"></p>
+
+            <label for="confirmPassword"> Bevestig Wachtwoord</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" minlength="6" required />
+            <p class="error" id="confirmPasswordError"></p>
+
+            <label for="birthDate"> Geboortedatum </label>
+            <input type="date" id="birthDate" name="birthDate" />
+            <p class="error" id="birthDateError"></p>
+
+            <p class="backend-error" id="backendError"></p>
+
+            <button id="register-button" type="submit">REGISTREER</button>
+
+        </form>
+    </section>
+
+
+
+
+
+
+</main>
+
+
+</body>
 </html>
