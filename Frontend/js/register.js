@@ -41,50 +41,76 @@ registrationForm.addEventListener("submit", function (event) {
     // controle var
     let hasError = false;
 
-    if(!email){
+    if (!email) {
         emailError.textContent = "Email is verplicht";
         hasError = true;
     }
-    if(!username){
+    if (!username) {
         usernameError.textContent = "Gebruikersnaam is verplicht";
         hasError = true;
     }
-    if(!password){
+    if (!password) {
         passwordError.textContent = "Wachtwoord is verplicht";
         hasError = true;
-    }else if (password.length < 6){
+    } else if (password.length < 6) {
         passwordError.textContent = "Wachtwoord moet minstens 6 characters zijn";
         hasError = true;
     }
 
-    if(!confirmPassword){
+    if (!confirmPassword) {
         confirmPasswordError.textContent = "bevestig je wachtwoord";
         hasError = true;
-    }else if (password !== confirmPassword){
+    } else if (password !== confirmPassword) {
         confirmPasswordError.textContent = "Wachtwoorden komen niet overeen";
         hasError = true;
     }
 
-    if(!birthDate){
+    if (!birthDate) {
         birthDateError.textContent = "Geboortedatum is verplicht";
         hasError = true;
-    }else {
+    } else {
         const selectedDate = new Date(birthDate);
         const today = new Date();
 
         selectedDate.setHours(0);
         today.setHours(0);
 
-        if (selectedDate > today){
+        if (selectedDate > today) {
             birthDateError.textContent = "Geboortedatum mag niet in de toekomst zijn";
             hasError = true;
         }
     }
-if (hasError){
-    return;
-}
+    if (hasError) {
+        return;
+    }
 
-console.log("Formulier is geldig");
+    const registerData = {
+        email: email,
+        userName: username,
+        password: password,
+        birthDate: birthDate,
+    };
+
+    fetch("https://localhost:5051/api/Authentication/register",
+        {
+            method: "POST",
+            body: JSON.stringify(registerData),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = "index.html?email=" + encodeURIComponent(email);
+                return;
+            }else {
+                return response.text().then((errorText) => {
+                    throw new Error(errorText || "Register error");
+                });
+            }
+    })
+        .catch(error => {
+            backendError.textContent = error.message;
+        })
 
 });
 
