@@ -41,4 +41,3 @@ Scope is the issue number that is related to the work, **INCLUDE THE HASHTAG**
 
 ## Subject
 A present tense description of the work done. Keep it short but descriptive. Space seperated sentence.
-
