@@ -44,7 +44,12 @@ registrationForm.addEventListener("submit", function (event) {
     if (!email) {
         emailError.textContent = "Email is verplicht";
         hasError = true;
+    } else if (!email.includes("@")){
+        emailError.textContent = "Email moet geldig";
+        hasError = true;
     }
+
+
     if (!username) {
         usernameError.textContent = "Gebruikersnaam is verplicht";
         hasError = true;
