@@ -1,3 +1,5 @@
+/* START TEMPLATE SKELETON*/
+
 * {
     box-sizing: border-box;
 }
@@ -11,6 +13,23 @@ h1{
     color: #5f2f45;
     margin: 0;
 }
+
+p {
+    font-family: 'Abel';
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    font-size: 1.5em;
+}
+
+label{
+    font-family: 'Abel';
+    font-weight: 400;
+    font-size: 1.8em;
+    color: #f8ddb7;
+    font-variant-caps: all-small-caps;
+}
+
+/* END FONTS */
 
 
 html{
@@ -42,7 +61,7 @@ main{
     display: flex;
     flex: 1;
     flex-direction: column;
-    margin: 0 3em 0 0 ;
+    margin: 0 3em 1rem 0 ;
 }
 
 header{
@@ -92,51 +111,56 @@ header{
     color: #f5ddbc ;
 }
 
+/* adjust id to the id of the page */
 #register {
     color: #f5ddbc;
     text-shadow:#000000 4px 4px 10px;
 }
 
+/* END TEMPLATE SKELETON*/
+
 .register-form{
     background-color: #5f2f45;
     border-radius: 15px;
-    padding:  1rem;
+    padding:  1.5rem 1rem 2rem 1rem;
     display: flex;
     flex-direction: column;
 }
 
-.register-form label {
-    color: #f8ddb7;
-    font-size: 1rem;
-    margin-bottom: 8px;
-}
-
 .register-form input {
-    width: 330px;
-    height: 1rem;
-    border: none;
-    background-color: #efd0b0;
-    padding: 4px;
-    font-size: 1rem;
-    color: #3d2433;
-    margin-bottom: 8px;
+    height: 2rem;
+    width: 75%;
+    background-color: #f5ddbc;
+    border-style: none ;
+    font-family: 'Abel';
+    font-size: 1.5rem;
+    border-radius: 10px;
+    margin: 0 0 0 1rem;
 }
 
 .register-form button {
+    display: flex;
     align-self: center;
-    background-color: #ab2d48;
+    justify-content: center;
+    background-color: #a02f40;
     color: #f8ddb7;
-    border: none;
+    font-size: 2em;
+    border-radius: 15px;
     padding: 1rem;
+    margin: 1rem 0 0 0;
     min-width: 420px;
-    font-size: 1rem;
     cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.register-form button:hover {
+    transform: scale(1.2);
+    color: #f5ddbc ;
 }
 
 .error,
 .backend-error {
-    min-height: 1rem;
-    color: #ff734f;
-    background-color: yellow;
-    font-size: 0.95rem;
+    height: 1.8rem;
+    margin: 0 0 0 1rem;
+    color: red;
 }
