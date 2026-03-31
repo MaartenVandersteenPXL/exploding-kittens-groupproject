@@ -1,6 +1,18 @@
 * {
     box-sizing: border-box;
 }
+/* FONTS */
+
+h1{
+    font-family: 'Abel';
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    font-size: 4em;
+    color: #5f2f45;
+    margin: 0;
+}
+
+
 html{
     display: flex;
     justify-content: center;
@@ -10,33 +22,44 @@ html{
 
 body{
     display: flex;
+    flex-direction: row;
     justify-content: flex-start;
     background-color:#fabb64;
     min-height:768px;
     min-width: 1024px;
-    align-self: stretch;
     gap: 2em;
 }
 
-.sidebar{
+aside{
     display: flex;
     flex-direction: column;
     margin: 0 0 0 3em ;
     align-items: center;
-    flex-shrink: 1;
     max-width: 12em;
+}
+
+main{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: 0 3em 0 0 ;
+}
+
+header{
+    display: flex;
+    height: 150px;
+    align-items: center;
 }
 
 .logo {
     display: flex;
     max-width: 100%;
     justify-content: center;
-    flex-shrink: 1;
 }
 
 .logo img{
-    width: 80%;
-    height: auto;
+    width: auto;
+    height: 150px;
     display: block;
     
 }
@@ -74,20 +97,9 @@ body{
     text-shadow:#000000 4px 4px 10px;
 }
 
-.main{
-    display: flex;
-    flex-grow: 2;
-}
-
-.register-page  {
-   
-}
-
-
-
-
 .register-form{
     background-color: #5f2f45;
+    border-radius: 15px;
     padding:  1rem;
     display: flex;
     flex-direction: column;
