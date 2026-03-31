@@ -58,7 +58,7 @@ registrationForm.addEventListener("submit", function (event) {
     }
 
     if (!confirmPassword) {
-        confirmPasswordError.textContent = "bevestig je wachtwoord";
+        confirmPasswordError.textContent = "Bevestig je wachtwoord";
         hasError = true;
     } else if (password !== confirmPassword) {
         confirmPasswordError.textContent = "Wachtwoorden komen niet overeen";
@@ -101,7 +101,6 @@ registrationForm.addEventListener("submit", function (event) {
         }).then(response => {
             if (response.ok) {
                 window.location.href = "index.html?email=" + encodeURIComponent(email);
-                return;
             }else {
                 return response.text().then((errorText) => {
                     throw new Error(errorText || "Register error");
