@@ -97,7 +97,7 @@ registrationForm.addEventListener("submit", async (event) => {
     };
 
     try {
-         let respondse = await fetch("https://localhost:5051/api/Authentication/register",
+         let response = await fetch("https://localhost:5051/api/Authentication/register",
             {
                 method: "POST",
                 body: JSON.stringify(registerData),
@@ -106,10 +106,11 @@ registrationForm.addEventListener("submit", async (event) => {
                 }
             });
 
-         if(respondse.ok) {
-             throw new Error(respondse.message);
-         } else {
+         if(response.ok) {
              window.location.href = "index.html?email=" + encodeURIComponent(email);
+         } else {
+             let errorMessage = await response.json();
+             throw new Error(errorMessage.message );
          }
 
     } catch (error) {
