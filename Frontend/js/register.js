@@ -29,7 +29,7 @@ function clearError() {
 
 // Hier wordt code uitgevoerd zodra je op registeer drukt.
 
-registrationForm.addEventListener("submit", function (event) {
+registrationForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearError();
     const email = emailInput.value.trim();
@@ -44,7 +44,12 @@ registrationForm.addEventListener("submit", function (event) {
     if (!email) {
         emailError.textContent = "Email is verplicht";
         hasError = true;
+    } else if (!email.includes("@")) {
+        emailError.textContent = "Email is niet geldig";
+        hasError = true;
     }
+
+
     if (!username) {
         usernameError.textContent = "Gebruikersnaam is verplicht";
         hasError = true;
@@ -53,12 +58,12 @@ registrationForm.addEventListener("submit", function (event) {
         passwordError.textContent = "Wachtwoord is verplicht";
         hasError = true;
     } else if (password.length < 6) {
-        passwordError.textContent = "Wachtwoord moet minstens 6 characters zijn";
+        passwordError.textContent = "Wachtwoord moet minstens 6 karakters zijn";
         hasError = true;
     }
 
     if (!confirmPassword) {
-        confirmPasswordError.textContent = "bevestig je wachtwoord";
+        confirmPasswordError.textContent = "Bevestig je wachtwoord";
         hasError = true;
     } else if (password !== confirmPassword) {
         confirmPasswordError.textContent = "Wachtwoorden komen niet overeen";
@@ -91,26 +96,28 @@ registrationForm.addEventListener("submit", function (event) {
         birthDate: birthDate,
     };
 
-    fetch("https://localhost:5051/api/Authentication/register",
-        {
-            method: "POST",
-            body: JSON.stringify(registerData),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }).then(response => {
-            if (response.ok) {
-                window.location.href = "index.html?email=" + encodeURIComponent(email);
-                return;
-            }else {
-                return response.text().then((errorText) => {
-                    throw new Error(errorText || "Register error");
-                });
-            }
-    })
-        .catch(error => {
-            backendError.textContent = error.message;
-        })
+    try {
+         let response = await fetch("https://localhost:5051/api/Authentication/register",
+            {
+                method: "POST",
+                body: JSON.stringify(registerData),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+         if(response.ok) {
+             window.location.href = "index.html?email=" + encodeURIComponent(email);
+         } else {
+             let errorMessage = await response.json();
+             throw new Error(errorMessage.message );
+         }
+
+    } catch (error) {
+        backendError.textContent = error.message;
+    }
+
+
 
 });
 
