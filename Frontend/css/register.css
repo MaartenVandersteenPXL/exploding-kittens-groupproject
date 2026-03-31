@@ -57,11 +57,16 @@ body{
     font-size:  2em;
     text-decoration: none;
     color: #5f2f45 ;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .sidebar-menu a:first-child{
     margin-bottom: 2rem;
-    
+}
+
+.sidebar-menu a:hover{
+    transform: scale(1.2);
+    color: #f5ddbc ;
 }
 
 #register {
