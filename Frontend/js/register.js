@@ -29,7 +29,7 @@ function clearError() {
 
 // Hier wordt code uitgevoerd zodra je op registeer drukt.
 
-registrationForm.addEventListener("submit", function (event) {
+registrationForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearError();
     const email = emailInput.value.trim();
@@ -96,7 +96,7 @@ registrationForm.addEventListener("submit", function (event) {
         birthDate: birthDate,
     };
 
-    fetch("https://localhost:5051/api/Authentication/register",
+    await fetch("https://localhost:5051/api/Authentication/register",
         {
             method: "POST",
             body: JSON.stringify(registerData),
