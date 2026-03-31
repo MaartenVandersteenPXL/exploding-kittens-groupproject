@@ -44,7 +44,7 @@ registrationForm.addEventListener("submit", async (event) => {
     if (!email) {
         emailError.textContent = "Email is verplicht";
         hasError = true;
-    } else if (!email.includes("@")){
+    } else if (!email.includes("@")) {
         emailError.textContent = "Email moet geldig";
         hasError = true;
     }
@@ -96,25 +96,27 @@ registrationForm.addEventListener("submit", async (event) => {
         birthDate: birthDate,
     };
 
-    await fetch("https://localhost:5051/api/Authentication/register",
-        {
-            method: "POST",
-            body: JSON.stringify(registerData),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }).then(response => {
-            if (response.ok) {
-                window.location.href = "index.html?email=" + encodeURIComponent(email);
-            }else {
-                return response.text().then((errorText) => {
-                    throw new Error(errorText || "Register error");
-                });
-            }
-    })
-        .catch(error => {
-            backendError.textContent = error.message;
-        })
+    try {
+         let respondse = await fetch("https://localhost:5051/api/Authentication/register",
+            {
+                method: "POST",
+                body: JSON.stringify(registerData),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+         if(respondse.ok) {
+             throw new Error(respondse.message);
+         } else {
+             window.location.href = "index.html?email=" + encodeURIComponent(email);
+         }
+
+    } catch (error) {
+        backendError.textContent = error.message;
+    }
+
+
 
 });
 
