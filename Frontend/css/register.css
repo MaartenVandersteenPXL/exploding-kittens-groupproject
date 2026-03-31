@@ -1,61 +1,89 @@
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+}
+html{
+    display: flex;
+    justify-content: center;
+    background-color: #ab2d48;
 }
 
 
 body{
+    display: flex;
+    justify-content: flex-start;
     background-color:#fabb64;
-    min-height:100vh;
-}
-
-.register-page  {
-    max-width: 1024px;
-    margin: auto;
-    min-height: 100vh;
-    background-color: #faddbc;
-    display: grid;
-    grid-template-columns:220px 1fr;
+    min-height:768px;
+    min-width: 1024px;
+    align-self: stretch;
+    gap: 2em;
 }
 
 .sidebar{
     display: flex;
     flex-direction: column;
+    margin: 0 0 0 3em ;
     align-items: center;
+    flex-shrink: 1;
+    max-width: 12em;
 }
 
-
-.logo-box {
-    width: 170px;
-    height: 190px;
+.logo {
     display: flex;
-    align-items: center;
+    max-width: 100%;
     justify-content: center;
-    margin-bottom: 24px;
+    flex-shrink: 1;
 }
 
-.logo img {
-    max-width: 120px;
+.logo img{
+    width: 80%;
     height: auto;
     display: block;
+    
 }
 
 .sidebar-menu {
-    width: 170px;
-    min-height: 430px;
     background-color: #f86f53;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 26px;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex: 1;
+    border-radius: 15px 15px 0 0;
+    padding: 3rem 1rem  3rem;
 }
+.sidebar-menu a {
+    font-family: Abel;
+    font-size:  2em;
+    text-decoration: none;
+    color: #5f2f45 ;
+}
+
+.sidebar-menu a:first-child{
+    margin-bottom: 2rem;
+    
+}
+
+#register {
+    color: #f5ddbc;
+    text-shadow:#000000 4px 4px 10px;
+}
+
+.main{
+    display: flex;
+    flex-grow: 2;
+}
+
+.register-page  {
+   
+}
+
+
+
 
 .register-form{
     background-color: #5f2f45;
-    max-width: 800px;
-    padding:  40px 58px 34px;
+    padding:  1rem;
     display: flex;
     flex-direction: column;
 }
@@ -68,10 +96,10 @@ body{
 
 .register-form input {
     width: 330px;
-    height: 46px;
+    height: 1rem;
     border: none;
     background-color: #efd0b0;
-    padding: 10px 14px;
+    padding: 4px;
     font-size: 1rem;
     color: #3d2433;
     margin-bottom: 8px;
@@ -79,11 +107,10 @@ body{
 
 .register-form button {
     align-self: center;
-    margin-top: 8px;
     background-color: #ab2d48;
     color: #f8ddb7;
     border: none;
-    padding: 14px 28px;
+    padding: 1rem;
     min-width: 420px;
     font-size: 1rem;
     cursor: pointer;
@@ -91,8 +118,8 @@ body{
 
 .error,
 .backend-error {
-    min-height: 28px;
+    min-height: 1rem;
     color: #ff734f;
+    background-color: yellow;
     font-size: 0.95rem;
-    margin-bottom: 10px;
 }
