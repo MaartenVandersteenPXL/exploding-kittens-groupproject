@@ -45,7 +45,7 @@ registrationForm.addEventListener("submit", async (event) => {
         emailError.textContent = "Email is verplicht";
         hasError = true;
     } else if (!email.includes("@")) {
-        emailError.textContent = "Email moet geldig";
+        emailError.textContent = "Email is niet geldig";
         hasError = true;
     }
 
@@ -58,7 +58,7 @@ registrationForm.addEventListener("submit", async (event) => {
         passwordError.textContent = "Wachtwoord is verplicht";
         hasError = true;
     } else if (password.length < 6) {
-        passwordError.textContent = "Wachtwoord moet minstens 6 characters zijn";
+        passwordError.textContent = "Wachtwoord moet minstens 6 karakters zijn";
         hasError = true;
     }
 
