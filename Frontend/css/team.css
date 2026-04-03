@@ -126,9 +126,10 @@ h2 {
     color: #a02f40;
     font-size: 16px;
 }
-
-main {
-    background-color: #fabb64;
+section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 ul {
