@@ -44,8 +44,10 @@ body{
     flex-direction: row;
     justify-content: flex-start;
     background-color:#fabb64;
-    min-height:768px;
+    min-height:826px;
+    max-height:826px ;
     min-width: 1024px;
+    max-width: 1024px;
     gap: 2em;
 }
 
@@ -112,57 +114,49 @@ header{
 }
 
 /* adjust id to the id of the page */
-#register {
+#team {
     color: #f5ddbc;
     text-shadow:#000000 4px 4px 10px;
 }
 
 /* END TEMPLATE SKELETON*/
 
-.register-form{
-    background-color: #5f2f45;
-    border-radius: 15px;
-    padding:  1.5rem 1rem 2rem 1rem;
+
+h2 {
+    color: #a02f40;
+    font-size: 16px;
+}
+section {
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
-
-.register-form input {
-    height: 2rem;
-    width: 75%;
-    background-color: #f5ddbc;
-    border-style: none ;
-    font-family: 'Abel';
-    font-size: 1.5rem;
-    border-radius: 10px;
-    margin: 0 0 0 1rem;
-}
-
-.register-form button {
+ul {
     display: flex;
-    align-self: center;
-    justify-content: center;
-    background-color: #a02f40;
-    color: #f8ddb7;
-    font-family: 'Abel';
-    font-size: 2em;
-    border-radius: 15px;
-    border: none;
-    padding: 1rem;
-    margin: 1rem 0 0 0;
-    min-width: 420px;
-    cursor: pointer;
-    transition: transform 0.2s ease, color 0.2s ease;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 50%;
+    list-style: none;
 }
 
-.register-form button:hover {
-    transform: scale(1.2);
-    color: #f5ddbc ;
+
+li {
+    display: flex;
+    flex-direction: row-reverse;
+    width: fit-content;
+    height: 50%;
 }
 
-.error,
-.backend-error {
-    height: 1.8rem;
-    margin: 0 0 0 1rem;
-    color: red;
+
+li:last-child{
+    align-self: flex-end;
+}
+img {
+    width: 160px;
+    height: auto;
+    border-radius: 50%;
+
+}
+section img{
+    background-color: #5f2f45;
 }
