@@ -159,26 +159,4 @@ img {
 }
 section img{
     background-color: #5f2f45;
-
-
-}
-
-
-
-.felten  { top: 150px; left: 280px; }
-.maarten { top: 230px; left: 570px; }
-.hamza   { top: 430px; left: 280px; }
-.rob     { top: 480px; left: 630px; }
-
-.rechts {
-    position: absolute;
-    top: 5%;
-    left: 160px;
-    white-space: nowrap;
-}
-.rechtsboven {
-    position: relative;
-    top: 50%;
-    left: 90px;
-    white-space: nowrap;
 }
