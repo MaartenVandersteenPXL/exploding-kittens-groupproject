@@ -167,3 +167,7 @@ tbody {
     color: #f5ddbc;
     margin: 5%;
 }
+td, th {
+    text-align: center;
+    color: #5f2f45;
+}
