@@ -147,7 +147,6 @@ header{
 
 .filter {
     width: 35%;
-    max-height: 30%;
     margin: 5%;
     border-collapse: collapse;
 
@@ -170,4 +169,10 @@ tbody {
 td, th {
     text-align: center;
     color: #5f2f45;
+}
+.ga-naar-tafel {
+    font-size: xx-large;
+    color: #f5ddbc;
+    background-color: #a02f40;
+    margin: 50% 0 50% 0
 }
