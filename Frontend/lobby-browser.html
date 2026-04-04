@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Exploding Kittens lobby browser</title>
+    <link rel="stylesheet" href="css/lobby-browser.css" />
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
+    <script src="js/lobby-browser.js" defer></script>
+    
+</head>
+<body>
+
+<aside>
+        <div class="logo">
+            <img src="./assets/cat-svgrepo-com.svg" alt="logo">
+        </div>
+        <nav class="sidebar-menu">
+            <a id="log out" href="index.html">uitloggen</a>
+            <a id="refresh" href="index.html">beschikbare tafels</a>
+            <a id="new" href="index.html">maak nieuwe tafel</a>
+        </nav>
+    </aside>
+
+<main>
+    <header><h1>Lobby browser</h1></header>
+    <h2>Miauwkes, {(username)}</h2>
+    <section class="browser">
+        <table class="tables">
+            <thead>
+            <tr>
+                <th>tafel</th>
+                <th>spelers</th>
+                <th>AI spelers</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Kittens_01</td>
+                <td>3/5</td>
+                <td>2/4</td>
+            </tr>
+            <tr>
+                <td>Kittens_02</td>
+                <td>0/5</td>
+                <td>0/4</td>
+            </tr>
+            <tr>
+                <td>Kittens_03</td>
+                <td>5/5</td>
+                <td>4/4</td>
+            </tr>
+            </tbody>
+            </table>
+        <table class="filter">
+            <thead>
+            <tr>
+                <td><button class="head" id="filter">filter</button></td>
+                <td><button class="head" id="reset">reset filter</button></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Aantal spelers</td>
+                <td>
+                    <select id="spelers">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Aantal AI</td>
+                <td>
+                    <select id="IA">
+                        <option value="1">1</option>
+                        <option value="3">2</option>
+                        <option value="4">3</option>
+                        <option value="5">4</option>
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+
+
+    </section>
+</main>
+</body>
+</html>

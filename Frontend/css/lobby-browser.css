@@ -128,50 +128,42 @@ header{
 
 /* END TEMPLATE SKELETON*/
 
-.register-form{
+.browser {
     background-color: #5f2f45;
-    border-radius: 15px;
-    padding:  1.5rem 1rem 2rem 1rem;
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+
 }
 
-.register-form input {
+.tables {
+    width: 65%;
+    height: auto;
+    margin: 5%;
+    border-collapse: collapse;
+
+}
+
+.filter {
+    width: 35%;
+    max-height: 30%;
+    margin: 5%;
+    border-collapse: collapse;
+
+}
+
+thead {
+    background-color: #fabb64;
     height: 2rem;
-    width: 75%;
+}
+
+tbody {
     background-color: #f5ddbc;
-    border-style: none ;
-    font-family: 'Abel';
-    font-size: 1.5rem;
-    border-radius: 10px;
-    margin: 0 0 0 1rem;
 }
-
-.register-form button {
-    display: flex;
-    align-self: center;
-    justify-content: center;
-    background-color: #a02f40;
-    color: #f8ddb7;
-    font-family: 'Abel';
-    font-size: 2em;
-    border-radius: 15px;
-    border: none;
-    padding: 1rem;
-    margin: 1rem 0 0 0;
-    min-width: 420px;
-    cursor: pointer;
-    transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.register-form button:hover {
-    transform: scale(1.2);
-    color: #f5ddbc ;
-}
-
-.error,
-.backend-error {
-    height: 1.8rem;
-    margin: 0 0 0 1rem;
-    color: red;
+.head {
+    width: 90%;
+    background-color: #5f2f45;
+    color: #f5ddbc;
+    margin: 5%;
 }
