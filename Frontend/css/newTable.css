@@ -13,6 +13,13 @@ h1{
     color: #5f2f45;
     margin: 0;
 }
+h2{
+    font-family: 'Abel';
+    font-weight: 10;
+    font-size: 2em;
+    color: #7b3957;
+    margin: 0;
+}
 
 p {
     font-family: 'Abel';
@@ -68,8 +75,9 @@ main{
 
 header{
     display: flex;
+    flex-direction: column;
     height: 150px;
-    align-items: center;
+    justify-content: center;
 }
 
 .logo {
@@ -130,7 +138,7 @@ header{
 }
 
 
-.table-form{
+.newTable-form{
     background-color: #5f2f45;
     border-radius: 15px;
     padding:  1.5rem 1rem 2rem 1rem;
@@ -138,7 +146,7 @@ header{
     flex-direction: column;
 }
 
-.table-form input {
+.newTable-form input {
     height: 2rem;
     width: 75%;
     background-color: #f5ddbc;
@@ -149,7 +157,7 @@ header{
     margin: 0 0 0 1rem;
 }
 
-.table-form button {
+.newTable-form button {
     display: flex;
     align-self: center;
     justify-content: center;
@@ -166,7 +174,7 @@ header{
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.table-form button:hover {
+.newTable-form button:hover {
     transform: scale(1.2);
     color: #f5ddbc ;
 }
