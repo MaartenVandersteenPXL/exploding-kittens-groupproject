@@ -56,8 +56,11 @@
             });
 
             if (response.ok) {
-                window.location.href = "lobby.html"; //Naar lobbypagina?
-            } else {
+                const data = await response.json();
+                localStorage.setItem("token", data.token);
+                window.location.href = "lobby.html";
+            }
+            else {
                 const errorData = await response.json();
                 backendError.textContent = errorData.message || "Login mislukt";
             }
