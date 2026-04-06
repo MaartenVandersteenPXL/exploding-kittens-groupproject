@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8" />
+    <title>Exploding Kittens New Table </title>
+    <link rel="stylesheet" href="css/lobby.css" />
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
+    <script src="js/lobby.js"></script>
+
+</head>
+<body>
+<aside>
+    <div class="logo">
+        <img src="./assets/cat-svgrepo-com.svg" alt="logo">
+    </div>
+    <nav class="sidebar-menu">
+        <a id="logout" href="index.html">LOG OUT</a>
+        <a id="lobby" href="lobby.html">Lobby</a>
+    </nav>
+</aside>
+<main>
+    <section class="newTable">
+        <header>
+            <h1>NIEUWE TAFEL</h1>
+            <h2>Purrrrrrr, Meneer Test <span id="userName"></span></h2>
+        </header>
+        <form id="newTableForm" class="newTable-form">
+            <label for="newTableForm">TAFEL NAAM</label>
+            <input type="text" id="newTableName" name="newTableName" required />
+            <p class="error" id="newTableNameError"></p>
+
+            <label for="numberOfPlayers">Aantal Spelers</label>
+            <input type="number" id="numberOfPlayers" name="numberOfPlayers" max="5" required />
+            <p class="error" id="numberOfPlayersError"></p>
+
+            <label for="numberOfAIPlayers">Aantal AI Spelers</label>
+            <input type="number" id="numberOfAIPlayers" name="numberOfAIPlayers" max="4" required />
+            <p class="error" id="numberOfAIPlayersError"></p>
+
+            <p class="backend-error" id="backendError"></p>
+
+<!--            Om JS te testen-->
+            <button id="createNewTableButton" type="button">MAAK NIEUWE TAFEL</button>
+<!--            <button id="createNewTableButton" type="submit">MAAK NIEUWE TAFEL</button>-->
+        </form>
+    </section>
+
+    <section class="lobbyBrowser">
+    <header>
+        <h1>Lobby browser</h1>
+        <h2>Miauwkes, {(username)}</h2>
+    </header>
+        <section class="lobbyBrowser-form">
+        <table class="tables">
+            <thead>
+            <tr>
+                <th>tafel</th>
+                <th>spelers</th>
+                <th>AI spelers</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Kittens_01</td>
+                <td>3/5</td>
+                <td>2/4</td>
+            </tr>
+            <tr>
+                <td>Kittens_02</td>
+                <td>0/5</td>
+                <td>0/4</td>
+            </tr>
+            <tr>
+                <td>Kittens_03</td>
+                <td>5/5</td>
+                <td>4/4</td>
+            </tr>
+            </tbody>
+        </table>
+            <div class="filter-wrapper">
+        <table class="filter">
+            <thead>
+            <tr>
+                <th><button class="head" id="filter">filter</button></th>
+                <th><button class="head" id="reset">reset filter</button></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Aantal spelers</td>
+                <td>
+                    <select id="spelers">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Aantal AI</td>
+                <td>
+                    <select id="IA">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+                    <button class="go-to-table" >Ga naar tafel</button>
+            </div>
+
+    </section>
+    </section>
+
+    <section class="lobbyTable">
+        <header>
+            <h1>Lobby tafel</h1>
+            <h2>Hiiiisssss, {(username)}</h2>
+        </header>
+        <section class="lobbyTable-form">
+            <table class="playerTables">
+                <thead>
+                <tr>
+                    <th>Speler</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1. My kitten is the best</td>
+                </tr>
+                <tr>
+                    <td>2. I love Dogs</td>
+                </tr>
+                <tr>
+                    <td>3. My everything</td>
+                </tr>
+                <tr>
+                    <td>4. Wachten op een nieuwe speler</td>
+                </tr>
+                <tr>
+                    <td>5. Wachten op een nieuwe speler</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+            <div class="lobbyTeller-wrapper">
+                <table class="lobbyTeller">
+                    <thead>
+                    <tr>
+                        <th colspan="2">Lobby teller</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Aantal spelers</td>
+                        <td>2/5</td>
+                    </tr>
+                    <tr>
+                        <td>Aantal AI</td>
+                        <td>2</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <button class="leave-table" >Verlaat tafel</button>
+            </div>
+
+        </section>
+    </section>
+
+</main>
+</body>
+</html>
