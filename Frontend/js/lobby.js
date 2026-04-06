@@ -1,23 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    const newTable = document.querySelector(".newTable");
+    const lobbyBrowser = document.querySelector(".lobbyBrowser");
+    const lobbyTable = document.querySelector(".lobbyTable");
+    const createNewTableButton = document.getElementById("createNewTableButton");
+    const goToTableButton = document.querySelector(".go-to-table");
+    const leaveTableButton = document.querySelector(".leave-table");
+
     function toonSectie(sectie) {
-        document.querySelectorAll("main > section").forEach(s => s.style.display = "none");
-        document.querySelector(sectie).style.display = "block";
+        [newTable, lobbyBrowser, lobbyTable].forEach(s => s.style.display = "none");
+        sectie.style.display = "block";
     }
 
-    toonSectie(".newTable");
+    toonSectie(newTable);
 
-    document.getElementById("createNewTableButton").addEventListener("click", (event) => {
+    createNewTableButton.addEventListener("click", (event) => {
         event.preventDefault();
-        toonSectie(".lobbyBrowser");
+        toonSectie(lobbyBrowser);
     });
 
-    document.querySelector(".go-to-table").addEventListener("click", () => {
-        toonSectie(".lobbyTable");
+    goToTableButton.addEventListener("click", () => {
+        toonSectie(lobbyTable);
     });
 
-    document.querySelector(".leave-table").addEventListener("click", () => {
-        toonSectie(".newTable");
+    leaveTableButton.addEventListener("click", () => {
+        toonSectie(newTable);
     });
 
 });
