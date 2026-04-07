@@ -1,3 +1,5 @@
+//HERE KOMT LOBBY LOGICA
+
 document.addEventListener("DOMContentLoaded", () => {
     //elementen ophalen
     const newTable = document.querySelector(".newTable");
