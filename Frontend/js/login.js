@@ -13,6 +13,13 @@
         passwordError.textContent = "";
         backendError.textContent = "";
     }
+// Email uit Register halen
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailFromUrl = urlParams.get("email");
+
+    if (emailFromUrl) {
+        emailInput.value = emailFromUrl;
+}
 
 // Code na druk op inloggen
     loginForm.addEventListener("submit", async (event) => {
