@@ -147,6 +147,7 @@ header{
     font-family: 'Abel';
     font-size: 2em;
     border-radius: 15px;
+    border: none;
     padding: 1rem;
     margin: 1rem 0 0 0;
     min-width: 420px;
