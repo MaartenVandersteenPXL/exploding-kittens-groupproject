@@ -47,7 +47,7 @@
         };
 
         try {
-            const response = await fetch("https://localhost:5051/api/Authentication/login", {
+            const response = await fetch("https://localhost:5051/api/Authentication/token", {
                 method: "POST",
                 body: JSON.stringify(loginData),
                 headers: {
