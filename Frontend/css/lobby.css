@@ -1,4 +1,7 @@
 /* START TEMPLATE SKELETON*/
+/* HIER KOMT LOBBY CSS */
+/* EN GEMEENSCHAPPELIJKE CSS */
+
 
 * {
     box-sizing: border-box;
@@ -129,7 +132,12 @@ header{
 
 /* END TEMPLATE SKELETON*/
 
-/* Parts of lobby page */
+
+
+/*
+TO MOVE OR DELETE OR RE- USE
+
+Parts of lobby page 
 .newTable,
 .lobbyTable,
 .lobbyBrowser{
@@ -260,3 +268,6 @@ tbody {
     margin: 0 0 0 1rem;
     color: red;
 }
+
+*/
+
