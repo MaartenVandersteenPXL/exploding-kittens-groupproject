@@ -68,11 +68,11 @@ loginForm.addEventListener("submit", async (event) => {
             localStorage.setItem("token", data.token);
             window.location.href = "lobby.html";
         } else {
-            const backendError = {
+            const backendErrorNumbers = {
                 400: "Ongeldige aanvraag. Controleer uw gegevens.",
                 401: "Ongeldige gebruikersnaam of wachtwoord.",
                 403: "U heeft geen toegang.",
-                404: "Niet gevonden.",
+                404: "Pagina bestaat niet.",
                 405: "Aanvraag niet ondersteund.",
                 409: "Conflict, probeer opnieuw.",
                 415: "Verkeerd formaat.",
@@ -81,7 +81,7 @@ loginForm.addEventListener("submit", async (event) => {
                 503: "Service tijdelijk niet beschikbaar."
             };
 
-            backendError.textContent = backendError[response.status] || "Login mislukt";
+            backendError.textContent = backendErrorNumbers[response.status] || "Login mislukt";
         }
 
     } catch (error) {
