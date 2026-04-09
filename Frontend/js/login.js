@@ -68,7 +68,7 @@ loginForm.addEventListener("submit", async (event) => {
             localStorage.setItem("token", data.token);
             window.location.href = "lobby.html";
         } else {
-            const foutmeldingen = {
+            const backendError = {
                 400: "Ongeldige aanvraag. Controleer uw gegevens.",
                 401: "Ongeldige gebruikersnaam of wachtwoord.",
                 403: "U heeft geen toegang.",
@@ -81,7 +81,7 @@ loginForm.addEventListener("submit", async (event) => {
                 503: "Service tijdelijk niet beschikbaar."
             };
 
-            backendError.textContent = foutmeldingen[response.status] || "Login mislukt";
+            backendError.textContent = backendError[response.status] || "Login mislukt";
         }
 
     } catch (error) {
