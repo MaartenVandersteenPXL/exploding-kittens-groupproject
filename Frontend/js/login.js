@@ -64,8 +64,8 @@ loginForm.addEventListener("submit", async (event) => {
         });
 
         if (response.ok) {
-            const data = await response.json();
-            sessionStorage.setItem("token", data.token);
+            const { token } = await response.json();
+            sessionStorage.setItem("token", token);
             window.location.href = "lobby.html";
         } else {
             const backendErrorNumbers = {
