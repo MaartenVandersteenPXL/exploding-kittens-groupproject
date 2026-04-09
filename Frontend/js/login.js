@@ -86,5 +86,6 @@ loginForm.addEventListener("submit", async (event) => {
 
     } catch (error) {
         backendError.textContent = "Kan geen verbinding maken met de server. Probeer later opnieuw.";
-    }})
+    }
+});
                 
