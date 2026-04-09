@@ -65,7 +65,7 @@ loginForm.addEventListener("submit", async (event) => {
 
         if (response.ok) {
             const data = await response.json();
-            localStorage.setItem("token", data.token);
+            sessionStorage.setItem("token", data.token);
             window.location.href = "lobby.html";
         } else {
             const backendErrorNumbers = {
