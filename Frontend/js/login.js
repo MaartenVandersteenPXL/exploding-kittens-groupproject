@@ -7,6 +7,19 @@ const emailError = document.getElementById("emailError");
 const passwordError = document.getElementById("passwordError");
 const backendError = document.getElementById("backendError");
 
+const backendErrorNumbers = {
+    400: "Ongeldige aanvraag. Controleer uw gegevens.",
+    401: "Ongeldige gebruikersnaam of wachtwoord.",
+    403: "U heeft geen toegang.",
+    404: "Pagina bestaat niet.",
+    405: "Aanvraag niet ondersteund.",
+    409: "Conflict, probeer opnieuw.",
+    415: "Verkeerd formaat.",
+    422: "Ongeldige gegevens.",
+    500: "Serverfout. Probeer later opnieuw.",
+    503: "Service tijdelijk niet beschikbaar."
+};
+
 // errors resetten
 function clearErrors() {
     emailError.textContent = "";
@@ -64,22 +77,11 @@ loginForm.addEventListener("submit", async (event) => {
         });
 
         if (response.ok) {
-            const { token } = await response.json();
+            const { token, user } = await response.json();
             sessionStorage.setItem("token", token);
+            sessionStorage.setItem("user", JSON.stringify(user));
             window.location.href = "lobby.html";
         } else {
-            const backendErrorNumbers = {
-                400: "Ongeldige aanvraag. Controleer uw gegevens.",
-                401: "Ongeldige gebruikersnaam of wachtwoord.",
-                403: "U heeft geen toegang.",
-                404: "Pagina bestaat niet.",
-                405: "Aanvraag niet ondersteund.",
-                409: "Conflict, probeer opnieuw.",
-                415: "Verkeerd formaat.",
-                422: "Ongeldige gegevens.",
-                500: "Serverfout. Probeer later opnieuw.",
-                503: "Service tijdelijk niet beschikbaar."
-            };
 
             backendError.textContent = backendErrorNumbers[response.status] || "Login mislukt";
         }
