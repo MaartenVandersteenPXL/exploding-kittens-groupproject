@@ -1,6 +1,7 @@
-/* HIER KOMT TAFEL CSS */
-/*
-.lobbyTable-form{
+/* HIER KOMT TABLE CSS */
+
+.lobby-table
+{
     background-color: #5f2f45;
     border-radius: 15px;
     padding:  1.5rem 1rem 2rem 1rem;
@@ -8,54 +9,78 @@
     flex-direction: column;
 }
 
-.lobbyTable-form{
+
+.lobby-table{
     flex-direction: row;
+    flex: 1;
 }
 
-.go-to-table,
-.leave-table{
+.filter{
+    flex-direction: column;
+}
+
+
+.table-player{
     display: flex;
-    align-self: center;
-    justify-content: center;
-    background-color: #a02f40;
-    color: #f8ddb7;
-    font-family: 'Abel';
-    font-size: 2em;
+    flex-direction: column;
+    background-color: #f5ddbc;
+    width: 65%;
     border-radius: 15px;
     border: none;
-    padding: 1rem;
-    margin: 1rem 0 0 0;
-    min-width: 420px;
-    cursor: pointer;
-    transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.go-to-table,
-.leave-table{
-    min-width: 100%;
-    font-size: 1.5rem;
+.table-player thead{
+    background-color: #fabb64;
+    height: auto;
+    border-radius: 15px 15px 0px 0px;
 }
 
-.go-to-table:hover,
-.leave-table:hover {
-    transform: scale(1.2);
-    color: #f5ddbc ;
+.table-player thead tr{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
 }
 
-.playerTables{
+.table-player thead tr{
+    margin: 1rem 0.5rem 1rem 0.5rem;
+    font-family: abel;
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    font-size: 1.5em;
+}
+
+.table-player-output tr{
+    margin: 1rem 0.5rem 1rem 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.table-player-output tr td{
+    font-family: abel;
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    font-size: 1.5em;
+
+}
+
+/*
+.tables{
     width: 65%;
     height: auto;
     margin: 5%;
     border-radius: 15px;
     overflow: hidden;
     text-align: center;
-    color: #5f2f45;
+    color: #f8ddb7;
     border: none;
     border-collapse: separate;
     border-spacing: 0;
 }
 
-.lobbyTeller{
+
+.filter{
     width: 100%;
     border-radius: 15px;
     overflow: hidden;
@@ -66,11 +91,36 @@
     border-spacing: 0;
 }
 
-.lobbyTeller-wrapper{
+.filter-wrapper{
     width: 35%;
     margin: 5%;
     display: flex;
     flex-direction: column;
+}
+
+/* MAARTENS CODE 
+.browser {
+    background-color: #5f2f45;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.tables {
+    width: 65%;
+    height: auto;
+    margin: 5%;
+    border-collapse: collapse;
+
+}
+
+.filter {
+    width: 35%;
+    margin: 5%;
+    border-collapse: collapse;
+
 }
 
 thead {
@@ -81,11 +131,21 @@ thead {
 tbody {
     background-color: #f5ddbc;
 }
-
-.error,
-.backend-error {
-    height: 1.8rem;
-    margin: 0 0 0 1rem;
-    color: red;
+.head {
+    width: 90%;
+    background-color: #5f2f45;
+    color: #f5ddbc;
+    margin: 5%;
 }
+td, th {
+    text-align: center;
+    color: #5f2f45;
+}
+.ga-naar-tafel {
+    font-size: xx-large;
+    color: #f5ddbc;
+    background-color: #a02f40;
+    margin: 50% 0 50% 0
+}
+
 */

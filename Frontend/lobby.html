@@ -31,8 +31,9 @@
         <h1 id="headerTitle"></h1>
         <h2 id="headerIntro"></h2>
     </header>
-    <section class="newTable">
-        <form id="newTableForm" class="newTable-form">
+    
+    <section class="new-table">
+        <form id="newTableForm" class="new-table-form">
             <label for="newTableForm">TAFEL NAAM</label>
             <input type="text" id="newTableName" name="newTableName" required />
             <p class="error" id="newTableNameError"></p>
@@ -109,37 +110,25 @@
                 <button class="go-to-table" >Ga naar tafel</button>
             </div>
             <p class="backend-error" id="backendError"></p>
-    </section>
+    
+        </section>
 
-    <section class="lobbyTable">
-        <section class="lobbyTable-form">
-            <table class="playerTables">
+    <section class="lobby-table">
+            <table class="table-player">
                 <thead>
-                <tr>
-                    <th>Speler</th>
-                </tr>
+                    <tr>
+                        <th>Speler</th>
+                    </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>1. My kitten is the best</td>
-                </tr>
-                <tr>
-                    <td>2. I love Dogs</td>
-                </tr>
-                <tr>
-                    <td>3. My everything</td>
-                </tr>
-                <tr>
-                    <td>4. Wachten op een nieuwe speler</td>
-                </tr>
-                <tr>
-                    <td>5. Wachten op een nieuwe speler</td>
-                </tr>
-
-
+                <tbody class="table-player-output">
+                    <tr>
+                        <td>Dit is een test rij</td>
+                    </tr>
+                    
                 </tbody>
             </table>
-            <div class="lobbyTeller-wrapper">
+            
+            <div class="lobby-teller">
                 <table class="lobbyTeller">
                     <thead>
                     <tr>
@@ -160,8 +149,6 @@
 
                 <button class="start-table" >Start tafel</button>
             </div>
-
-        </section>
     </section>
 
 </main>

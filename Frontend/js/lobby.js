@@ -18,9 +18,9 @@ import { User, Token, Tables} from "./classes.js";
     const numberOfPlayers = document.getElementById("aantalSpelers")
     const numberOfArtificialPlayers = document.getElementById("aiSpelers")
 //table
-    const newTable = document.querySelector(".newTable");
+    const newTable = document.querySelector(".new-table");
     const lobbyBrowser = document.querySelector(".lobby-browser");
-    const lobbyTable = document.querySelector(".lobbyTable");
+    const lobbyTable = document.querySelector(".lobby-table");
     const lobbyTablePlaceholder = document.querySelector(".table-list-placeholder")
 //Button
     const createNewTableButton = document.getElementById("createNewTableButton");

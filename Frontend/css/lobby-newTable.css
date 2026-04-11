@@ -9,7 +9,7 @@
 }
 
 
-.newTable-form{
+.new-table-form{
     background-color: #5f2f45;
     border-radius: 15px;
     padding:  1.5rem 1rem 2rem 1rem;
@@ -17,7 +17,7 @@
     flex-direction: column;
 }
 
-.newTable-form input {
+.new-table-form input {
     height: 2rem;
     width: 75%;
     background-color: #f5ddbc;
@@ -28,7 +28,7 @@
     margin: 0 0 0 1rem;
 }
 
-.newTable-form button {
+.new-table-form button {
     display: flex;
     align-self: center;
     justify-content: center;
@@ -45,7 +45,7 @@
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.newTable-form button:hover {
+.new-table-form button:hover {
     transform: scale(1.2);
     color: #f5ddbc ;
 }
