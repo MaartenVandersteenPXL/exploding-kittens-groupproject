@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Exploding Kittens Lobby </title>
-    <link rel="stylesheet" href="css/lobby.css" />
-    <link rel="stylesheet" href="css/lobby-browser.css" />
-    <link rel="stylesheet" href="css/lobby-table.css" />
-    <link rel="stylesheet" href="css/lobby-newTable.css" />
+    <link rel="stylesheet" href="css/lobby.css"/>
+    <link rel="stylesheet" href="css/lobby-browser.css"/>
+    <link rel="stylesheet" href="css/lobby-table.css"/>
+    <link rel="stylesheet" href="css/lobby-newTable.css"/>
     <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
-    <script src="js/lobby.js"></script>
-    <script src="js/lobby-browser.js"></script>
-    <script src="js/lobby-newTable.js"></script>
-    <script src="js/lobby-table.js"></script>
+    <script src="js/lobby.js" defer></script>
+    <script src="js/lobby-browser.js" defer></script>
+    <script src="js/lobby-newTable.js" defer></script>
+    <script src="js/lobby-table.js" defer></script>
 
 </head>
 <body>
@@ -30,91 +30,95 @@
             <h1>NIEUWE TAFEL</h1>
             <h2>Purrrrrrr, <span id="userName"></span></h2>
         </header>
-        <form id="newTableForm" class="newTable-form">
+        <form id="newTableForm" class="newTable-form" novalidate>
             <label for="numberOfPlayers">Aantal Spelers</label>
-            <input type="number" id="numberOfPlayers" name="numberOfPlayers" max="5" required />
+            <input type="number" id="numberOfPlayers" name="numberOfPlayers" min="2" max="5" required/>
             <p class="error" id="numberOfPlayersError"></p>
 
             <label for="numberOfAIPlayers">Aantal AI Spelers</label>
-            <input type="number" id="numberOfAIPlayers" name="numberOfAIPlayers" max="4" required />
+            <input type="number" id="numberOfAIPlayers" name="numberOfAIPlayers" min="0"  max="4" required/>
             <p class="error" id="numberOfAIPlayersError"></p>
 
             <p class="backend-error" id="backendError"></p>
 
-            <button id="createNewTableButton" type="submit">MAAK NIEUWE TAFEL</button>
+            <button id="createNewTableButton" type="button">MAAK NIEUWE TAFEL</button>
         </form>
     </section>
 
     <section class="lobbyBrowser">
-    <header>
-        <h1>Lobby browser</h1>
-        <h2>Miauwkes, {(username)}</h2>
-    </header>
+        <header>
+            <h1>Lobby browser</h1>
+            <h2>Miauwkes, {(username)}</h2>
+        </header>
         <section class="lobbyBrowser-form">
-        <table class="tables">
-            <thead>
-            <tr>
-                <th>tafel</th>
-                <th>spelers</th>
-                <th>AI spelers</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Kittens_01</td>
-                <td>3/5</td>
-                <td>2/4</td>
-            </tr>
-            <tr>
-                <td>Kittens_02</td>
-                <td>0/5</td>
-                <td>0/4</td>
-            </tr>
-            <tr>
-                <td>Kittens_03</td>
-                <td>5/5</td>
-                <td>4/4</td>
-            </tr>
-            </tbody>
-        </table>
+            <table class="tables">
+                <thead>
+                <tr>
+                    <th>tafel</th>
+                    <th>spelers</th>
+                    <th>AI spelers</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Kittens_01</td>
+                    <td>3/5</td>
+                    <td>2/4</td>
+                </tr>
+                <tr>
+                    <td>Kittens_02</td>
+                    <td>0/5</td>
+                    <td>0/4</td>
+                </tr>
+                <tr>
+                    <td>Kittens_03</td>
+                    <td>5/5</td>
+                    <td>4/4</td>
+                </tr>
+                </tbody>
+            </table>
             <div class="filter-wrapper">
-        <table class="filter">
-            <thead>
-            <tr>
-                <th><button class="head" id="filter">filter</button></th>
-                <th><button class="head" id="reset">reset filter</button></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Aantal spelers</td>
-                <td>
-                    <select id="spelers" name="spelers" aria-label="Aantal spelers">
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Aantal AI</td>
-                <td>
-                    <select id="IA" name="IA" aria-label="Aantal AI spelers">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                    </select>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                <table class="filter">
+                    <thead>
+                    <tr>
+                        <th>
+                            <button class="head" id="filter">filter</button>
+                        </th>
+                        <th>
+                            <button class="head" id="reset">reset filter</button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Aantal spelers</td>
+                        <td>
+                            <select id="spelers" name="spelers" aria-label="Aantal spelers">
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Aantal AI</td>
+                        <td>
+                            <select id="IA" name="IA" aria-label="Aantal AI spelers">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
-                    <button class="go-to-table" >Ga naar tafel</button>
+                <button class="go-to-table">Ga naar tafel</button>
             </div>
 
-    </section>
+        </section>
     </section>
 
     <section class="lobbyTable">
@@ -168,7 +172,7 @@
                     </tbody>
                 </table>
 
-                <button class="leave-table" >Verlaat tafel</button>
+                <button class="leave-table">Verlaat tafel</button>
             </div>
 
         </section>
