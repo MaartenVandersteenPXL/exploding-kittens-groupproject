@@ -1,5 +1,5 @@
 //IMPORTS
-import { User } from "./classes.js";
+import { User, Token, Tables, Table} from "./classes.js";
 
 //classes
     let user = User.load();
@@ -19,9 +19,12 @@ import { User } from "./classes.js";
     const newTable = document.querySelector(".newTable");
     const lobbyBrowser = document.querySelector(".lobbyBrowser");
     const lobbyTable = document.querySelector(".lobbyTable");
+//Button
     const createNewTableButton = document.getElementById("createNewTableButton");
     const goToTableButton = document.querySelector(".go-to-table");
     const startTableButton = document.querySelector(".start-table");
+//error
+    const backendError = document.getElementById("backendError");
 
 //DOM on loading event - first page after redirect
 document.addEventListener("DOMContentLoaded", () => {
@@ -68,7 +71,6 @@ startTableButton.addEventListener("click", () => {
     //LOGICA voor een game te starten
 });
 
-
 ///// Functions
 //Page view - Secties wisselen
 function toonSectie(sectie, title, intro) {
@@ -80,17 +82,52 @@ function toonSectie(sectie, title, intro) {
 
 //Fetch filter
 filterForm.addEventListener("submit", async (event) => {
+        let tableList = await fetchTables()
+        let lobbyListOutput = document.getElementById("tableListOutput")
+        for(const table of tableList.tables){
+            let trRow = document.createElement("tr");
+            let tdGameId = document.createElement("td");
+            let tdSeatedPlayers = document.createElement("td");
+            let tdNumberOfPlayers = document.createElement("td");
+            let tdSeatAvailable = document.createElement("td");
+            
+            tdGameId.textContent = table.id;
+            tdSeatedPlayers = table.tdSeatedPlayers;
+            tdNumberOfPlayers = table.preference.numberOfPlayers + table.preference.numerOfAiPlayers;
+            tdSeatAvailable = table.hasAvailableSeats
+
+            trRow.appendChild(tdGameId);
+            trRow.appendChild(tdSeatedPlayers);
+            trRow.appendChild(tdNumberOfPlayers);
+            trRow.appendChild(tdSeatAvailable);
+
+            lobbyListOutput.appendChild(trRow);
+        }
+});
+
+async function fetchTables(){
     try {
-        let response = await fetch("https://localhost:5051/api/Tables/with-available-seats", {
+        const response = await fetch("https://localhost:5051/api/Tables/with-available-seats", {
             method: "GET",
             body: JSON.stringify(filterData),
             headers: {
-                'Content-type' : 'Application/json'
-                'Authorization': 
+                'Content-type' : 'Application/json',
+                "Authorization": "Bearer" + Token.load()
             }
         })
-    }catch(error){
+        if(!response.ok){
+            const errorMessage = await response.json();
+            throw new Error(errorMessage.message );e
+        }
+        const dataTables = await response.json();
+        const tables = new Tables(dataTables);
+        if(!tables){
+            throw new Error("Geen tafels beschikbaar")
+        }
+        return tables;
 
+    }catch(error){
+         backendError.textContent = "Kan geen verbinding maken met de server. Probeer later opnieuw."
     }
-})
+}
 
