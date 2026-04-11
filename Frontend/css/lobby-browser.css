@@ -1,5 +1,51 @@
 /* HIER KOMT BROWSER CSS */
 
+
+.lobbyBrowser-form
+{
+    background-color: #5f2f45;
+    border-radius: 15px;
+    padding:  1.5rem 1rem 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.lobbyBrowser-form{
+    flex-direction: row;
+}
+
+.tables{
+    width: 65%;
+    height: auto;
+    margin: 5%;
+    border-radius: 15px;
+    overflow: hidden;
+    text-align: center;
+    color: #5f2f45;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.filter{
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    text-align: center;
+    color: #5f2f45;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.filter-wrapper{
+    width: 35%;
+    margin: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* MAARTENS CODE */
 .browser {
     background-color: #5f2f45;
     width: 100%;
