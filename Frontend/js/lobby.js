@@ -1,5 +1,5 @@
 //IMPORTS
-import { User, Token, Tables, Table} from "./classes.js";
+import { User, Token, Tables} from "./classes.js";
 
 //classes
     let user = User.load();
@@ -82,7 +82,14 @@ function toonSectie(sectie, title, intro) {
 
 //Fetch filter
 filterForm.addEventListener("submit", async (event) => {
-        let tableList = await fetchTables()
+        event.preventDefault()
+        //dummy data
+        const filterData = {
+            NumberOfPlayers : 2,
+            NumberOfArtificialPlayers: 1,
+        }
+        
+        let tableList = await fetchTables(filterData)
         let lobbyListOutput = document.getElementById("tableListOutput")
         for(const table of tableList.tables){
             let trRow = document.createElement("tr");
@@ -91,10 +98,10 @@ filterForm.addEventListener("submit", async (event) => {
             let tdNumberOfPlayers = document.createElement("td");
             let tdSeatAvailable = document.createElement("td");
             
-            tdGameId.textContent = table.id;
-            tdSeatedPlayers = table.tdSeatedPlayers;
-            tdNumberOfPlayers = table.preference.numberOfPlayers + table.preference.numerOfAiPlayers;
-            tdSeatAvailable = table.hasAvailableSeats
+            tdGameId.textContent = table.gameId.substring(0,5);
+            tdSeatedPlayers.textContent = table.seatedPlayers.length;
+            tdNumberOfPlayers.textContent = String(table.preferences.numberOfPlayers + table.preferences.numberOfArtificialPlayers);
+            tdSeatAvailable.textContent = table.hasAvailableSeats
 
             trRow.appendChild(tdGameId);
             trRow.appendChild(tdSeatedPlayers);
@@ -105,14 +112,22 @@ filterForm.addEventListener("submit", async (event) => {
         }
 });
 
-async function fetchTables(){
+async function fetchTables(filterData){
     try {
-        const response = await fetch("https://localhost:3000/api/Tables/with-available-seats", {
+        /*
+        const params = new URLSearchParams(filterData)
+        const response = await fetch(`https://localhost:3000/api/Tables/with-available-seats?{params}`, {
             method: "GET",
-            body: JSON.stringify(filterData),
             headers: {
                 'Content-type' : 'Application/json',
                 "Authorization": "Bearer" + Token.load()
+            }
+        })*/
+        //TEST DATA
+        const response = await fetch("http://localhost:3000/api/tables/with-available-seats", {
+            method: "GET",
+            headers: {
+                'Content-type' : 'Application/json',
             }
         })
         if(!response.ok){
@@ -127,7 +142,7 @@ async function fetchTables(){
         return tables;
 
     }catch(error){
-         backendError.textContent = "Kan geen verbinding maken met de server. Probeer later opnieuw."
+         backendError.textContent = error.message
     }
 }
 

@@ -56,29 +56,17 @@
             <table class="tables">
                 <thead>
                     <tr>
-                        <th>tafel</th>
-                        <th>spelers</th>
-                        <th>AI spelers</th>
+                        <th>Game id</th>
+                        <th>Aantal spelers</th>
+                        <th>Tafel spelers</th>
+                        <th>Beschikbaar</th>
                     </tr>
                 </thead>
                 <tbody id="tableListOutput">
-                <tr>
-                    <td>Kittens_01</td>
-                    <td>3/5</td>
-                    <td>2/4</td>
-                </tr>
-                <tr>
-                    <td>Kittens_02</td>
-                    <td>0/5</td>
-                    <td>0/4</td>
-                </tr>
-                <tr>
-                    <td>Kittens_03</td>
-                    <td>5/5</td>
-                    <td>4/4</td>
-                </tr>
                 </tbody>
             </table>
+            
+            
             <div class="filter-wrapper">
                 <table class="filterForm">
                     <thead>
@@ -115,6 +103,10 @@
                 </table>
                 <button class="go-to-table" >Ga naar tafel</button>
             </div>
+            
+            <form id="filterForm">
+                <button type="submit">testButtonForTable</button>
+            </form>
         </section>
         <p class="backend-error" id="backendError"></p>
     </section>
