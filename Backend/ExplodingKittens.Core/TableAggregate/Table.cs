@@ -35,10 +35,14 @@ internal class Table: ITable
 
     public void Leave(Guid userId)
     {
-        IPlayer? playerToRemove = this._seatedPlayers.FirstOrDefault(player => player.Id == userId);
-        if(playerToRemove != null){
-            this._seatedPlayers.Remove(playerToRemove);
+        IPlayer? playerToRemove = _seatedPlayers.FirstOrDefault(player => player.Id == userId);
+
+        if (playerToRemove == null)
+        {
+            throw new InvalidOperationException("Deze speler zit niet aan de tafel.");
         }
+
+        _seatedPlayers.Remove(playerToRemove);
     }
 
     public void LetArtificialPlayersJoin(IGamePlayStrategy gamePlayStrategy)
