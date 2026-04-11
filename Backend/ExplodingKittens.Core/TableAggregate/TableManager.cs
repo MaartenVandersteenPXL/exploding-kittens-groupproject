@@ -1,6 +1,7 @@
 ﻿using ExplodingKittens.Core.GameAggregate.Contracts;
 using ExplodingKittens.Core.TableAggregate.Contracts;
 using ExplodingKittens.Core.UserAggregate;
+using System.Reflection.Emit;
 
 namespace ExplodingKittens.Core.TableAggregate;
 
@@ -41,7 +42,13 @@ internal class TableManager : ITableManager
 
     public void LeaveTable(Guid tableId, User user)
     {
-        this._tableRepository.Get(tableId).Leave(user.Id);
+        ITable table = _tableRepository.Get(tableId);
+        table.Leave(user.Id);
+
+        if (table.SeatedPlayers.Count == 0)
+        {
+            _tableRepository.Remove(tableId);
+        }
     }
 
     public IGame StartGameForTable(Guid tableId)
