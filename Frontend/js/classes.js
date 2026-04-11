@@ -1,3 +1,4 @@
+//User
 export class User {
     constructor(id, email, userName, birthdate){
         this.id = id;
@@ -15,6 +16,7 @@ export class User {
     }
 }
 
+//Token
 export class Token {
     constructor (token){
         this.token = token;
@@ -46,17 +48,17 @@ class Preferences {
 }
 
 export class Table {
-    constructor(id, preferences, seatedPlayers, hasAvailableSeats, gameId){
+    constructor(id, preferences, seatedPlayers, hasAvailableSeat, gameId){
         this.id = id;
         this.preferences = new Preferences(preferences.numberOfPlayers, preferences.numberOfArtificialPlayers);
         this.seatedPlayers = seatedPlayers.map(p => new SeatedPlayer(p.id, p.name, p.birthDate));
-        this.hasAvailableSeats = hasAvailableSeats;
+        this.hasAvailableSeat = hasAvailableSeat;
         this.gameId = gameId;
     }
 }
 
 export class Tables {
     constructor(dataTables){
-        this.tables = dataTables.map(t => new Table(t.id, t.preferences, t.seatedPlayers, t.hasAvailableSeats, t.gameId));
+        this.tables = dataTables.map(t => new Table(t.id, t.preferences, t.seatedPlayers, t.hasAvailableSeat, t.gameId));
     }
 }

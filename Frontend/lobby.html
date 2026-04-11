@@ -51,23 +51,24 @@
         </form>
     </section>
 
-    <section class="lobbyBrowser">
-        <section class="lobbyBrowser-form">
-            <table class="tables">
+    <section class="lobby-browser">
+            <table class="table-list">
                 <thead>
                     <tr>
                         <th>Game id</th>
-                        <th>Aantal spelers</th>
-                        <th>Tafel spelers</th>
-                        <th>Beschikbaar</th>
+                        <th>Aanwezig</th>
+                        <th>Totaal</th>
+                        <th>Vrij</th>
                     </tr>
                 </thead>
-                <tbody id="tableListOutput">
+                <tbody class="table-list-output">
+                    <tr class="table-list-placeholder">
+                        <td>Gelieve de tafels te fliteren</td>
+                    </tr>
                 </tbody>
             </table>
             
-            
-            <div class="filter-wrapper">
+            <div class="filter">
                 <table class="filterForm">
                     <thead>
                         <tr>
@@ -101,14 +102,13 @@
                     </tbody>
                 
                 </table>
+
+                <form id="filterForm">
+                    <button type="submit">testButtonForTable</button>
+                </form>
                 <button class="go-to-table" >Ga naar tafel</button>
             </div>
-            
-            <form id="filterForm">
-                <button type="submit">testButtonForTable</button>
-            </form>
-        </section>
-        <p class="backend-error" id="backendError"></p>
+            <p class="backend-error" id="backendError"></p>
     </section>
 
     <section class="lobbyTable">
