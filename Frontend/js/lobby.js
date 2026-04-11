@@ -33,7 +33,10 @@ import { User, Token, Tables} from "./classes.js";
 document.addEventListener("DOMContentLoaded", () => {
     
     //LOGICA IF USER IS NOT LOGGED IN -> REDIRECT TO LOGIN
-    
+    if(!user){
+        window.location.href="index.html";
+    }
+
     //first page after redirect
     leaveTableNav.style.display="none"
     toonSectie(lobbyBrowser,titles[0], intros[0] );
@@ -129,7 +132,7 @@ async function fetchTables(filterData){
                 "Authorization": "Bearer" + Token.load()
             }
         })*/
-       
+
         //TEST DATA
         const response = await fetch("http://localhost:3000/api/tables/with-available-seats", {
             method: "GET",
@@ -137,11 +140,10 @@ async function fetchTables(filterData){
                 'Content-type' : 'Application/json',
             }
         })
-        if(!response.ok){
-            const errorMessage = await response.json();
-            throw new Error(errorMessage.message );e
-        }
         const dataTables = await response.json();
+        if(!response.ok){
+            throw new Error(dataTables.message );
+        }
         const tables = new Tables(dataTables);
         if(!tables){
             throw new Error("Geen tafels beschikbaar")
