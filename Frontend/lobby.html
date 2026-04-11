@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Exploding Kittens Lobby </title>
-    <link rel="stylesheet" href="css/lobby.css" />
-    <link rel="stylesheet" href="css/lobby-browser.css" />
-    <link rel="stylesheet" href="css/lobby-table.css" />
-    <link rel="stylesheet" href="css/lobby-newTable.css" />
+    <link rel="stylesheet" href="css/lobby.css"/>
+    <link rel="stylesheet" href="css/lobby-browser.css"/>
+    <link rel="stylesheet" href="css/lobby-table.css"/>
+    <link rel="stylesheet" href="css/lobby-newTable.css"/>
     <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
     <script type="module" src="js/lobby.js"></script>
     <script src="js/lobby-browser.js"></script>
@@ -39,16 +39,16 @@
             <p class="error" id="newTableNameError"></p>
 
             <label for="numberOfPlayers">Aantal Spelers</label>
-            <input type="number" id="numberOfPlayers" name="numberOfPlayers" max="5" required />
+            <input type="number" id="numberOfPlayers" name="numberOfPlayers" min="2" max="5" required/>
             <p class="error" id="numberOfPlayersError"></p>
 
             <label for="numberOfAIPlayers">Aantal AI Spelers</label>
-            <input type="number" id="numberOfAIPlayers" name="numberOfAIPlayers" max="4" required />
+            <input type="number" id="numberOfAIPlayers" name="numberOfAIPlayers" min="0"  max="4" required/>
             <p class="error" id="numberOfAIPlayersError"></p>
 
             <p class="backend-error" id="backendError"></p>
 
-            <button id="createNewTableButton" type="submit">MAAK NIEUWE TAFEL</button>
+            <button id="createNewTableButton" type="button">MAAK NIEUWE TAFEL</button>
         </form>
     </section>
 
