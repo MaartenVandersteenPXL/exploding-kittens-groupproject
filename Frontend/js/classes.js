@@ -45,11 +45,11 @@ class Preference {
     }
 }
 
-class Table {
+export class Table {
     constructor(id, preference, seatedPlayers, hasAvailableSeats, gameId){
         this.id = id;
-        this.Preference = new Preference(preference.numberOfPlayers, preference.numerOfAiPlayers),
-        this.SeatedPlayers = seatedPlayers.map(p => new SeatedPlayer(p.id, p.name, p.birthDate))
+        this.preference = new Preference(preference.numberOfPlayers, preference.numerOfAiPlayers),
+        this.seatedPlayers = seatedPlayers.map(p => new SeatedPlayer(p.id, p.name, p.birthDate))
         this.hasAvailableSeats = hasAvailableSeats;
         this.gameId = gameId;
     }

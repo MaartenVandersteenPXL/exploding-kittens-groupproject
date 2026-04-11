@@ -107,7 +107,7 @@ filterForm.addEventListener("submit", async (event) => {
 
 async function fetchTables(){
     try {
-        const response = await fetch("https://localhost:5051/api/Tables/with-available-seats", {
+        const response = await fetch("https://localhost:3000/api/Tables/with-available-seats", {
             method: "GET",
             body: JSON.stringify(filterData),
             headers: {
