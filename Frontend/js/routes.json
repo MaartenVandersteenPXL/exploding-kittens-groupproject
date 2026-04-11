@@ -1,3 +1,4 @@
 {
-    "/api/tables/with-available-seats": "/tables"
+    "/api/tables/with-available-seats": "/tables",
+    "/api/tables": "/tablesNew"
 }
