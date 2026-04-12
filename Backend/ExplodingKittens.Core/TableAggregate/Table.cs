@@ -14,8 +14,9 @@ internal class Table: ITable
     internal Table(Guid id, ITablePreferences preferences)
     {
         this._id = id;
-        this._preferences= preferences;
+        this._preferences = preferences;
         this._seatedPlayers = new List<IPlayer>();
+        
     }
 
     public Guid Id => this._id;

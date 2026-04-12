@@ -53,9 +53,16 @@ internal class TableManager : ITableManager
 
     public IGame StartGameForTable(Guid tableId)
     {
-        IGame game = this._gameFactory.CreateNewForTable(this._tableRepository.Get(tableId));
-        this._gameRepository.Add(game);
+        ITable table = _tableRepository.Get(tableId);
 
+        if (table.HasAvailableSeat)
+        {
+            throw new InvalidOperationException("Er zijn niet genoeg spelers aan de tafel.");
+        }
+
+        IGame game = _gameFactory.CreateNewForTable(table);
+        table.GameId = game.Id;
+        _gameRepository.Add(game);
         return game;
     }
 }
