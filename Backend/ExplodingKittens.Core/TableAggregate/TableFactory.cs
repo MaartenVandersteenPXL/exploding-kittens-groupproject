@@ -14,14 +14,10 @@ internal class TableFactory : ITableFactory
     }
 
     public ITable CreateNewForUser(User user, ITablePreferences preferences)
-    { 
-         
-        ITable table = new Table(Guid.NewGuid(), preferences) as ITable;
-        table.Join(user);        
-        for (int i = 0; i < preferences.NumberOfArtificialPlayers; i++)
-        {
-            table.LetArtificialPlayersJoin(this._gamePlayStrategy);
-        }
+    {
+
+        ITable table = new Table(Guid.NewGuid(), preferences);
+        table.Join(user);
         return table;
     }
 }
