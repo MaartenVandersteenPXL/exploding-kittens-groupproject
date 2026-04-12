@@ -26,11 +26,22 @@ internal class Table: ITable
 
     public bool HasAvailableSeat => this._seatedPlayers.ToArray().Length < this._preferences.NumberOfPlayers;
 
-    public Guid GameId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public Guid GameId { get; set; } = Guid.Empty;
 
     public void Join(User user)
     {
+        if (!HasAvailableSeat)
+        {
+            throw new InvalidOperationException("De tafel is vol.");
+        }
+        if(_seatedPlayers.Any(player => player.Id == user.Id))
+        {
+            throw new InvalidOperationException("Deze speler zit al aan de tafel.");
+        }
+
         this._seatedPlayers.Add(new HumanPlayer(user.Id, user.ToString(), user.BirthDate));
+        
+       
     }
 
     public void Leave(Guid userId)
