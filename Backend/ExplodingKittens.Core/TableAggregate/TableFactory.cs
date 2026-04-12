@@ -15,7 +15,9 @@ internal class TableFactory : ITableFactory
 
     public ITable CreateNewForUser(User user, ITablePreferences preferences)
     { 
-       ITable table = new Table(user.Id, preferences) as ITable;
+         
+        ITable table = new Table(Guid.NewGuid(), preferences) as ITable;
+        table.Join(user);        
         for (int i = 0; i < preferences.NumberOfArtificialPlayers; i++)
         {
             table.LetArtificialPlayersJoin(this._gamePlayStrategy);
