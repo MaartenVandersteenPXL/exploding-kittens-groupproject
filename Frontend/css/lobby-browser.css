@@ -1,5 +1,104 @@
 /* HIER KOMT BROWSER CSS */
 
+.lobby-browser
+{
+    background-color: #5f2f45;
+    border-radius: 15px;
+    padding:  1.5rem 1rem 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.lobby-browser{
+    flex-direction: row;
+    flex: 1;
+}
+
+.lobby-teller{
+    flex-direction: column;
+}
+
+
+.table-list{
+    display: flex;
+    flex-direction: column;
+    background-color: #f5ddbc;
+    width: 65%;
+    border-radius: 15px;
+    border: none;
+}
+
+.table-list thead{
+    background-color: #fabb64;
+    height: auto;
+    border-radius: 15px 15px 0px 0px;
+}
+
+.table-list thead tr{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.table-list thead tr{
+    margin: 1rem 0.5rem 1rem 0.5rem;
+    font-family: abel;
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    font-size: 1.5em;
+}
+
+.table-list-output tr{
+    margin: 1rem 0.5rem 1rem 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.table-list-output tr td{
+    font-family: abel;
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    font-size: 1.5em;
+
+}
+
+/*
+.tables{
+    width: 65%;
+    height: auto;
+    margin: 5%;
+    border-radius: 15px;
+    overflow: hidden;
+    text-align: center;
+    color: #f8ddb7;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+
+.filter{
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    text-align: center;
+    color: #5f2f45;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.filter-wrapper{
+    width: 35%;
+    margin: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* MAARTENS CODE 
 .browser {
     background-color: #5f2f45;
     width: 100%;
@@ -48,3 +147,5 @@ td, th {
     background-color: #a02f40;
     margin: 50% 0 50% 0
 }
+
+*/
