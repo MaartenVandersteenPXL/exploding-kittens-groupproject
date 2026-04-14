@@ -1,5 +1,5 @@
 //IMPORTS
-import { User, Token, Tables, Table, Preferences} from "./classes.js";
+import { User, Token, Tables, Table} from "./classes.js";
 
 //classes
     let user = User.load();
@@ -72,6 +72,8 @@ leaveTableNav.addEventListener("click", async (event) => {
     playerTableCandidateId = "";
     createNewTableNav.style.display="";
     leaveTableNav.style.display="none"
+    //TODO - leaveResult - WAIT FOR BACKEND
+    console.log("TOFIX: leave user from player table L76")
     //let leaveResult = await playerLeaveTable(playerTableCandidateId)
     //if(!result) return
     toonSectie(lobbyBrowser, titles[0], intros[0]);
@@ -124,8 +126,9 @@ goToTableButton.addEventListener("click", async (event) => {
         backendError = "Gelieve een tafel te selecteren";
         //TODO reset css clicked candidate table
     }
+    //TODO - JOIN TABLE WAIT FOR BE
+    console.log("TOFIX: join user on player table L131")
     /*
-    //TODO - WAIT FOR BACKEND
     //join table
     let joinedResult = await playerJoinTable(playerTableCandidateId);
     if(!joinedResult){
@@ -152,6 +155,7 @@ goToTableButton.addEventListener("click", async (event) => {
 //startPlayersTable
 startTableButton.addEventListener("click", () => {
     //TODO LOGICA voor een game te starten
+    console.log("TOFIX: start players table - L158");
 });
 
 ///// Functions
@@ -166,6 +170,7 @@ function toonSectie(sectie, title, intro) {
 //EVENT - browser filter
 filterForm.addEventListener("submit", async (event) => {
         //TODO reset lobbyTableList on new filter
+        lobbyTableList.replaceChildren();
         lobbyTablePlaceholder.style.display="none"
         event.preventDefault()
         //dummy data
