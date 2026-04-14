@@ -1,10 +1,13 @@
 //IMPORTS
-import { User, Token, Tables} from "./classes.js";
+import { User, Token, Tables, Table, Preferences} from "./classes.js";
 
 //classes
     let user = User.load();
     let titles = ["lobby browser", "lobby tafel", "nieuwe tafel"];
     let intros = ["Miauwkes, ", "Hiiiisssss, ", "Purrrrr, " ];
+
+//VARIABLES
+    let playerTableCandidate;
 
 ///// elements
 //header
@@ -30,7 +33,9 @@ import { User, Token, Tables} from "./classes.js";
 //table-browser
     const lobbyBrowser = document.querySelector(".lobby-browser");
     const lobbyTable = document.querySelector(".lobby-table");
-    const lobbyTablePlaceholder = document.querySelector(".table-list-placeholder")
+    const lobbyTablePlaceholder = document.querySelector(".table-list-placeholder");
+    const lobbyTableList = document.querySelector(".table-list-output");
+
 //Button
     const createNewTableButton = document.getElementById("createNewTableButton");
     const goToTableButton = document.querySelector(".go-to-table");
@@ -55,12 +60,15 @@ document.addEventListener("DOMContentLoaded", () => {
 //ROUTES
 createNewTableNav.addEventListener("click", (event) => {
     event.preventDefault();
+    playerTableCandidate = "";
+    //TODO reset css clicked candidate table
     createNewTableNav.style.display="none"
     leaveTableNav.style.display="none"
     toonSectie(newTable,titles[2], intros[2])
 });
 
 leaveTableNav.addEventListener("click", (event) => {
+    playerTableCandidate = "";
     createNewTableNav.style.display="";
     leaveTableNav.style.display="none"
     //LOGICA OM TAFEL TE VERLATEN
@@ -101,16 +109,36 @@ createNewTableButton.addEventListener("click", async (event) => {
     toonSectie(lobbyBrowser, titles[0], intros[0]);
 });
 
-goToTableButton.addEventListener("click", (event) => {
+goToTableButton.addEventListener("click", async (event) => {
     event.preventDefault();
     createNewTableNav.style.display="none"
     leaveTableNav.style.display=""
     //LOGICA OM TAFEL TE JOINEN
+    console.log("TAFEL ID GEKLIKT:", playerTableCandidate)
+    if(!playerTableCandidate){
+        backendError = "Gelieve een tafel te selecteren";
+        //TODO reset css clicked candidate table
+    }
+    let playersTable = await fetchPlayerTable(playerTableCandidate);
+    let playersTotal = playersTable.preferences.numberOfArtificialPlayers + playersTable.preferences.numberOfPlayers;
+    let playerTableListOutput = document.querySelector(".table-player-output")
+    for(let player = 0; player < playersTotal; player++ ){
+         let row = document.createElement("tr");
+         let tdSeatedPlayerSlot = document.createElement("td");
+         if( player < playersTable.seatedPlayers.length){
+            tdSeatedPlayerSlot.textContent = playersTable.seatedPlayers[player].name;
+         }else{
+            tdSeatedPlayerSlot.textContent="AI COMPUTERRRRRR";
+         }
+         row.appendChild(tdSeatedPlayerSlot)
+         playerTableListOutput.appendChild(row);
+    }
+
     toonSectie(lobbyTable, titles[1], intros[1]);
 });
 
 startTableButton.addEventListener("click", () => {
-    //LOGICA voor een game te starten
+    //TODO LOGICA voor een game te starten
 });
 
 ///// Functions
@@ -122,8 +150,9 @@ function toonSectie(sectie, title, intro) {
     headerIntro.textContent = intro + user.userName
 }
 
-//Fetch filter
+//EVENT - browser filter
 filterForm.addEventListener("submit", async (event) => {
+        //TODO reset lobbyTableList on new filter
         lobbyTablePlaceholder.style.display="none"
         event.preventDefault()
         //dummy data
@@ -133,14 +162,21 @@ filterForm.addEventListener("submit", async (event) => {
         }
         
         let tableList = await fetchTables(filterData)
-        let lobbyListOutput = document.querySelector(".table-list-output")
-        for(const table of tableList.tables){
+        
+        tableList.tables.forEach((table , index) => {
             let row = document.createElement("tr");
             let tdGameId = document.createElement("td");
             let tdSeatedPlayers = document.createElement("td");
             let tdNumberOfPlayers = document.createElement("td");
             let tdSeatAvailable = document.createElement("td");
             
+            row.classList.add(`tableCandidate-${index}`);
+            tdGameId.classList.add("gameId", `tableCandidate-${index}`);
+            tdSeatedPlayers.classList.add("seatedPlayers", `tableCandidate-${index}`);
+            tdNumberOfPlayers.classList.add("numberOfPlayers", `tableCandidate-${index}`);
+            tdSeatAvailable.classList.add("seatAvailable", `tableCandidate-${index}`);
+
+            //TODO id in full length for select
             tdGameId.textContent = table.gameId.substring(0,5);
             tdSeatedPlayers.textContent = table.seatedPlayers.length;
             tdNumberOfPlayers.textContent = String(table.preferences.numberOfPlayers + table.preferences.numberOfArtificialPlayers);
@@ -151,8 +187,16 @@ filterForm.addEventListener("submit", async (event) => {
             row.appendChild(tdNumberOfPlayers);
             row.appendChild(tdSeatAvailable);
 
-            lobbyListOutput.appendChild(row);
-        }
+            lobbyTableList.appendChild(row);
+        });
+});
+
+//Event tableCandidate
+lobbyTableList.addEventListener('click', (event) => {
+    const row = event.target.closest('[class^="tableCandidate-"]');
+    if(!row) return;
+    const tdGameId = row.querySelector(".gameId");
+    playerTableCandidate = tdGameId.innerText;
 });
 
 //Fetch tables
@@ -230,6 +274,45 @@ async function createTable(players, ai){
     }catch(error){
         backendError.textContent = error.message;
         return null;
+    }
+}
+
+//Fetch player table
+async function fetchPlayerTable(gameId){
+    try {
+        //REAL API CALL
+        /*
+        const response = await fetch(`https://localhost:3000/api/Tables/${gameId}`, {
+            method: "GET",
+            headers: {
+                'Content-type' : 'Application/json',
+                "Authorization": "Bearer" + Token.load()
+            }
+        });
+        */
+        //TEST DATA
+        let testGameId = "00000000-6828-5673-c4gd-3d074g77bgb7"
+        const response = await fetch(`http://localhost:3000/api/tables/${testGameId}`, {
+            method: "GET",
+            headers: {
+                'Content-type' : 'Application/json',
+            }
+        })
+        //END TEST DATA
+        const dataTable = await response.json();
+        if(!response.ok){
+            throw new Error(dataTable.message );
+        }
+        const table = new Table(
+            dataTable.id,
+            dataTable.preferences,
+            dataTable.seatedPlayers,
+            dataTable.hasAvailableSeat,
+            dataTable.gameId);
+        return table;
+
+    }catch(error){
+         backendError.textContent = error.message
     }
 }
 

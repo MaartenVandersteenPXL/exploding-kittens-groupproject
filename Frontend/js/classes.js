@@ -32,7 +32,7 @@ export class Token {
 }
 
 //Table
-class SeatedPlayer {
+export class SeatedPlayer {
     constructor(id, name, birthDate){
         this.id = id;
         this.name = name;
@@ -40,7 +40,7 @@ class SeatedPlayer {
     }
 }
 
-class Preferences {
+export class Preferences {
     constructor(numberOfPlayers, numberOfArtificialPlayers){
         this.numberOfPlayers = numberOfPlayers;
         this.numberOfArtificialPlayers = numberOfArtificialPlayers;
