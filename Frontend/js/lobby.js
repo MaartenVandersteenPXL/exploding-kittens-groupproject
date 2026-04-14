@@ -7,7 +7,7 @@ import { User, Token, Tables, Table, Preferences} from "./classes.js";
     let intros = ["Miauwkes, ", "Hiiiisssss, ", "Purrrrr, " ];
 
 //VARIABLES
-    let playerTableCandidate;
+    let playerTableCandidateId;
 
 ///// elements
 //header
@@ -67,15 +67,18 @@ createNewTableNav.addEventListener("click", (event) => {
     toonSectie(newTable,titles[2], intros[2])
 });
 
-leaveTableNav.addEventListener("click", (event) => {
-    playerTableCandidate = "";
+//leavePlayersTable
+leaveTableNav.addEventListener("click", async (event) => {
+    playerTableCandidateId = "";
     createNewTableNav.style.display="";
     leaveTableNav.style.display="none"
-    //LOGICA OM TAFEL TE VERLATEN
+    //let leaveResult = await playerLeaveTable(playerTableCandidateId)
+    //if(!result) return
     toonSectie(lobbyBrowser, titles[0], intros[0]);
 })
 
-//BUTTON ACTIONS
+//////BUTTON ACTIONS
+//newTable
 createNewTableButton.addEventListener("click", async (event) => {
     event.preventDefault();
     ////LOGICA OM TAFEL AAN TE MAKEN OP BACKEND
@@ -108,18 +111,29 @@ createNewTableButton.addEventListener("click", async (event) => {
     createNewTableNav.style.display=""
     toonSectie(lobbyBrowser, titles[0], intros[0]);
 });
-
+//selectPlayersTable
 goToTableButton.addEventListener("click", async (event) => {
     event.preventDefault();
     createNewTableNav.style.display="none"
     leaveTableNav.style.display=""
     //LOGICA OM TAFEL TE JOINEN
-    console.log("TAFEL ID GEKLIKT:", playerTableCandidate)
-    if(!playerTableCandidate){
+    
+    //check playerTableId
+    console.log("TAFEL ID GEKLIKT:", playerTableCandidateId)
+    if(!playerTableCandidateId){
         backendError = "Gelieve een tafel te selecteren";
         //TODO reset css clicked candidate table
     }
-    let playersTable = await fetchPlayerTable(playerTableCandidate);
+    /*
+    //TODO - WAIT FOR BACKEND
+    //join table
+    let joinedResult = await playerJoinTable(playerTableCandidateId);
+    if(!joinedResult){
+        return;
+    }
+        */
+    //BUILD Players table
+    let playersTable = await fetchPlayerTable(playerTableCandidateId);
     let playersTotal = playersTable.preferences.numberOfArtificialPlayers + playersTable.preferences.numberOfPlayers;
     let playerTableListOutput = document.querySelector(".table-player-output")
     for(let player = 0; player < playersTotal; player++ ){
@@ -133,10 +147,9 @@ goToTableButton.addEventListener("click", async (event) => {
          row.appendChild(tdSeatedPlayerSlot)
          playerTableListOutput.appendChild(row);
     }
-
     toonSectie(lobbyTable, titles[1], intros[1]);
 });
-
+//startPlayersTable
 startTableButton.addEventListener("click", () => {
     //TODO LOGICA voor een game te starten
 });
@@ -196,9 +209,10 @@ lobbyTableList.addEventListener('click', (event) => {
     const row = event.target.closest('[class^="tableCandidate-"]');
     if(!row) return;
     const tdGameId = row.querySelector(".gameId");
-    playerTableCandidate = tdGameId.innerText;
+    playerTableCandidateId = tdGameId.innerText;
 });
 
+//////BACKEND CALLS
 //Fetch tables
 async function fetchTables(filterData){
     try {
@@ -277,7 +291,7 @@ async function createTable(players, ai){
     }
 }
 
-//Fetch player table
+//Fetch player table list
 async function fetchPlayerTable(gameId){
     try {
         //REAL API CALL
@@ -299,20 +313,75 @@ async function fetchPlayerTable(gameId){
             }
         })
         //END TEST DATA
-        const dataTable = await response.json();
+        const dataPlayerTable = await response.json();
         if(!response.ok){
-            throw new Error(dataTable.message );
+            throw new Error(dataPlayerTable.message );
         }
-        const table = new Table(
-            dataTable.id,
-            dataTable.preferences,
-            dataTable.seatedPlayers,
-            dataTable.hasAvailableSeat,
-            dataTable.gameId);
-        return table;
+        const playerTable = new Table(
+            dataPlayerTable.id,
+            dataPlayerTable.preferences,
+            dataPlayerTable.seatedPlayers,
+            dataPlayerTable.hasAvailableSeat,
+            dataPlayerTable.gameId);
+        return playerTable;
 
     }catch(error){
          backendError.textContent = error.message
     }
 }
 
+//Fetch player table join
+async function playerJoinTable(gameId){
+       try{
+        //REAL API CALL
+        const response = await fetch(`https://localhost:5051/api/tables/${gamiId}/join`,{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer" + Token.load(),
+            }
+        });
+        //TEST DATA
+        // Geen test endpoint
+        // END TEST DATA
+        
+        const dataJoinedTable = await response.json();
+        if(!response.ok){
+            throw new Error(dataJoinedTable.message );
+        }
+        const joinedTable = new Table(
+            dataJoinedTable.id,
+            dataJoinedTable.preferences,
+            dataJoinedTable.seatedPlayers,
+            dataJoinedTable.hasAvailableSeat,
+            dataJoinedTable.gameId);
+        return joinedTable;
+    }catch(error){
+        backendError.textContent = error.message;
+    }
+}
+
+//Fetch player table leave
+async function playerLeaveTable(gameId){
+       try{
+        //REAL API CALL
+        const response = await fetch(`https://localhost:5051/api/tables/${gamiId}/leave`,{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer" + Token.load(),
+            }
+        });
+        //TEST DATA
+        // Geen test endpoint
+        // END TEST DATA
+        
+        const dataLeavedTable = await response.json();
+        if(!response.ok){
+            throw new Error(dataJoinedTable.message );
+        }
+        return dataLeavedTable.message;
+    }catch(error){
+        backendError.textContent = error.message;
+    }
+}
