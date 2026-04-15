@@ -65,6 +65,9 @@
 
 }
 
+/*toegevoegd voor lobby-browser-filter*/
+
+
 .lobby-browser-filter {
     display: flex;
     flex-direction: column;
@@ -79,13 +82,12 @@
 .lobby-browser-filter-table{
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
     border-collapse: collapse;
     border-spacing: 0;
     background-color: #fabb64;
     border-radius: 15px;
     overflow: hidden;
-    margin: 0 0 3em 0.5em
+    margin-left: 0.5em;
 
 }
 
@@ -150,4 +152,9 @@
     color: #f5ddbc;
     border-radius: 15px;
     padding: 1.5em 0 1.5em 0
+}
+
+.lobby-browser-filter button:hover,
+.lobby-browser-filter-button button:hover {
+    transform: scale(1.2);
 }
