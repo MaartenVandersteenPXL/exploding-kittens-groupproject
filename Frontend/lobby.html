@@ -49,39 +49,43 @@
                 </tbody>
         </table>
             <div class="lobby-browser-filter">
-                <table class="lobby-browser-filter-table">
-                    <thead>
-                    <tr>
-                        <th><button class="head" id="filter">filter</button></th>
-                        <th><button class="head" id="reset">reset filter</button></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Aantal spelers</td>
-                        <td>
-                            <select id="spelers" name="spelers" aria-label="Aantal spelers">
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Aantal AI</td>
-                        <td>
-                            <select id="IA" name="IA" aria-label="Aantal AI spelers">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                            </select>
-                        </td>
-                    </tr>
-                    </tbody>
+                <form class="lobby-browser-filter-form">
+                    <table class="lobby-browser-filter-table">
+                        <thead>
+                        <tr>
+                            <th><button class="head" id="filter" type="submit">reset filter</button></th>
+                            <th><button class="head" id="reset" type="reset">filter</button></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Aantal spelers</td>
+                            <td>
+                                <select class="browser-dropdown" id="spelers" name="spelers" aria-label="Aantal spelers">
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Aantal AI</td>
+                            <td>
+                                <select class="browser-dropdown" id="AI" name="IA" aria-label="Aantal AI spelers">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
 
                     </table>
+                </form>
+
 
 
                 <form id="filterForm">
