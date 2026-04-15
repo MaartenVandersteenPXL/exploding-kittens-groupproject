@@ -11,6 +11,8 @@ internal class Table: ITable
     Guid _id;
     ITablePreferences _preferences;
     IList<IPlayer> _seatedPlayers ;
+    
+    //Constructor
     internal Table(Guid id, ITablePreferences preferences)
     {
         this._id = id;
@@ -19,16 +21,20 @@ internal class Table: ITable
         
     }
 
+    //Public Properties - Table info
     public Guid Id => this._id;
-
     public ITablePreferences Preferences => this._preferences;
 
+
+    //Public Properties - Players
     public IReadOnlyList<IPlayer> SeatedPlayers => _seatedPlayers.AsReadOnly();
-
     public bool HasAvailableSeat => this._seatedPlayers.ToArray().Length < this._preferences.NumberOfPlayers;
-
+    
+    //Public Properties - Game
     public Guid GameId { get; set; } = Guid.Empty;
 
+
+    //Public Functies
     public void Join(User user)
     {
         if (!HasAvailableSeat)
