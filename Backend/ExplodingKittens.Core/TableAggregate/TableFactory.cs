@@ -11,12 +11,20 @@ internal class TableFactory : ITableFactory
     public TableFactory(IGamePlayStrategy gamePlayStrategy)
     {
         _gamePlayStrategy = gamePlayStrategy;
+
     }
 
     public ITable CreateNewForUser(User user, ITablePreferences preferences)
     {
         ITable createdTable = new Table(Guid.NewGuid(), preferences);
         createdTable.Join(user);
+
+        // Laat virtuele spelers toe om aan tafel aan te schuiven indien dit is gespecificeerd in de voorkeuren.
+        for (int i = 0; i < preferences.NumberOfArtificialPlayers; i++)
+        {
+            createdTable.LetArtificialPlayersJoin(_gamePlayStrategy);
+        }
+
         return createdTable;
     }
 }
