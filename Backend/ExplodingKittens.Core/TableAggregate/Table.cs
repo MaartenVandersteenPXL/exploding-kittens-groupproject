@@ -8,24 +8,21 @@ namespace ExplodingKittens.Core.TableAggregate;
 /// <inheritdoc cref="ITable"/>
 internal class Table: ITable
 {
-    Guid _id;
-    ITablePreferences _preferences;
-    IList<IPlayer> _seatedPlayers ;
+    private readonly IList<IPlayer> _seatedPlayers = new List<IPlayer>();
+
     internal Table(Guid id, ITablePreferences preferences)
     {
-        _id = id;
-        _preferences = preferences;
-        _seatedPlayers = new List<IPlayer>();
-        
+        Id = id;
+        Preferences = preferences;
     }
 
-    public Guid Id => _id;
+    public Guid Id { get; }
 
-    public ITablePreferences Preferences => _preferences;
+    public ITablePreferences Preferences { get; }
 
     public IReadOnlyList<IPlayer> SeatedPlayers => _seatedPlayers.AsReadOnly();
 
-    public bool HasAvailableSeat => _seatedPlayers.Count < _preferences.NumberOfPlayers;
+    public bool HasAvailableSeat => _seatedPlayers.Count < Preferences.NumberOfPlayers;
 
     public Guid GameId { get; set; } = Guid.Empty;
 
