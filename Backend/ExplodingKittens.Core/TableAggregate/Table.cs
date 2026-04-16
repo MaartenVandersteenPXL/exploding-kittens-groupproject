@@ -25,7 +25,7 @@ internal class Table: ITable
 
     public IReadOnlyList<IPlayer> SeatedPlayers => _seatedPlayers.AsReadOnly();
 
-    public bool HasAvailableSeat => _seatedPlayers.ToArray().Length < _preferences.NumberOfPlayers;
+    public bool HasAvailableSeat => _seatedPlayers.Count < _preferences.NumberOfPlayers;
 
     public Guid GameId { get; set; } = Guid.Empty;
 
@@ -40,7 +40,7 @@ internal class Table: ITable
             throw new InvalidOperationException("Deze speler zit al aan de tafel.");
         }
 
-        this._seatedPlayers.Add(new HumanPlayer(user.Id, user.ToString(), user.BirthDate));
+        _seatedPlayers.Add(new HumanPlayer(user.Id, user.ToString(), user.BirthDate));
         
        
     }
@@ -59,6 +59,6 @@ internal class Table: ITable
 
     public void LetArtificialPlayersJoin(IGamePlayStrategy gamePlayStrategy)
     {
-        _seatedPlayers.Add(new ComputerPlayer("AI Player " + _seatedPlayers.ToArray().Length, gamePlayStrategy));
+        _seatedPlayers.Add(new ComputerPlayer("AI Player " + _seatedPlayers.Count, gamePlayStrategy));
     }
 }
