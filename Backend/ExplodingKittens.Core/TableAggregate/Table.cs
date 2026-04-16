@@ -13,19 +13,19 @@ internal class Table: ITable
     IList<IPlayer> _seatedPlayers ;
     internal Table(Guid id, ITablePreferences preferences)
     {
-        this._id = id;
-        this._preferences = preferences;
-        this._seatedPlayers = new List<IPlayer>();
+        _id = id;
+        _preferences = preferences;
+        _seatedPlayers = new List<IPlayer>();
         
     }
 
-    public Guid Id => this._id;
+    public Guid Id => _id;
 
-    public ITablePreferences Preferences => this._preferences;
+    public ITablePreferences Preferences => _preferences;
 
     public IReadOnlyList<IPlayer> SeatedPlayers => _seatedPlayers.AsReadOnly();
 
-    public bool HasAvailableSeat => this._seatedPlayers.ToArray().Length < this._preferences.NumberOfPlayers;
+    public bool HasAvailableSeat => _seatedPlayers.ToArray().Length < _preferences.NumberOfPlayers;
 
     public Guid GameId { get; set; } = Guid.Empty;
 
@@ -59,6 +59,6 @@ internal class Table: ITable
 
     public void LetArtificialPlayersJoin(IGamePlayStrategy gamePlayStrategy)
     {
-        this._seatedPlayers.Add(new ComputerPlayer("AI Player " + this._seatedPlayers.ToArray().Length, gamePlayStrategy));
+        _seatedPlayers.Add(new ComputerPlayer("AI Player " + _seatedPlayers.ToArray().Length, gamePlayStrategy));
     }
 }

@@ -10,7 +10,7 @@ internal class TableFactory : ITableFactory
     IGamePlayStrategy _gamePlayStrategy;
     public TableFactory(IGamePlayStrategy gamePlayStrategy)
     {
-        this._gamePlayStrategy = gamePlayStrategy;
+        _gamePlayStrategy = gamePlayStrategy;
     }
 
     public ITable CreateNewForUser(User user, ITablePreferences preferences)

@@ -27,14 +27,14 @@ internal class TableManager : ITableManager
 
     public ITable CreateTable(User user, ITablePreferences preferences)
     {
-        ITable table = this._tableFactory.CreateNewForUser(user, preferences);
-        this._tableRepository.Add(table);
+        ITable table = _tableFactory.CreateNewForUser(user, preferences);
+        _tableRepository.Add(table);
         return table;
     }
 
     public ITable JoinTable(Guid tableId, User user)
     {
-       ITable table = this._tableRepository.Get(tableId);
+       ITable table = _tableRepository.Get(tableId);
        table.Join(user);
 
        return table;

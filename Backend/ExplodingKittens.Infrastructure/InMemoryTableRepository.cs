@@ -38,7 +38,7 @@ internal class InMemoryTableRepository : ITableRepository
         //and check if those tables have the same preferences and have seats available.
         //Put the tables that have the same preferences and have seats available in a list and return that list.
 
-        IReadOnlyList<ITable> list = this._tableDictionary.Values;
+        IReadOnlyList<ITable> list = _tableDictionary.Values;
         IList<ITable> result = [];
         foreach (ITable table in list)
         {
