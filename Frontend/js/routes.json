@@ -1,4 +1,5 @@
 {
     "/api/tables/with-available-seats": "/tables",
-    "/api/tables": "/tablesNew"
+    "/api/tables": "/tablesNew",
+    "/api/tables/*": "/tables/$1"
 }

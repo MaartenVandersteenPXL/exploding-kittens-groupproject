@@ -27,6 +27,27 @@
       "gameId": "4ab96g75-6828-5673-c4gd-3d074g77bgb7"
     },
     {
+      "id": "00000000-6828-5673-c4gd-3d074g77bgb7",
+      "preferences": {
+        "numberOfPlayers": 4,
+        "numberOfArtificialPlayers": 1
+      },
+      "seatedPlayers": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "name": "John",
+          "birthDate": "2000-01-01"
+        },
+        {
+          "id": "5bc07h86-7939-6784-d5he-4e185h88chc8",
+          "name": "Jane",
+          "birthDate": "1995-05-15"
+        }
+      ],
+      "hasAvailableSeat": true,
+      "gameId": "4ab96g75-6828-5673-c4gd-3d074g77bgb7"
+    },
+    {
       "id": "5bc07h86-7939-6784-d5he-4e185h88chc8",
       "preferences": {
         "numberOfPlayers": 3,
