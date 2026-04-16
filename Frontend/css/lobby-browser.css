@@ -65,87 +65,96 @@
 
 }
 
-/*
-.tables{
-    width: 65%;
-    height: auto;
-    margin: 5%;
-    border-radius: 15px;
-    overflow: hidden;
-    text-align: center;
-    color: #f8ddb7;
-    border: none;
-    border-collapse: separate;
-    border-spacing: 0;
-}
+/*toegevoegd voor lobby-browser-filter*/
 
 
-.filter{
-    width: 100%;
-    border-radius: 15px;
-    overflow: hidden;
-    text-align: center;
-    color: #5f2f45;
-    border: none;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.filter-wrapper{
-    width: 35%;
-    margin: 5%;
+.lobby-browser-filter {
     display: flex;
     flex-direction: column;
+
 }
 
-/* MAARTENS CODE 
-.browser {
-    background-color: #5f2f45;
+.lobby-browser-filter-form {
+    width: 100%;
+    height: 45%;
+}
+
+.lobby-browser-filter-table{
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: row;
-
-}
-
-.tables {
-    width: 65%;
-    height: auto;
-    margin: 5%;
     border-collapse: collapse;
-
-}
-
-.filter {
-    width: 35%;
-    margin: 5%;
-    border-collapse: collapse;
-
-}
-
-thead {
+    border-spacing: 0;
     background-color: #fabb64;
-    height: 2rem;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-left: 0.5em;
+
 }
 
-tbody {
+.lobby-browser-filter-table thead {
+    margin: 0.5rem;
+    height: 4em;
+
+
+}
+
+.lobby-browser-filter-table tbody{
     background-color: #f5ddbc;
-}
-.head {
-    width: 90%;
-    background-color: #5f2f45;
-    color: #f5ddbc;
-    margin: 5%;
-}
-td, th {
     text-align: center;
-    color: #5f2f45;
-}
-.ga-naar-tafel {
-    font-size: xx-large;
-    color: #f5ddbc;
-    background-color: #a02f40;
-    margin: 50% 0 50% 0
+    font-size: 1.5rem;
+    font-family: Abel;
+    color: #ab2d48;
+
 }
 
-*/
+.lobby-browser-filter-table td{
+    max-width: 100%;
+}
+
+.head {
+    font-family: Abel;
+    font-size: 1.5rem;
+    background-color: #5f2f45;
+    color: #fabb64;
+    border-radius: 15px;
+
+}
+
+.browser-dropdown {
+    font-size: 1.5rem;
+    background-color: #5f2f45;
+    color: #fabb64;
+    border-radius: 15px;
+}
+
+.browser-create-new-table {
+    font-size: 1.5rem;
+    background-color: #ab2d48;
+    color: #f5ddbc;
+    border-radius: 15px;
+}
+
+.lobby-browser-filter-button {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    justify-content: space-evenly;
+    margin: 0 0 3em 0.5em;
+}
+
+.browser-create-button {
+    width: 100%;
+    font-family: Abel;
+    font-size: 1.5rem;
+    background-color: #ab2d48;
+    color: #f5ddbc;
+    border-radius: 15px;
+    padding: 1.5em 0 1.5em 0
+}
+
+.lobby-browser-filter button:hover,
+.lobby-browser-filter-button button:hover {
+    transform: scale(1.2);
+}
