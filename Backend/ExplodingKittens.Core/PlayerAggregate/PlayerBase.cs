@@ -14,16 +14,16 @@ internal class PlayerBase : IPlayer
         BirthDate = birthDate;
     }
 
-    //Public properties  - player info
+    //Public Properties  - player info
     public Guid Id { get; }
     public string Name { get; }
     public DateOnly BirthDate { get; }
 
-    //Public properties - Hand info and logic
+    //Public Properties - Hand info and logic
     public IHand Hand => throw new NotImplementedException();
     public IReadOnlyList<Card> FutureCards { get; set; } = [];
 
-    //Public propeties - Game state
+    //Public Propeties - Game state
     public bool HasExplodingKitten => throw new NotImplementedException();
     public bool Eliminated => throw new NotImplementedException();
 
