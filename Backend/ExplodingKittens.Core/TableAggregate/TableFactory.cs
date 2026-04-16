@@ -15,8 +15,8 @@ internal class TableFactory : ITableFactory
 
     public ITable CreateNewForUser(User user, ITablePreferences preferences)
     {
-        ITable table = new Table(Guid.NewGuid(), preferences);
-        table.Join(user);
-        return table;
+        ITable createdTable = new Table(Guid.NewGuid(), preferences);
+        createdTable.Join(user);
+        return createdTable;
     }
 }

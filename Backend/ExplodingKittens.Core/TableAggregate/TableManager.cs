@@ -27,25 +27,25 @@ internal class TableManager : ITableManager
 
     public ITable CreateTable(User user, ITablePreferences preferences)
     {
-        ITable table = _tableFactory.CreateNewForUser(user, preferences);
-        _tableRepository.Add(table);
-        return table;
+        ITable newTable = _tableFactory.CreateNewForUser(user, preferences);
+        _tableRepository.Add(newTable);
+        return newTable;
     }
 
     public ITable JoinTable(Guid tableId, User user)
     {
-       ITable table = _tableRepository.Get(tableId);
-       table.Join(user);
+       ITable tableToJoin = _tableRepository.Get(tableId);
+        tableToJoin.Join(user);
 
-       return table;
+       return tableToJoin;
     }
 
     public void LeaveTable(Guid tableId, User user)
     {
-        ITable table = _tableRepository.Get(tableId);
-        table.Leave(user.Id);
+        ITable tableToLeave = _tableRepository.Get(tableId);
+        tableToLeave.Leave(user.Id);
 
-        if (table.SeatedPlayers.Count == 0)
+        if (tableToLeave.SeatedPlayers.Count == 0)
         {
             _tableRepository.Remove(tableId);
         }
@@ -53,16 +53,16 @@ internal class TableManager : ITableManager
 
     public IGame StartGameForTable(Guid tableId)
     {
-        ITable table = _tableRepository.Get(tableId);
+        ITable tableToStart = _tableRepository.Get(tableId);
 
-        if (table.HasAvailableSeat)
+        if (tableToStart.HasAvailableSeat)
         {
             throw new InvalidOperationException("Er zijn niet genoeg spelers aan de tafel.");
         }
 
-        IGame game = _gameFactory.CreateNewForTable(table);
-        table.GameId = game.Id;
-        _gameRepository.Add(game);
-        return game;
+        IGame newGame = _gameFactory.CreateNewForTable(tableToStart);
+        tableToStart.GameId = newGame.Id;
+        _gameRepository.Add(newGame);
+        return newGame;
     }
 }
