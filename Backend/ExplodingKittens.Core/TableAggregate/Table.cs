@@ -20,12 +20,16 @@ internal class Table: ITable
 
     public ITablePreferences Preferences { get; }
 
+
+    //Public Properties - Players
     public IReadOnlyList<IPlayer> SeatedPlayers => _seatedPlayers.AsReadOnly();
 
     public bool HasAvailableSeat => _seatedPlayers.Count < Preferences.NumberOfPlayers;
 
     public Guid GameId { get; set; } = Guid.Empty;
 
+
+    //Public Functies
     public void Join(User user)
     {
         if (!HasAvailableSeat)
