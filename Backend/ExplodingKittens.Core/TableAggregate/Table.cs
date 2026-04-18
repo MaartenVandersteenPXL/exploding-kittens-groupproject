@@ -6,16 +6,18 @@ using ExplodingKittens.Core.UserAggregate;
 namespace ExplodingKittens.Core.TableAggregate;
 
 /// <inheritdoc cref="ITable"/>
-internal class Table: ITable
+internal class Table : ITable
 {
     private readonly IList<IPlayer> _seatedPlayers = new List<IPlayer>();
 
+    //Constructor
     internal Table(Guid id, ITablePreferences preferences)
     {
         Id = id;
         Preferences = preferences;
     }
 
+    //Public Properties - Table info
     public Guid Id { get; }
 
     public ITablePreferences Preferences { get; }
@@ -26,6 +28,8 @@ internal class Table: ITable
 
     public bool HasAvailableSeat => _seatedPlayers.Count < Preferences.NumberOfPlayers;
 
+
+    //Public Properties - Game
     public Guid GameId { get; set; } = Guid.Empty;
 
 
@@ -36,14 +40,14 @@ internal class Table: ITable
         {
             throw new InvalidOperationException("De tafel is vol.");
         }
-        if(_seatedPlayers.Any(player => player.Id == user.Id))
+        if (_seatedPlayers.Any(player => player.Id == user.Id))
         {
             throw new InvalidOperationException("Deze speler zit al aan de tafel.");
         }
 
         _seatedPlayers.Add(new HumanPlayer(user.Id, user.ToString(), user.BirthDate));
-        
-       
+
+
     }
 
     public void Leave(Guid userId)
