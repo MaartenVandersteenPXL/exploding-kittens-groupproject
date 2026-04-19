@@ -111,7 +111,7 @@
     max-width: 100%;
 }
 
-.head {
+.browser-filter-head {
     font-family: Abel;
     font-size: 1.5rem;
     background-color: #5f2f45;
@@ -134,7 +134,7 @@
     border-radius: 15px;
 }
 
-.lobby-browser-filter-button {
+.lobby-browser-naar-tafel {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -144,7 +144,7 @@
     margin: 0 0 3em 0.5em;
 }
 
-.browser-create-button {
+.button-naar-tafel{
     width: 100%;
     font-family: Abel;
     font-size: 1.5rem;
