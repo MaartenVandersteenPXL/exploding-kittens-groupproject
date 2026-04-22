@@ -1,12 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Exploding Kittens Registratie </title>
-    <link rel="stylesheet" href="css/game.css" />
-    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
+    <meta charset="UTF-8"/>
+    <title>Exploding Kittens - Game</title>
+    <link rel="stylesheet" href="css/game.css"/>
     <script src="js/game.js" defer></script>
-
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
 </head>
 <body>
 
@@ -15,9 +14,61 @@
         <img src="./assets/cat-svgrepo-com.svg" alt="logo">
     </div>
     <nav class="sidebar-menu">
-        <a id="xxx4" href="">GAME ON</a>
-        <a id="xxx3" href="">XXX</a>
-        <a id="xxx2" href="">XXX</a>
-        <a id="xxx1" href="">XXX</a>
+        <a id="game-on" href="">GAME ON</a>
+        <a id="XXX" href="">XXX</a>
+        <a id="XXX1" href="">XXX</a>
+        <a id="XXX2" href="">XXX</a>
     </nav>
 </aside>
+
+<main>
+    <header>
+        <h1 id="headerTitle"></h1>
+        <h2 id="headerIntro"></h2>
+    </header>
+
+    <!-- Speelveld Cirkel -->
+    <section class="table-area">
+        <div class="circle">
+            <!-- Spelers rondom de tafel -->
+            <div class="opponent p2"><span>PLAYER 2</span>
+                <div class="nr-cards-opponents">10</div>
+            </div>
+            <div class="opponent p3"><span>PLAYER 3</span>
+                <div class="nr-cards-opponents">10</div>
+            </div>
+            <div class="opponent p1"><span>PLAYER 1</span>
+                <div class="nr-cards-opponents">10</div>
+            </div>
+            <div class="opponent p4"><span>PLAYER 4</span>
+                <div class="nr-cards-opponents">10</div>
+            </div>
+            <!-- Kaarten op tafel -->
+            <div class="discard-pile"><span>AFLEGSTAPEL</span>
+                <div class="discard-card-value" id="lastDiscardedCard">LEEG</div>
+            </div>
+            <div class="deck">
+                <div class="nr-carts-left-deck">45</div>
+                <button>Click here<br>to start</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard onderaan -->
+    <section class="hand-area">
+        <div class="hand-container" id="myHand">
+
+            <div class="own-card"><p>Placeholder</p><div class="cart-enum">0</div>
+            <!-- JS gaat hier kaarten in 'injecteren' -->
+            </div>
+
+            <div class="game-message">H
+                <p id="statusMessage">Start the game already</p>
+            </div>
+            <button id="playActionBtn" class="play-btn">SPEEL</button>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>
