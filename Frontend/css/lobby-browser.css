@@ -58,14 +58,6 @@
     justify-content: space-between;
 }
 
-.table-list-output tr td{
-    font-family: abel;
-    font-weight: 400;
-    font-variant-caps: all-small-caps;
-    font-size: 1.5em;
-
-}
-
 /*toegevoegd voor lobby-browser-filter*/
 
 
@@ -175,6 +167,23 @@
 #goToTable:hover {
     transform: scale(1.2);
     color: #f5ddbc ;
+}
+
+[class^="tableCandidate-"]:hover td {
+    font-weight: bold ;
+    cursor: pointer;
+    transition: font-weight 0.2s ease;
+}
+
+[class^="tableCandidate-"]:active {
+    font-weight: bold ;
+    cursor: pointer;
+    background-color: #6ec077;
+}
+
+[class^="tableCandidate-"].active{
+    font-weight: bold ;
+    background-color: #6ec077;
 }
 
 .gameId{

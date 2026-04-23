@@ -195,10 +195,10 @@ filterForm.addEventListener("submit", async (event) => {
             let tdSeatAvailable = document.createElement("td");
             
             row.classList.add(`tableCandidate-${index}`);
-            tdGameId.classList.add("gameId", `tableCandidate-${index}`);
-            tdSeatedPlayers.classList.add("seatedPlayers", `tableCandidate-${index}`);
-            tdNumberOfPlayers.classList.add("numberOfPlayers", `tableCandidate-${index}`);
-            tdSeatAvailable.classList.add("seatAvailable", `tableCandidate-${index}`);
+            tdGameId.classList.add("gameId", `candidateElement-${index}`);
+            tdSeatedPlayers.classList.add("seatedPlayers", `candidateElement-${index}`);
+            tdNumberOfPlayers.classList.add("numberOfPlayers", `candidateElement-${index}`);
+            tdSeatAvailable.classList.add("seatAvailable", `candidateElement-${index}`);
 
             //TODO id in full length for select
             tdGameId.textContent = table.gameId;
@@ -229,8 +229,11 @@ filterForm.addEventListener("reset", async (event) =>{
 lobbyTableList.addEventListener('click', (event) => {
     const row = event.target.closest('[class^="tableCandidate-"]');
     if(!row) return;
+    document.querySelectorAll('[class^="tableCandidate-"].active').forEach(x => x.classList.remove('active'))
+    row.classList.add('active');
     const tdGameId = row.querySelector(".gameId");
     playerTableCandidateId = tdGameId.innerText;
+    console.log("playerTableCandidate:", playerTableCandidateId);
 });
 
 //////BACKEND CALLS
