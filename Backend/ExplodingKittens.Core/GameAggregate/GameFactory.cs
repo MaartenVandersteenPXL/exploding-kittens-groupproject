@@ -1,8 +1,10 @@
+using System.Linq;
 using ExplodingKittens.Core.ActionAggregate;
 using ExplodingKittens.Core.ActionAggregate.Contracts;
 using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.CardAggregate.Contracts;
 using ExplodingKittens.Core.GameAggregate.Contracts;
+using ExplodingKittens.Core.PlayerAggregate.Contracts;
 using ExplodingKittens.Core.TableAggregate.Contracts;
 
 namespace ExplodingKittens.Core.GameAggregate;
@@ -22,17 +24,17 @@ internal class GameFactory : IGameFactory
 
     public IGame CreateNewForTable(ITable table)
     {
-        var players = table.SeatedPlayers.ToArray();
+        IPlayer[] players = table.SeatedPlayers.ToArray();
 
         // 1. Maak het deck
-        var deck = _cardDeckFactory.CreateStandardDeckWithoutExplodingKittens(players.Length);
+        ICardDeck deck = _cardDeckFactory.CreateStandardDeckWithoutExplodingKittens(players.Length);
 
         // 2. Het dek een eerste keer schudden
         deck.Shuffle();
         
 
         // 3. Deel kaarten uit (7 per persoon + 1 Defuse)
-        foreach (var player in players)
+        foreach (IPlayer player in players)
         {
             for (int i = 0; i < 7; i++)
             {
@@ -59,7 +61,12 @@ internal class GameFactory : IGameFactory
         deck.Shuffle();
 
         // 7. Jongste speler bepalen
-        var startingPlayer = players.OrderByDescending(p => p.BirthDate).First();
+        IPlayer? startingPlayer = players.OrderByDescending(p => p.BirthDate).FirstOrDefault();
+
+        if (startingPlayer == null)
+        {
+            throw new InvalidOperationException("Kan geen spelers vinden om het spel te starten.");
+        }
 
         // 8. Maak het spel aan
         return new Game(Guid.NewGuid(), players, deck, startingPlayer.Id, _actionFactory);
