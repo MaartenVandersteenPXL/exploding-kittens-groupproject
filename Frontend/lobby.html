@@ -48,16 +48,17 @@
                     </tr>
                 </tbody>
         </table>
-            <div class="lobby-browser-filter">
-                <form class="lobby-browser-filter-form">
-                    <table class="lobby-browser-filter-table">
-                        <thead>
+        
+        <div class="lobby-browser-filter">
+            <form class="lobby-browser-filter-form">
+                <table class="lobby-browser-filter-table">
+                    <thead>
                         <tr>
                             <th><button class="browser-filter-head" id="filter" type="submit">reset filter</button></th>
                             <th><button class="browser-filter-head" id="reset" type="reset">filter</button></th>
                         </tr>
-                        </thead>
-                        <tbody>
+                    </thead>
+                    <tbody>
                         <tr>
                             <td>Aantal spelers</td>
                             <td>
@@ -81,17 +82,19 @@
                                 </select>
                             </td>
                         </tr>
-                        </tbody>
+                    </tbody>
 
-                    </table>
-                </form>
-                <div class="lobby-browser-naar-tafel">
-                    <button class="button-naar-tafel">ga naar tafel</button>
-                </div>
+                </table>
+            </form>
+            <div class="lobby-browser-naar-tafel">
+                <button class="button-naar-tafel" id="goToTable">ga naar tafel</button>
             </div>
             <p class="backend-error" id="backendError"></p>
-    
-        </section>
+        </div>
+        
+        
+        
+    </section>
 
     <section class="new-table">
         <form id="newTableForm" class="new-table-form">

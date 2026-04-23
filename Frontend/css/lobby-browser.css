@@ -13,6 +13,7 @@
 .lobby-browser{
     flex-direction: row;
     flex: 1;
+    gap:1rem;
 }
 
 .lobby-teller{
@@ -31,7 +32,7 @@
 
 .table-list thead{
     background-color: #fabb64;
-    height: auto;
+    height: 60px;
     border-radius: 15px 15px 0px 0px;
 }
 
@@ -71,90 +72,111 @@
 .lobby-browser-filter {
     display: flex;
     flex-direction: column;
-
+    width: 35%;
+    justify-content: space-between;
 }
+
 
 .lobby-browser-filter-form {
-    width: 100%;
-    height: 45%;
+    height: auto;
 }
+
+.lobby-browser-naar-tafel{
+    height: 25%;
+}
+
 
 .lobby-browser-filter-table{
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    background-color: #fabb64;
+    background-color: #f5ddbc;
     border-radius: 15px;
-    overflow: hidden;
-    margin-left: 0.5em;
-
+    border: none;
 }
+
 
 .lobby-browser-filter-table thead {
-    margin: 0.5rem;
-    height: 4em;
-
-
+    display: flex;
+    align-items: center;
+    background-color: #fabb64;
+    height: 60px;
+    border-radius: 15px 15px 0px 0px;
+    border: none;
 }
+
+.lobby-browser-filter-table thead tr {
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+}
+
 
 .lobby-browser-filter-table tbody{
-    background-color: #f5ddbc;
-    text-align: center;
-    font-size: 1.5rem;
-    font-family: Abel;
-    color: #ab2d48;
-
+   margin: 1rem 0.5rem 1rem 0.5rem;
 }
 
-.lobby-browser-filter-table td{
-    max-width: 100%;
+.lobby-browser-filter-table tbody tr{
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
 }
+
 
 .browser-filter-head {
-    font-family: Abel;
+    font-family: 'Abel';
     font-size: 1.5rem;
     background-color: #5f2f45;
-    color: #fabb64;
+    color: #f8ddb7;
     border-radius: 15px;
-
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
+
+.browser-filter-head:hover{
+    transform: scale(1.2);
+    color: #f5ddbc ;
+}
+
 
 .browser-dropdown {
+    font-family: 'Abel';
     font-size: 1.5rem;
     background-color: #5f2f45;
-    color: #fabb64;
+    color: #f8ddb7;
     border-radius: 15px;
-}
-
-.browser-create-new-table {
-    font-size: 1.5rem;
-    background-color: #ab2d48;
-    color: #f5ddbc;
-    border-radius: 15px;
+    border: none;
+    cursor: pointer;
 }
 
 .lobby-browser-naar-tafel {
     display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    justify-content: space-evenly;
-    margin: 0 0 3em 0.5em;
+    justify-content: center;
 }
 
-.button-naar-tafel{
-    width: 100%;
-    font-family: Abel;
-    font-size: 1.5rem;
-    background-color: #ab2d48;
-    color: #f5ddbc;
+#goToTable {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    background-color: #a02f40;
+    color: #f8ddb7;
+    font-family: 'Abel';
+    font-size: 2em;
     border-radius: 15px;
-    padding: 1.5em 0 1.5em 0
+    border: none;
+    padding: 1rem;
+    min-width: auto;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.lobby-browser-filter button:hover,
-.lobby-browser-filter-button button:hover {
+#goToTable:hover {
     transform: scale(1.2);
+    color: #f5ddbc ;
+}
+
+#backendError{
+    flex-grow: 2;
 }
