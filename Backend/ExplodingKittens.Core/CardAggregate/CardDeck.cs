@@ -27,7 +27,9 @@ internal class CardDeck: ICardDeck
     {
         if(_cards.Count >= 1)
         {
-            return _cards.FirstOrDefault();
+            Card cardToReturn = _cards.FirstOrDefault();
+            _cards.Remove(cardToReturn);
+            return cardToReturn;
         }
         throw new DataNotFoundException();
     }
@@ -41,9 +43,9 @@ internal class CardDeck: ICardDeck
     {
         if (_cards.Count >= numberOfCards)
         {
-            return (IReadOnlyList<Card>)_cards.Take(numberOfCards);
+            return _cards.Take(numberOfCards).ToList();
         }
-        return (IReadOnlyList<Card>)_cards.Take(_cards.Count);
+        return _cards.Take(_cards.Count).ToList();
     }
 
     public void Shuffle()
