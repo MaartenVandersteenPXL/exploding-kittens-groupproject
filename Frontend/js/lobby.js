@@ -57,8 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
     toonSectie(lobbyBrowser,titles[0], intros[0] );
 });
 
-///// Events
-//ROUTES
+///////// Events
+////ROUTES
+//newTable
 createNewTableNav.addEventListener("click", (event) => {
     event.preventDefault();
     //TODO reset css clicked candidate table
@@ -85,7 +86,7 @@ logout.addEventListener("click", async (Event) => {
     User.delete();
 })
 
-//////BUTTON ACTIONS
+////BUTTON ACTIONS
 //newTable
 createNewTableButton.addEventListener("click", async (event) => {
     event.preventDefault();
@@ -127,20 +128,10 @@ goToTableButton.addEventListener("click", async (event) => {
     //LOGICA OM TAFEL TE JOINEN
     
     //check playerTableId
-    console.log("TAFEL ID GEKLIKT:", playerTableCandidateId)
     if(!playerTableCandidateId){
-        backendError = "Gelieve een tafel te selecteren";
-        //TODO reset css clicked candidate table
-    }
-    //TODO - JOIN TABLE WAIT FOR BE
-    console.log("TOFIX: join user on player table L131")
-    /*
-    //join table
-    let joinedResult = await playerJoinTable(playerTableCandidateId);
-    if(!joinedResult){
+        backendError.textContent = "Gelieve een tafel te selecteren";
         return;
     }
-        */
     //BUILD Players table
     let playersTable = await fetchPlayerTable(playerTableCandidateId);
     let playersTotal = playersTable.preferences.numberOfArtificialPlayers + playersTable.preferences.numberOfPlayers;
@@ -164,18 +155,10 @@ startTableButton.addEventListener("click", () => {
     console.log("TOFIX: start players table - L158");
 });
 
-///// Functions
-//Page view - Secties wisselen
-function toonSectie(sectie, title, intro) {
-    [newTable, lobbyBrowser, lobbyTable].forEach(s => s.style.display = "none");
-    sectie.style.display = "";
-    headerTitle.textContent = title
-    headerIntro.textContent = intro + user.userName
-}
-
-//EVENT - browser filter - submit fiter
+////FORMS
+//browser filter - submit fiter
 filterForm.addEventListener("submit", async (event) => {
-
+        playerTableCandidateId == "";
         lobbyTableList.replaceChildren();
         lobbyTablePlaceholder.style.display="none"
         event.preventDefault()
@@ -215,18 +198,23 @@ filterForm.addEventListener("submit", async (event) => {
         });
 });
 
+//browser filter - reset filter
 filterForm.addEventListener("reset", async (event) =>{
     event.preventDefault();
+    playerTableCandidateId = "";
+    backendError.textContent="";
     lobbyTableList.replaceChildren();
-    lobbyTablePlaceholder.style.display=""
+    lobbyTablePlaceholder.style.display="";
     lobbyTableList.appendChild(lobbyTablePlaceholder);
     numberOfPlayers.selectedIndex = 0;
     numberOfArtificialPlayers.selectedIndex = 0;
 
 })
 
-//Event tableCandidate
+/////ACTIONS
+//tableCandidate
 lobbyTableList.addEventListener('click', (event) => {
+    backendError.textContent="";
     const row = event.target.closest('[class^="tableCandidate-"]');
     if(!row) return;
     document.querySelectorAll('[class^="tableCandidate-"].active').forEach(x => x.classList.remove('active'))
@@ -236,7 +224,16 @@ lobbyTableList.addEventListener('click', (event) => {
     console.log("playerTableCandidate:", playerTableCandidateId);
 });
 
-//////BACKEND CALLS
+///////// FUNCTIONS
+//Page view - Secties wisselen
+function toonSectie(sectie, title, intro) {
+    [newTable, lobbyBrowser, lobbyTable].forEach(s => s.style.display = "none");
+    sectie.style.display = "";
+    headerTitle.textContent = title
+    headerIntro.textContent = intro + user.userName
+}
+
+///////// BACKEND CALLS
 //Fetch tables
 async function fetchTables(filterData){
     try {
