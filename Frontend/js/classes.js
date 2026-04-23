@@ -29,6 +29,10 @@ export class Token {
     static load(){
         return sessionStorage.getItem("token");
     }
+
+    delete(){
+        sessionStorage.removeItem("token");
+    }
 }
 
 //Table

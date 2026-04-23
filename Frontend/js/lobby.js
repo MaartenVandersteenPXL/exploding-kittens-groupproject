@@ -16,6 +16,7 @@ import { User, Token, Tables, Table} from "./classes.js";
 //nav
     const createNewTableNav = document.getElementById("nieuweTafel")
     const leaveTableNav = document.getElementById("verlaatTafel")
+    const logout = document.getElementById("logout");
 //filter
     const filterForm = document.getElementById("filterForm")
     const numberOfPlayers = document.getElementById("aantalSpelers")
@@ -76,6 +77,11 @@ leaveTableNav.addEventListener("click", async (event) => {
     //let leaveResult = await playerLeaveTable(playerTableCandidateId)
     //if(!result) return
     toonSectie(lobbyBrowser, titles[0], intros[0]);
+})
+
+//LogOut
+logout.addEventListener("click", async (Event) => {
+    Token.delete();
 })
 
 //////BUTTON ACTIONS
