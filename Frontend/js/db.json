@@ -104,6 +104,11 @@
       "numberOfPlayers": 2,
       "numberOfArtificialPlayers": 2,
       "id": 8
+    },
+    {
+      "numberOfPlayers": null,
+      "numberOfArtificialPlayers": null,
+      "id": 9
     }
   ]
 }

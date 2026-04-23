@@ -38,7 +38,7 @@ import { User, Token, Tables, Table} from "./classes.js";
 
 //Button
     const createNewTableButton = document.getElementById("createNewTableButton");
-    const goToTableButton = document.querySelector(".go-to-table");
+    const goToTableButton = document.getElementById("goToTable");
     const startTableButton = document.querySelector(".start-table");
 //error
     const backendError = document.getElementById("backendError");
@@ -60,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
 //ROUTES
 createNewTableNav.addEventListener("click", (event) => {
     event.preventDefault();
-    playerTableCandidate = "";
     //TODO reset css clicked candidate table
     createNewTableNav.style.display="none"
     leaveTableNav.style.display="none"
@@ -167,16 +166,16 @@ function toonSectie(sectie, title, intro) {
     headerIntro.textContent = intro + user.userName
 }
 
-//EVENT - browser filter
+//EVENT - browser filter - submit fiter
 filterForm.addEventListener("submit", async (event) => {
-        //TODO reset lobbyTableList on new filter
+
         lobbyTableList.replaceChildren();
         lobbyTablePlaceholder.style.display="none"
         event.preventDefault()
         //dummy data
         const filterData = {
-            NumberOfPlayers : numberOfPlayers,
-            NumberOfArtificialPlayers: numberOfArtificialPlayers,
+            NumberOfPlayers : numberOfPlayers.value,
+            NumberOfArtificialPlayers: numberOfArtificialPlayers.value,
         }
         
         let tableList = await fetchTables(filterData)
@@ -195,7 +194,7 @@ filterForm.addEventListener("submit", async (event) => {
             tdSeatAvailable.classList.add("seatAvailable", `tableCandidate-${index}`);
 
             //TODO id in full length for select
-            tdGameId.textContent = table.gameId.substring(0,5);
+            tdGameId.textContent = table.gameId;
             tdSeatedPlayers.textContent = table.seatedPlayers.length;
             tdNumberOfPlayers.textContent = String(table.preferences.numberOfPlayers + table.preferences.numberOfArtificialPlayers);
             tdSeatAvailable.textContent = table.hasAvailableSeat ? "ja": "nee"
@@ -208,6 +207,16 @@ filterForm.addEventListener("submit", async (event) => {
             lobbyTableList.appendChild(row);
         });
 });
+
+filterForm.addEventListener("reset", async (event) =>{
+    event.preventDefault();
+    lobbyTableList.replaceChildren();
+    lobbyTablePlaceholder.style.display=""
+    lobbyTableList.appendChild(lobbyTablePlaceholder);
+    numberOfPlayers.selectedIndex = 0;
+    numberOfArtificialPlayers.selectedIndex = 0;
+
+})
 
 //Event tableCandidate
 lobbyTableList.addEventListener('click', (event) => {

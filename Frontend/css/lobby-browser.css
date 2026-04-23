@@ -177,6 +177,13 @@
     color: #f5ddbc ;
 }
 
+.gameId{
+    max-width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 #backendError{
     flex-grow: 2;
 }
