@@ -14,6 +14,10 @@ export class User {
     static load(){
         return JSON.parse(sessionStorage.getItem("user"));
     }
+
+    delete(){
+        sessionStorage.removeItem("user");
+    }
 }
 
 //Token

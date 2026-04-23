@@ -82,6 +82,7 @@ leaveTableNav.addEventListener("click", async (event) => {
 //LogOut
 logout.addEventListener("click", async (Event) => {
     Token.delete();
+    User.delete();
 })
 
 //////BUTTON ACTIONS
