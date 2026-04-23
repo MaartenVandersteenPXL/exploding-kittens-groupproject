@@ -70,6 +70,7 @@ createNewTableNav.addEventListener("click", (event) => {
 
 //leavePlayersTable
 leaveTableNav.addEventListener("click", async (event) => {
+    console.log("TO DO:: reset form when leaving table")
     playerTableCandidateId = "";
     createNewTableNav.style.display="";
     leaveTableNav.style.display="none"
