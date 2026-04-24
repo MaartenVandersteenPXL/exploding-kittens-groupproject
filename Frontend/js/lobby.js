@@ -237,7 +237,6 @@ async function fetchTables(filterData){
     try {
         
         //REAL API CALL
-        
         const params = new URLSearchParams(filterData)
         const response = await fetch(`https://localhost:3000/api/Tables/with-available-seats?{params}`, {
             method: "GET",
