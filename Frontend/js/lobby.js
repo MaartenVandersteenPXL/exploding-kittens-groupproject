@@ -11,16 +11,17 @@ import { User, Token, Tables, Table} from "./classes.js";
 
 ///// elements
 //header
-    const headerTitle = document.getElementById("headerTitle")
-    const headerIntro = document.getElementById("headerIntro")
+    const headerTitle = document.getElementById("headerTitle");
+    const headerIntro = document.getElementById("headerIntro");
 //nav
-    const createNewTableNav = document.getElementById("nieuweTafel")
-    const leaveTableNav = document.getElementById("verlaatTafel")
+    const lobbyNav = document.getElementById("lobby");
+    const createNewTableNav = document.getElementById("nieuweTafel");
+    const leaveTableNav = document.getElementById("verlaatTafel");
     const logout = document.getElementById("logout");
 //filter
-    const filterForm = document.getElementById("filterForm")
-    const numberOfPlayers = document.getElementById("aantalSpelers")
-    const numberOfArtificialPlayers = document.getElementById("aiSpelers")
+    const filterForm = document.getElementById("filterForm");
+    const numberOfPlayers = document.getElementById("aantalSpelers");
+    const numberOfArtificialPlayers = document.getElementById("aiSpelers");
 //table -new
     const newTable = document.querySelector(".new-table");
 
@@ -70,14 +71,10 @@ createNewTableNav.addEventListener("click", (event) => {
 
 //leavePlayersTable
 leaveTableNav.addEventListener("click", async (event) => {
-    console.log("TO DO:: reset form when leaving table")
+    let leaveResult = await playerLeaveTable(playerTableCandidateId)
     playerTableCandidateId = "";
     createNewTableNav.style.display="";
-    leaveTableNav.style.display="none"
-    //TODO - leaveResult - WAIT FOR BACKEND
-    console.log("TOFIX: leave user from player table L76")
-    //let leaveResult = await playerLeaveTable(playerTableCandidateId)
-    //if(!result) return
+    leaveTableNav.style.display="none";
     toonSectie(lobbyBrowser, titles[0], intros[0]);
 })
 
@@ -124,10 +121,9 @@ createNewTableButton.addEventListener("click", async (event) => {
 //selectPlayersTable
 goToTableButton.addEventListener("click", async (event) => {
     event.preventDefault();
-    createNewTableNav.style.display="none"
-    leaveTableNav.style.display=""
-    //LOGICA OM TAFEL TE JOINEN
-    
+    lobbyNav.style.display="none";
+    createNewTableNav.style.display="none";
+    leaveTableNav.style.display="";
     //check playerTableId
     if(!playerTableCandidateId){
         backendError.textContent = "Gelieve een tafel te selecteren";
@@ -137,6 +133,7 @@ goToTableButton.addEventListener("click", async (event) => {
     let playersTable = await fetchPlayerTable(playerTableCandidateId);
     let playersTotal = playersTable.preferences.numberOfArtificialPlayers + playersTable.preferences.numberOfPlayers;
     let playerTableListOutput = document.querySelector(".table-player-output")
+    playerTableListOutput.replaceChildren();
     for(let player = 0; player < playersTotal; player++ ){
          let row = document.createElement("tr");
          let tdSeatedPlayerSlot = document.createElement("td");
@@ -152,7 +149,7 @@ goToTableButton.addEventListener("click", async (event) => {
 });
 //startPlayersTable
 startTableButton.addEventListener("click", () => {
-    //TODO LOGICA voor een game te starten
+    window.location.href = "game.html?gameId=" + encodeURIComponent(playerTableCandidateId);
     console.log("TOFIX: start players table - L158");
 });
 
