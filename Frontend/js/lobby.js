@@ -1,5 +1,5 @@
 //IMPORTS
-import { User, Token, Tables, Table} from "./classes.js";
+import { User, Token, Tables, Table, ProblemDetails} from "./classes.js";
 
 //classes
     let user = User.load();
@@ -257,6 +257,8 @@ async function fetchTables(filterData){
         //END TEST DATA
         const dataTables = await response.json();
         if(!response.ok){
+            const problemDetails = new ProblemDetails(dataPlayerTable)
+            console.log("TROUBLES"+ problemDetails);
             throw new Error(dataTables.message );
         }
         const tables = new Tables(dataTables);
@@ -334,6 +336,8 @@ async function fetchPlayerTable(gameId){
         //END TEST DATA
         const dataPlayerTable = await response.json();
         if(!response.ok){
+            const problemDetails = new ProblemDetails(dataPlayerTable)
+            console.log("TROUBLES"+ problemDetails);
             throw new Error(dataPlayerTable.message );
         }
         const playerTable = new Table(
@@ -397,7 +401,9 @@ async function playerLeaveTable(gameId){
         
         const dataLeavedTable = await response.json();
         if(!response.ok){
-            throw new Error(dataJoinedTable.message );
+            const problemDetails = new ProblemDetails(dataPlayerTable)
+            console.log("TROUBLES"+ problemDetails);
+            throw new Error(dataLeavedTable.message );
         }
         return dataLeavedTable.message;
     }catch(error){

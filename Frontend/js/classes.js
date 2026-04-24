@@ -70,3 +70,15 @@ export class Tables {
         this.tables = dataTables.map(t => new Table(t.id, t.preferences, t.seatedPlayers, t.hasAvailableSeat, t.gameId));
     }
 }
+
+//ProblemDetails
+
+export class ProblemDetails{
+    constructor(type, title,status,detail,instanse){
+        this.type = type,
+        this.title = title,
+        this.status = status,
+        this.detail = detail,
+        this.instanse = instanse
+    }
+}
