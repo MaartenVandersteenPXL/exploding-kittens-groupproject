@@ -48,11 +48,17 @@ internal class Hand : IHand
 
     public Card? PickRandomCard()
     {
-        int random = Random.Shared.Next(_hand.Count);
-        Card randomKaart = _hand[random];
-        _hand.RemoveAt(random);
-        return randomKaart;
-        
+        if (_hand.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            int random = Random.Shared.Next(_hand.Count);
+            Card randomKaart = _hand[random];
+            _hand.RemoveAt(random);
+            return randomKaart;
+        }
         //throw new NotImplementedException();
     }
 
@@ -64,7 +70,7 @@ internal class Hand : IHand
             _hand.RemoveAt(x);
             return card;
         }
-        else { return PickRandomCard(); }
+        else { return null; }
         
         //throw new NotImplementedException();
     }
