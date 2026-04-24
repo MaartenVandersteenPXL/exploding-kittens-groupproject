@@ -237,7 +237,7 @@ async function fetchTables(filterData){
     try {
         
         //REAL API CALL
-        /*
+        
         const params = new URLSearchParams(filterData)
         const response = await fetch(`https://localhost:3000/api/Tables/with-available-seats?{params}`, {
             method: "GET",
@@ -245,8 +245,8 @@ async function fetchTables(filterData){
                 'Content-type' : 'Application/json',
                 "Authorization": "Bearer" + Token.load()
             }
-        })*/
-
+        })
+        /*
         //TEST DATA
         const response = await fetch("http://localhost:3000/api/tables/with-available-seats", {
             method: "GET",
@@ -255,6 +255,7 @@ async function fetchTables(filterData){
             }
         })
         //END TEST DATA
+        */
         const dataTables = await response.json();
         if(!response.ok){
             const problemDetails = new ProblemDetails(dataPlayerTable)
@@ -276,7 +277,7 @@ async function fetchTables(filterData){
 async function createTable(players, ai){
     try{
         //REAL API CALL
-        /*
+        
         let response = await fetch("https://localhost:5051/api/Tables",{
             method: "POST",
             body: JSON.stringify({
@@ -288,7 +289,7 @@ async function createTable(players, ai){
                 'Authorization': "Bearer" + Token.load(),
             }
         });
-        */
+        /*
         //TEST DATA
         const response = await fetch("http://localhost:3000/api/Tables", {
             method: "POST",
@@ -301,6 +302,7 @@ async function createTable(players, ai){
             }
         })
         // END TEST DATA
+        */
         const createdTable = await response.json();
         if (!response.ok) {
             throw new Error(createdTable.message);
@@ -316,7 +318,7 @@ async function createTable(players, ai){
 async function fetchPlayerTable(gameId){
     try {
         //REAL API CALL
-        /*
+        
         const response = await fetch(`https://localhost:3000/api/Tables/${gameId}`, {
             method: "GET",
             headers: {
@@ -324,7 +326,7 @@ async function fetchPlayerTable(gameId){
                 "Authorization": "Bearer" + Token.load()
             }
         });
-        */
+        /*
         //TEST DATA
         let testGameId = "00000000-6828-5673-c4gd-3d074g77bgb7"
         const response = await fetch(`http://localhost:3000/api/tables/${testGameId}`, {
@@ -334,6 +336,7 @@ async function fetchPlayerTable(gameId){
             }
         })
         //END TEST DATA
+        */
         const dataPlayerTable = await response.json();
         if(!response.ok){
             const problemDetails = new ProblemDetails(dataPlayerTable)
@@ -398,7 +401,6 @@ async function playerLeaveTable(gameId){
         //TEST DATA
         // Geen test endpoint
         // END TEST DATA
-        
         const dataLeavedTable = await response.json();
         if(!response.ok){
             const problemDetails = new ProblemDetails(dataPlayerTable)
