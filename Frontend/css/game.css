@@ -355,9 +355,7 @@ header{
     font-family: 'Abel';
     font-size: 1.4em;
     font-weight: bold;
-    cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: all 0.2s ease;
 }
 
 .play-btn:hover {
