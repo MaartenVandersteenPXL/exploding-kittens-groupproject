@@ -7,16 +7,9 @@
     padding:  1.5rem 1rem 2rem 1rem;
     display: flex;
     flex-direction: column;
-}
-
-
-.lobby-table{
     flex-direction: row;
     flex: 1;
-}
-
-.filter{
-    flex-direction: column;
+    gap:1rem;
 }
 
 
@@ -31,7 +24,7 @@
 
 .table-player thead{
     background-color: #fabb64;
-    height: auto;
+    height: 60px;
     border-radius: 15px 15px 0px 0px;
 }
 
@@ -63,4 +56,86 @@
     font-variant-caps: all-small-caps;
     font-size: 1.5em;
 
+}
+
+/* Filter */
+
+.lobby-teller {
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    justify-content: space-between;
+}
+
+.lobby-tafel-naar-game{
+    height: 25%;
+}
+
+.lobbyTeller{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    background-color: #f5ddbc;
+    border-radius: 15px;
+    border: none;
+}
+
+.lobbyTeller thead {
+    display: flex;
+    align-items: center;
+    background-color: #fabb64;
+    height: 60px;
+    border-radius: 15px 15px 0px 0px;
+    border: none;
+}
+
+.lobbyTeller thead tr {
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    font-family: 'Abel';
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    font-size: 1.5em;
+}
+
+.lobbyTeller tbody{
+   margin: 1rem 0.5rem 1rem 0.5rem;
+}
+
+.lobbyTeller tbody tr{
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.lobby-tafel-naar-game {
+    display: flex;
+    justify-content: center;
+}
+
+#goToGame {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    background-color: #a02f40;
+    color: #f8ddb7;
+    font-family: 'Abel';
+    font-size: 2em;
+    border-radius: 15px;
+    border: none;
+    padding: 1rem;
+    min-width: auto;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+#goToGame:hover {
+    transform: scale(1.2);
+    color: #f5ddbc ;
+}
+
+#backendErrorPlayerTable{
+    flex-grow: 2;
 }

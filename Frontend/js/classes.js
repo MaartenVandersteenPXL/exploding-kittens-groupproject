@@ -14,6 +14,10 @@ export class User {
     static load(){
         return JSON.parse(sessionStorage.getItem("user"));
     }
+
+    delete(){
+        sessionStorage.removeItem("user");
+    }
 }
 
 //Token
@@ -28,6 +32,10 @@ export class Token {
 
     static load(){
         return sessionStorage.getItem("token");
+    }
+
+    delete(){
+        sessionStorage.removeItem("token");
     }
 }
 
@@ -60,5 +68,17 @@ export class Table {
 export class Tables {
     constructor(dataTables){
         this.tables = dataTables.map(t => new Table(t.id, t.preferences, t.seatedPlayers, t.hasAvailableSeat, t.gameId));
+    }
+}
+
+//ProblemDetails
+
+export class ProblemDetails{
+    constructor(type, title,status,detail,instanse){
+        this.type = type,
+        this.title = title,
+        this.status = status,
+        this.detail = detail,
+        this.instanse = instanse
     }
 }

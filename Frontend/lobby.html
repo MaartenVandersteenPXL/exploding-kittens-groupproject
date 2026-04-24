@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="css/lobby-newTable.css"/>
     <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
     <script type="module" src="js/lobby.js"></script>
-    <script src="js/lobby-browser.js"></script>
-    <script src="js/lobby-newTable.js"></script>
-    <script src="js/lobby-table.js"></script>
 
 </head>
 <body>
@@ -50,19 +47,21 @@
         </table>
         
         <div class="lobby-browser-filter">
-            <form class="lobby-browser-filter-form">
-                <table class="lobby-browser-filter-table">
+            <form class="lobby-browser-filter-form" id="filterForm">
+                
+                <table class="lobby-browser-filter-table" >
                     <thead>
                         <tr>
-                            <th><button class="browser-filter-head" id="filter" type="submit">reset filter</button></th>
-                            <th><button class="browser-filter-head" id="reset" type="reset">filter</button></th>
+                            <th><button class="browser-filter-head" id="reset" type="reset">reset filter</button></th>
+                            <th><button class="browser-filter-head" id="filter" type="submit">filter</button></th>
                         </tr>
                     </thead>
+                    
                     <tbody>
                         <tr>
                             <td>Aantal spelers</td>
                             <td>
-                                <select class="browser-dropdown" id="spelers" name="spelers" aria-label="Aantal spelers">
+                                <select class="browser-dropdown" id="aantalSpelers" name="spelers" aria-label="Aantal spelers">
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                     <option value="4">4</option>
@@ -73,7 +72,7 @@
                         <tr>
                             <td>Aantal AI</td>
                             <td>
-                                <select class="browser-dropdown" id="AI" name="IA" aria-label="Aantal AI spelers">
+                                <select class="browser-dropdown" id="aiSpelers" name="IA" aria-label="Aantal AI spelers">
                                     <option value="0">0</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -91,7 +90,6 @@
             </div>
             <p class="backend-error" id="backendError"></p>
         </div>
-        
         
         
     </section>
@@ -114,41 +112,45 @@
     </section>
 
     <section class="lobby-table">
-            <table class="table-player">
+            
+        <table class="table-player">
                 <thead>
                     <tr>
                         <th>Speler</th>
                     </tr>
                 </thead>
                 <tbody class="table-player-output">
-                    <tr>
-                        <td>Dit is een test rij</td>
-                    </tr>
-                    
+                </tbody>
+        </table>
+        
+        
+        <div class="lobby-teller">
+            <!--
+            //OVERBODIG?
+            <table class="lobbyTeller">
+                <thead>
+                <tr>
+                    <th colspan="2">Lobby teller</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Aantal spelers</td>
+                    <td>2/5</td>
+                </tr>
+                <tr>
+                    <td>Aantal AI</td>
+                    <td>2</td>
+                </tr>
                 </tbody>
             </table>
-            
-            <div class="lobby-teller">
-                <table class="lobbyTeller">
-                    <thead>
-                    <tr>
-                        <th colspan="2">Lobby teller</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Aantal spelers</td>
-                        <td>2/5</td>
-                    </tr>
-                    <tr>
-                        <td>Aantal AI</td>
-                        <td>2</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <button class="start-table" >Start tafel</button>
+        -->
+            <div class="lobby-tafel-naar-game">
+                <button class="start-table" id=goToGame >Start tafel</button>
             </div>
+            <p class="backend-error" id="backendErrorPlayerTable"></p>
+        </div>
+        
     </section>
 
 </main>

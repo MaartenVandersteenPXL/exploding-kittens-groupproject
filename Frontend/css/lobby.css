@@ -113,6 +113,7 @@ header{
     text-decoration: none;
     color: #5f2f45 ;
     transition: transform 0.2s ease, color 0.2s ease;
+    cursor: pointer;
 }
 
 .sidebar-menu a:first-child{
