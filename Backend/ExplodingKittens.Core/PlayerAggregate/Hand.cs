@@ -39,9 +39,12 @@ internal class Hand : IHand
 
     public void InsertCard(Card card)
     {
-        _hand.Add(card);
-        _hand.Sort();
-        
+        int positie = 0;
+        while(positie < _hand.Count && _hand[positie] < card)
+        {
+            positie++;
+        }
+        _hand.Insert(positie, card);
         
         //throw new NotImplementedException();
     }
