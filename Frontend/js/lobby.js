@@ -26,10 +26,10 @@ import { User, Token, Tables, Table, ProblemDetails} from "./classes.js";
     const newTable = document.querySelector(".new-table");
 
     //HAMZA
-    const players = parseInt(document.getElementById("numberOfPlayers").value);
-    const ai = parseInt(document.getElementById("numberOfAIPlayers").value);
-    const playersError = document.getElementById("numberOfPlayersError");
-    const aiError = document.getElementById("numberOfAIPlayersError");
+    const numberOfNewPlayers =document.getElementById("numberOfNewPlayers");
+    const numberOfNewAiPlayers = document.getElementById("numberOfNewAIPlayers");
+    const newPlayersError = document.getElementById("numberOfNewPlayersError");
+    const newAiError = document.getElementById("numberOfNewAIPlayersError");
     //end HAMZA
 
 //table-browser
@@ -89,30 +89,30 @@ logout.addEventListener("click", async (Event) => {
 createNewTableButton.addEventListener("click", async (event) => {
     event.preventDefault();
     ////LOGICA OM TAFEL AAN TE MAKEN OP BACKEND
-    //HAMZA code
     //reset
-    playersError.textContent = "";
-    aiError.textContent = "";
+    newPlayersError.textContent = "";
+    newAiError.textContent = "";
     backendError.textContent = "";
 
     //build newTableData
     let hasError = false;
-    if (players < 2 || players > 5) {
-        playersError.textContent = "Aantal spelers moet tussen 2 en 5 liggen";
+    if (numberOfNewPlayers.value < 2 || numberOfNewPlayers.value > 5) {
+        newPlayersError.textContent = "Aantal spelers moet tussen 2 en 5 liggen";
         hasError = true;
     }
-    if (ai < 0 || ai > 4) {
-        aiError.textContent = "Aantal AI spelers moet tussen 0 en 4 liggen";
+    if (numberOfNewAiPlayers.value < 0 || numberOfNewAiPlayers.value > 4) {
+        newAiError.textContent = "Aantal AI spelers moet tussen 0 en 4 liggen";
         hasError = true;
     }
-    if (players + ai > 5) {
-        aiError.textContent = "Totaal aantal spelers mag max 5 zijn";
+    let telling = parseInt(numberOfNewPlayers.value) + parseInt(numberOfNewAiPlayers.value);
+    if (telling > 5) {
+        newAiError.textContent = "Totaal aantal spelers mag max 5 zijn";
         hasError = true;
     }
     if (hasError) return;
 
     //create table backend
-    const result = await createTable(players, ai);
+    const result = await createTable(numberOfNewPlayers.value, numberOfNewAiPlayers.value);
     if (!result) return;
     // END HAMZA CODE
     createNewTableNav.style.display=""
@@ -121,17 +121,19 @@ createNewTableButton.addEventListener("click", async (event) => {
 //selectPlayersTable
 goToTableButton.addEventListener("click", async (event) => {
     event.preventDefault();
-    lobbyNav.style.display="none";
-    createNewTableNav.style.display="none";
-    leaveTableNav.style.display="";
     //check playerTableId
     if(!playerTableCandidateId){
         backendError.textContent = "Gelieve een tafel te selecteren";
         return;
     }
+    lobbyNav.style.display="none";
+    createNewTableNav.style.display="none";
+    leaveTableNav.style.display="";
     //BUILD Players table
     let playersTable = await fetchPlayerTable(playerTableCandidateId);
-    let playersTotal = playersTable.preferences.numberOfArtificialPlayers + playersTable.preferences.numberOfPlayers;
+    //TODO - IF USER IS NOT CREATOR OF TABLE - USE FETCH JOIN AND CALL PLAYERS TABLE AGAIN
+    //TODO - CHECK PLAYERS TABLE STATE FOR NEW PLAYERS
+    let playersTotal = playersTable.preferences.numberOfPlayers;
     let playerTableListOutput = document.querySelector(".table-player-output")
     playerTableListOutput.replaceChildren();
     for(let player = 0; player < playersTotal; player++ ){
@@ -140,7 +142,7 @@ goToTableButton.addEventListener("click", async (event) => {
          if( player < playersTable.seatedPlayers.length){
             tdSeatedPlayerSlot.textContent = playersTable.seatedPlayers[player].name;
          }else{
-            tdSeatedPlayerSlot.textContent="AI COMPUTERRRRRR";
+            tdSeatedPlayerSlot.textContent="Wachten op speler";
          }
          row.appendChild(tdSeatedPlayerSlot)
          playerTableListOutput.appendChild(row);
@@ -149,6 +151,7 @@ goToTableButton.addEventListener("click", async (event) => {
 });
 //startPlayersTable
 startTableButton.addEventListener("click", () => {
+    //TODO CHECK STATE OF TABLE BEFORE GAME
     window.location.href = "game.html?gameId=" + encodeURIComponent(playerTableCandidateId);
     console.log("TOFIX: start players table - L158");
 });
@@ -157,10 +160,7 @@ startTableButton.addEventListener("click", () => {
 //browser filter - submit fiter
 filterForm.addEventListener("submit", async (event) => {
         playerTableCandidateId == "";
-        lobbyTableList.replaceChildren();
-        lobbyTablePlaceholder.style.display="none"
         event.preventDefault()
-        //dummy data
         const filterData = {
             NumberOfPlayers : numberOfPlayers.value,
             NumberOfArtificialPlayers: numberOfArtificialPlayers.value,
@@ -168,26 +168,30 @@ filterForm.addEventListener("submit", async (event) => {
         
         let tableList = await fetchTables(filterData)
         
+        if(tableList.tables.length === 0){
+            lobbyTablePlaceholder.textContent="Geen tafels beschikbaar met deze filter"
+            return;
+        }
+        lobbyTableList.replaceChildren();
         tableList.tables.forEach((table , index) => {
             let row = document.createElement("tr");
-            let tdGameId = document.createElement("td");
+            let tdTableId = document.createElement("td");
             let tdSeatedPlayers = document.createElement("td");
             let tdNumberOfPlayers = document.createElement("td");
             let tdSeatAvailable = document.createElement("td");
             
             row.classList.add(`tableCandidate-${index}`);
-            tdGameId.classList.add("gameId", `candidateElement-${index}`);
+            tdTableId.classList.add("tableId", `candidateElement-${index}`);
             tdSeatedPlayers.classList.add("seatedPlayers", `candidateElement-${index}`);
             tdNumberOfPlayers.classList.add("numberOfPlayers", `candidateElement-${index}`);
             tdSeatAvailable.classList.add("seatAvailable", `candidateElement-${index}`);
 
-            //TODO id in full length for select
-            tdGameId.textContent = table.gameId;
+            tdTableId.textContent = table.id;
             tdSeatedPlayers.textContent = table.seatedPlayers.length;
             tdNumberOfPlayers.textContent = String(table.preferences.numberOfPlayers + table.preferences.numberOfArtificialPlayers);
             tdSeatAvailable.textContent = table.hasAvailableSeat ? "ja": "nee"
 
-            row.appendChild(tdGameId);
+            row.appendChild(tdTableId);
             row.appendChild(tdSeatedPlayers);
             row.appendChild(tdNumberOfPlayers);
             row.appendChild(tdSeatAvailable);
@@ -203,6 +207,7 @@ filterForm.addEventListener("reset", async (event) =>{
     backendError.textContent="";
     lobbyTableList.replaceChildren();
     lobbyTablePlaceholder.style.display="";
+    lobbyTablePlaceholder.textContent="Gelieve de tafels te filteren";
     lobbyTableList.appendChild(lobbyTablePlaceholder);
     numberOfPlayers.selectedIndex = 0;
     numberOfArtificialPlayers.selectedIndex = 0;
@@ -217,8 +222,8 @@ lobbyTableList.addEventListener('click', (event) => {
     if(!row) return;
     document.querySelectorAll('[class^="tableCandidate-"].active').forEach(x => x.classList.remove('active'))
     row.classList.add('active');
-    const tdGameId = row.querySelector(".gameId");
-    playerTableCandidateId = tdGameId.innerText;
+    const tdTableId = row.querySelector(".tableId");
+    playerTableCandidateId = tdTableId.innerText;
     console.log("playerTableCandidate:", playerTableCandidateId);
 });
 
@@ -238,11 +243,11 @@ async function fetchTables(filterData){
         
         //REAL API CALL
         const params = new URLSearchParams(filterData)
-        const response = await fetch(`https://localhost:3000/api/Tables/with-available-seats?{params}`, {
+        const response = await fetch(`https://localhost:5051/api/Tables/with-available-seats?${params}`, {
             method: "GET",
             headers: {
                 'Content-type' : 'Application/json',
-                "Authorization": "Bearer" + Token.load()
+                "Authorization": "Bearer " + Token.load()
             }
         })
         /*
@@ -257,7 +262,7 @@ async function fetchTables(filterData){
         */
         const dataTables = await response.json();
         if(!response.ok){
-            const problemDetails = new ProblemDetails(dataPlayerTable)
+            const problemDetails = new ProblemDetails(dataTables)
             console.log("TROUBLES"+ problemDetails);
             throw new Error(dataTables.message );
         }
@@ -285,7 +290,7 @@ async function createTable(players, ai){
             }),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer" + Token.load(),
+                'Authorization': "Bearer " + Token.load(),
             }
         });
         /*
@@ -306,6 +311,7 @@ async function createTable(players, ai){
         if (!response.ok) {
             throw new Error(createdTable.message);
         }
+        return createTable;
         console.log("//INFO: Tafel gemaakt",createdTable);// voor mijn debug
     }catch(error){
         backendError.textContent = error.message;
@@ -318,11 +324,11 @@ async function fetchPlayerTable(gameId){
     try {
         //REAL API CALL
         
-        const response = await fetch(`https://localhost:3000/api/Tables/${gameId}`, {
+        const response = await fetch(`https://localhost:5051/api/Tables/${gameId}`, {
             method: "GET",
             headers: {
                 'Content-type' : 'Application/json',
-                "Authorization": "Bearer" + Token.load()
+                "Authorization": "Bearer " + Token.load()
             }
         });
         /*
@@ -363,7 +369,7 @@ async function playerJoinTable(gameId){
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer" + Token.load(),
+                'Authorization': "Bearer " + Token.load(),
             }
         });
         //TEST DATA
@@ -394,7 +400,7 @@ async function playerLeaveTable(gameId){
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer" + Token.load(),
+                'Authorization': "Bearer " + Token.load(),
             }
         });
         //TEST DATA
