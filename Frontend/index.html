@@ -3,6 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <title>Exploding Kittens</title>
+      <link rel="stylesheet" href="css/login.css"/>
+      <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
+      <script src="js/login.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <aside>
+        <div class="logo">
+            <img src="./assets/cat-svgrepo-com.svg" alt="logo">
+        </div>
+        <nav class="sidebar-menu">
+            <a id="welcome" href="index.html">welkom</a>
+            <a id="register" href="register.html">registreer</a>
+            <a id="login" href="index.html">inloggen</a>
+            <a id="team" href="team.html">team</a>
+        </nav>
+    </aside>
+    <main>
+      <header><h1>Login</h1></header>
+      <section class="content">
+        <form id="loginForm" class="long-form" novalidate>
+          <label for="userLogin">login gebruiker</label>
+          <input type="email" id="userLogin" name="email" required/>
+          <p class="error" id="emailError"></p>
+
+          <label for="password">Wachtwoord</label>
+          <input type="password" id="password" name="password" minlength="6" required>
+          <p class="error" id="passwordError"></p>
+
+          <p class="backend-error" id="backendError"></p>
+          <button id="loginButton" type="submit">inloggen</button>
+        </form>
+      </section>
+    </main>
+  </body>
 </html>
