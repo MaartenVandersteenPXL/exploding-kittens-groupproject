@@ -242,7 +242,7 @@ async function fetchTables(filterData){
             method: "GET",
             headers: {
                 'Content-type' : 'Application/json',
-                "Authorization": "Bearer" + Token.load()
+                "Authorization": "Bearer " + Token.load()
             }
         })
         /*
@@ -285,7 +285,7 @@ async function createTable(players, ai){
             }),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer" + Token.load(),
+                'Authorization': "Bearer " + Token.load(),
             }
         });
         /*
@@ -322,7 +322,7 @@ async function fetchPlayerTable(gameId){
             method: "GET",
             headers: {
                 'Content-type' : 'Application/json',
-                "Authorization": "Bearer" + Token.load()
+                "Authorization": "Bearer " + Token.load()
             }
         });
         /*
@@ -363,7 +363,7 @@ async function playerJoinTable(gameId){
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer" + Token.load(),
+                'Authorization': "Bearer " + Token.load(),
             }
         });
         //TEST DATA
@@ -394,7 +394,7 @@ async function playerLeaveTable(gameId){
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer" + Token.load(),
+                'Authorization': "Bearer " + Token.load(),
             }
         });
         //TEST DATA
