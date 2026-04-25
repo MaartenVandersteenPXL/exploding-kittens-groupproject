@@ -238,7 +238,7 @@ async function fetchTables(filterData){
         
         //REAL API CALL
         const params = new URLSearchParams(filterData)
-        const response = await fetch(`https://localhost:3000/api/Tables/with-available-seats?{params}`, {
+        const response = await fetch(`https://localhost:5051/api/Tables/with-available-seats?${params}`, {
             method: "GET",
             headers: {
                 'Content-type' : 'Application/json',
@@ -318,7 +318,7 @@ async function fetchPlayerTable(gameId){
     try {
         //REAL API CALL
         
-        const response = await fetch(`https://localhost:3000/api/Tables/${gameId}`, {
+        const response = await fetch(`https://localhost:5051/api/Tables/${gameId}`, {
             method: "GET",
             headers: {
                 'Content-type' : 'Application/json',
