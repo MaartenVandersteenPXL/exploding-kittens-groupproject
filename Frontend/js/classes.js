@@ -72,7 +72,6 @@ export class Tables {
 }
 
 //ProblemDetails
-
 export class ProblemDetails{
     constructor(type, title,status,detail,instanse){
         this.type = type,
@@ -80,5 +79,51 @@ export class ProblemDetails{
         this.status = status,
         this.detail = detail,
         this.instanse = instanse
+    }
+}
+
+
+//Game Model
+class futureCard{
+    constructor(item){
+        this.item = item;
+    }
+}
+
+class cardsInHand{
+    constructor(item){
+        this.item = item;
+    }
+}
+
+class Player{
+    constructor(id, name, birthDate, hasExplodingKitten, eliminated, futureCards, cardsInHandCount, cardsInHand){
+        this.id = id;
+        this.name = name;
+        this.birthDate = birthDate;
+        this.hasExplodingKitten = hasExplodingKitten;
+        this.eliminated = eliminated;
+        this.futureCards = futureCards.map(f => new futureCard(f.item));
+        this.cardsInHandCount = cardsInHandCount;
+        this.cardsInHand = cardsInHand.map(f => new cardInHand(f.item));
+    }
+}
+
+class DiscardPile{
+    constructor (item){
+        this.item = item
+    }
+}
+
+export class GameModel {
+    constructor(id, players, discardPile, drawPileCount, playerToPlayId, pendingDraws, pendingAction, hasEnded){
+        this.id = id;
+        this.players = players.map(p => new Player(p.id, p.name, p.birthDate, p.hasExplodingKitten, p.eliminated, p.futureCards, p.cardsInHandCount, p.cardsInHand));
+        this.discardPile = discardPile.map(d => new discardPile(d.item));
+        this.drawPileCount = this.drawPileCount;
+        this.playerToPlayId = playerToPlayId;
+        this.pendingDraws = pendingDraws;
+        this.pendingAction = pendingAction;
+        this.hasEnded = hasEnded;
     }
 }
