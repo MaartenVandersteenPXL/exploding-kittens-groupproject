@@ -13,6 +13,13 @@ h1{
     color: #5f2f45;
     margin: 0;
 }
+h2{
+    font-family: 'Abel';
+    font-weight: 200;
+    font-size: 2em;
+    color: #a02f40;
+    margin: 0;
+}
 
 p {
     font-family: 'Abel';
@@ -320,7 +327,7 @@ header{
     text-align: center;
 }
 
-.cart-enum {
+.card-enum {
     background: #f8ddb7;
     width: 35px;
     height: 35px;

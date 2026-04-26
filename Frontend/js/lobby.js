@@ -1,5 +1,6 @@
 //IMPORTS
-import { User, Token, Tables, Table, ProblemDetails} from "./classes.js";
+import { Tables, Table, ProblemDetails} from "./Classes/tableClasses.js";
+import { User, Token } from "./Classes/userClasses.js";
 
 //classes
     let user = User.load();
@@ -185,7 +186,7 @@ startTableButton.addEventListener("click", () => {
         return;
     }
     tableTicker = false;
-    window.location.href = "game.html?gameId=" + encodeURIComponent(playerTableCandidateId);
+    window.location.href = "game.html?tableId=" + encodeURIComponent(playerTableCandidateId);
 });
 
 ////FORMS
