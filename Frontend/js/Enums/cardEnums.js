@@ -7,7 +7,6 @@ export const CardType = Object.freeze({
     Shuffle: 5,
     SeeTheFuture: 6,
     Nope: 7,
-
     BeardCat: 100,
     Cattermelon: 101,
     HairyPotatoCat: 102,

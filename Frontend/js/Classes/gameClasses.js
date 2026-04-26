@@ -16,14 +16,13 @@ export class Card {
 
 class FutureCard{
     constructor(typeNr){
-        this.typeNr = typeNr;
+        this.futureCard = new Card(typeNr);
     }
 }
 
 class CardsInHand{
     constructor(typeNr){
         this.card = new Card(typeNr);
-        console.log("getName exists:", typeof this.card.getName);
     }
 }
 

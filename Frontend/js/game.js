@@ -9,7 +9,7 @@ let intros = ["This is amazing! Prrt!",
     "Zoom zoom! Catch me if you can! Mrrrow!",
     "I got it! I got it! …wait—gone. Hmph!",
     "Best game ever! Pounce! Prrrp!",
-    "You saw that, right? I’m incredible. Meow!"]
+    "You saw that, right? Im incredible. Meow!"]
 
 ///// ELEMENTS
 //header
