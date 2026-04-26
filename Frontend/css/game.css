@@ -292,6 +292,7 @@ header{
     max-width: 580px;
     padding-right: 120px; /* Geeft berichtenvak ruimte */
     row-gap: 20px;
+    
 }
 
 /* Eigen kaarten */
@@ -310,6 +311,9 @@ header{
     padding: 10px;
     transition: transform 0.2s;
     box-shadow:  -4px 0 10px rgba(0,0,0,0.3);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .own-card:hover {
@@ -353,7 +357,7 @@ header{
     position: absolute;
     bottom: 15px;
     right: 30px;
-    background-color: cornflowerblue;
+    background-color: #7396d5;
     color: white;
     border: 2px solid beige;
     width: 100px;

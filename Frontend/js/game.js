@@ -55,16 +55,22 @@ async function userCardsBuilder(){
         let cardContainer = document.createElement("div");
         let cardName = document.createElement("p");
         let cardEnum = document.createElement("p");
+        let cardImg = document.createElement("img");
         
-        cardContainer.classList.add(`own-card`);
+        cardContainer.classList.add(`own-card`, `${element.card.getName()}`);
         cardName.classList.add(`card-name`);
         cardEnum.classList.add(`card-enum`);
+        //cardImg.classList.add("card-img");
+
+        cardContainer.style.backgroundImage= `url('${element.card.getImage()}')`;
+        //cardImg.alt=`${element.card.getName()}-img`;
 
         cardName.textContent = element.card.getName();
         cardEnum.textContent = element.card.typeNr;
 
         cardContainer.appendChild(cardName);
         cardContainer.appendChild(cardEnum);
+        //cardContainer.appendChild(cardImg);
         userHandCardContainer.appendChild(cardContainer);
     });
     userDeskMessageBoard.textContent="Klaar om te spelen!";

@@ -15,17 +15,17 @@ export const CardType = Object.freeze({
 });
 
 export const CardImage = {
-    [CardType.Attack]: "/assets/AchterkantDek.jpeg",
-    [CardType.BeardCat]: "/assets/AchterkantDek.jpeg",
-    [CardType.Cattermelon]: "/assets/AchterkantDek.jpeg",
-    [CardType.Defuse]: "/assets/AchterkantDek.jpeg",
-    [CardType.ExplodingKitten]: "/assets/AchterkantDek.jpeg",
-    [CardType.Favor]: "/assets/AchterkantDek.jpeg",
-    [CardType.HairyPotatoCat]: "/assets/AchterkantDek.jpeg",
-    [CardType.Nope]: "/assets/AchterkantDek.jpeg",
-    [CardType.RainbowRalphingCat]: "/assets/AchterkantDek.jpeg",
-    [CardType.SeeTheFuture]: "/assets/AchterkantDek.jpeg",
-    [CardType.Shuffle]: "/assets/AchterkantDek.jpeg",
-    [CardType.Skip]: "/assets/AchterkantDek.jpeg", 
-    [CardType.TacoCat]: "/assets/AchterkantDek.jpeg"
+    [CardType.Attack]: "assets/AchterkantDek.jpeg",
+    [CardType.BeardCat]: "assets/AchterkantDek.jpeg",
+    [CardType.Cattermelon]: "assets/AchterkantDek.jpeg",
+    [CardType.Defuse]: "assets/AchterkantDek.jpeg",
+    [CardType.ExplodingKitten]: "assets/AchterkantDek.jpeg",
+    [CardType.Favor]: "assets/AchterkantDek.jpeg",
+    [CardType.HairyPotatoCat]: "assets/AchterkantDek.jpeg",
+    [CardType.Nope]: "assets/AchterkantDek.jpeg",
+    [CardType.RainbowRalphingCat]: "assets/AchterkantDek.jpeg",
+    [CardType.SeeTheFuture]: "assets/AchterkantDek.jpeg",
+    [CardType.Shuffle]: "assets/AchterkantDek.jpeg",
+    [CardType.Skip]: "assets/AchterkantDek.jpeg", 
+    [CardType.TacoCat]: "assets/AchterkantDek.jpeg"
 }

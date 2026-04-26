@@ -4,11 +4,9 @@ export class Card {
     constructor(typeNr){
         this.typeNr = typeNr;
     }
-
     getName(){
         return Object.keys(CardType).find(key => CardType[key] == this.typeNr);
     }
-
     getImage(){
         return CardImage[this.typeNr];
     }
