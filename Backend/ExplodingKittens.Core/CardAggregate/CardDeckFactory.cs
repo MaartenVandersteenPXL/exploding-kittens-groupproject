@@ -9,7 +9,9 @@ internal class CardDeckFactory : ICardDeckFactory
     {
         IList<Card> cards = new List<Card>();
 
-       for (int i = 0; i < 4; i++)
+       // kaarten toevoegen tot de lijst
+        
+        for (int i = 0; i < 4; i++)
         {
             cards.Add(Card.Attack);
             cards.Add(Card.Skip);
@@ -28,7 +30,8 @@ internal class CardDeckFactory : ICardDeckFactory
             cards.Add(Card.Nope);
         }
 
-        // defuse kaarten volgens test moeten per speler
+        // defuse kaarten volgens test moeten per speler dus standaard op 2 ,
+        // allen bij 5 spelers wordt het 1, drna loopt de for loop om het juistaantal defuse toetevoegen tot de lijst.
 
         int numberOfDefuseCards = 2;
 
