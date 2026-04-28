@@ -23,15 +23,7 @@ internal class Hand : IHand
 
     public bool Contains(Card card)
     {
-        foreach (Card c in _hand) 
-        {
-            if (c == card)
-            {
-                return true;
-            }
-            
-        }
-        return false;
+        return _hand.Contains(card);
 
 
         //throw new NotImplementedException();
@@ -57,10 +49,10 @@ internal class Hand : IHand
         }
         else
         {
-            int random = Random.Shared.Next(_hand.Count);
-            Card randomKaart = _hand[random];
-            _hand.RemoveAt(random);
-            return randomKaart;
+            int index = Random.Shared.Next(_hand.Count);
+            Card randomCard = _hand[index];
+            _hand.RemoveAt(index);
+            return randomCard;
         }
         //throw new NotImplementedException();
     }
@@ -69,8 +61,7 @@ internal class Hand : IHand
     {
         if(_hand.Contains(card))
         {
-            int x = _hand.IndexOf(card);
-            _hand.RemoveAt(x);
+            _hand.Remove(card);
             return card;
         }
         else { return null; }
