@@ -33,13 +33,7 @@ internal class CardDeckFactory : ICardDeckFactory
         // defuse kaarten volgens test moeten per speler dus standaard op 2 ,
         // allen bij 5 spelers wordt het 1, drna loopt de for loop om het juistaantal defuse toetevoegen tot de lijst.
 
-        int numberOfDefuseCards = 2;
-
-        if (numberOfPlayers == 5)
-        {
-            numberOfDefuseCards = 1;
-        }
-
+        int numberOfDefuseCards = numberOfPlayers == 5 ? 1 : 2;
         for (int i = 0; i < numberOfDefuseCards; i++)
         {
             cards.Add(Card.Defuse);
