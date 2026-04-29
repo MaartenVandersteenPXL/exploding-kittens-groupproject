@@ -78,18 +78,7 @@ internal abstract class PlayerBase : IPlayer
     }
         //=> throw new NotImplementedException();
 
-    public IReadOnlyList<Card> FutureCards
-    {
-        get
-        {
-            return _futureCards.AsReadOnly();
-        }
-        set
-        {
-
-        }
-    }
-
+   
     IReadOnlyList<Card> IPlayer.FutureCards
     {
         get
