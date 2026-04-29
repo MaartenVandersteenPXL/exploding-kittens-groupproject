@@ -1,4 +1,5 @@
-﻿using ExplodingKittens.Core.PlayerAggregate.Contracts;
+﻿using ExplodingKittens.Core.CardAggregate;
+using ExplodingKittens.Core.PlayerAggregate.Contracts;
 
 namespace ExplodingKittens.Core.PlayerAggregate;
 
@@ -89,4 +90,15 @@ internal abstract class PlayerBase : IPlayer
         }
     }
 
+    IReadOnlyList<Card> IPlayer.FutureCards
+    {
+        get
+        {
+            return _futureCards.AsReadOnly();
+        }
+        set
+        {
+            _futureCards = value.ToList();
+        }
+    }
 }
