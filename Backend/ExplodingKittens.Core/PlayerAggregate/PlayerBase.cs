@@ -1,4 +1,5 @@
-﻿using ExplodingKittens.Core.PlayerAggregate.Contracts;
+﻿using ExplodingKittens.Core.CardAggregate;
+using ExplodingKittens.Core.PlayerAggregate.Contracts;
 
 namespace ExplodingKittens.Core.PlayerAggregate;
 
