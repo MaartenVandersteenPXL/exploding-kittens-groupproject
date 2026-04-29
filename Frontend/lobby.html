@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Exploding Kittens Lobby </title>
+    <link rel="stylesheet" href="css/lobby.css"/>
+    <link rel="stylesheet" href="css/lobby-browser.css"/>
+    <link rel="stylesheet" href="css/lobby-table.css"/>
+    <link rel="stylesheet" href="css/lobby-newTable.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
+    <script type="module" src="js/lobby.js"></script>
+
+</head>
+<body>
+<aside>
+    <div class="logo">
+        <img src="./assets/cat-svgrepo-com.svg" alt="logo">
+    </div>
+    <nav class="sidebar-menu">
+        <a id="logout" href="index.html">LOG OUT</a>
+        <a id="lobby" href="lobby.html">lobby</a>
+        <a id="nieuweTafel">nieuwe tafel</a>
+        <a id="verlaatTafel">verlaat tafel</a>
+    </nav>
+</aside>
+<main>
+    <header>
+        <h1 id="headerTitle"></h1>
+        <h2 id="headerIntro"></h2>
+    </header>
+    
+    <section class="lobby-browser">
+        <table class="table-list">
+                <thead>
+                    <tr>
+                        <th>Game id</th>
+                        <th>Aanwezig</th>
+                        <th>Totaal</th>
+                        <th>Vrij</th>
+                    </tr>
+                </thead>
+                <tbody class="table-list-output">
+                    <tr class="table-list-placeholder">
+                        <td>Gelieve de tafels te filteren</td>
+                    </tr>
+                </tbody>
+        </table>
+        
+        <div class="lobby-browser-filter">
+            <form class="lobby-browser-filter-form" id="filterForm">
+                
+                <table class="lobby-browser-filter-table" >
+                    <thead>
+                        <tr>
+                            <th><button class="browser-filter-head" id="reset" type="reset">reset filter</button></th>
+                            <th><button class="browser-filter-head" id="filter" type="submit">filter</button></th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr>
+                            <td>Aantal spelers</td>
+                            <td>
+                                <select class="browser-dropdown" id="aantalSpelers" name="spelers" aria-label="Aantal spelers">
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Aantal AI</td>
+                            <td>
+                                <select class="browser-dropdown" id="aiSpelers" name="IA" aria-label="Aantal AI spelers">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </form>
+            <div class="lobby-browser-naar-tafel">
+                <button class="button-naar-tafel" id="goToTable">ga naar tafel</button>
+            </div>
+            <p class="backend-error" id="backendError"></p>
+        </div>
+        
+        
+    </section>
+
+    <section class="new-table">
+        <form id="newTableForm" class="new-table-form">
+            
+            <label for="numberOfNewPlayers">Aantal Spelers</label>
+            <input type="number" id="numberOfNewPlayers" name="numberOfNewPlayers" min="2" max="5" required/>
+            <p class="error" id="numberOfNewPlayersError"></p>
+
+            <label for="numberOfNewAIPlayers">Aantal AI Spelers</label>
+            <input type="number" id="numberOfNewAIPlayers" name="numberOfNewAIPlayers" min="0"  max="4" required/>
+            <p class="error" id="numberOfNewAIPlayersError"></p>
+
+            <p class="backend-error" id="backendError"></p>
+
+            <button id="createNewTableButton" type="button">MAAK NIEUWE TAFEL</button>
+        </form>
+    </section>
+
+    <section class="lobby-table">
+            
+        <table class="table-player">
+                <thead>
+                    <tr>
+                        <th>Speler</th>
+                    </tr>
+                </thead>
+                <tbody class="table-player-output">
+                </tbody>
+        </table>
+        
+        
+        <div class="lobby-teller">
+            <!--
+            //OVERBODIG?
+            <table class="lobbyTeller">
+                <thead>
+                <tr>
+                    <th colspan="2">Lobby teller</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Aantal spelers</td>
+                    <td>2/5</td>
+                </tr>
+                <tr>
+                    <td>Aantal AI</td>
+                    <td>2</td>
+                </tr>
+                </tbody>
+            </table>
+        -->
+            <div class="lobby-tafel-naar-game">
+                <button class="start-table" id=goToGame >Wachten op spelers</button>
+            </div>
+            <p class="backend-error" id="backendErrorPlayersTable"></p>
+        </div>
+        
+    </section>
+
+</main>
+</body>
+</html>

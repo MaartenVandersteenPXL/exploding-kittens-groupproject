@@ -1,5 +1,4 @@
-﻿using ExplodingKittens.Core.CardAggregate;
-using ExplodingKittens.Core.PlayerAggregate.Contracts;
+﻿using ExplodingKittens.Core.PlayerAggregate.Contracts;
 
 namespace ExplodingKittens.Core.PlayerAggregate;
 
@@ -36,7 +35,7 @@ internal abstract class PlayerBase : IPlayer
         {
             return _name;
         }
-    } 
+    }
         //throw new NotImplementedException();
 
     public DateOnly BirthDate
@@ -73,12 +72,12 @@ internal abstract class PlayerBase : IPlayer
         get
         {
             return Hand.Contains(Card.ExplodingKitten) && !Hand.Contains(Card.Defuse);
-        } 
-        
+        }
+
     }
         //=> throw new NotImplementedException();
 
-   
+
     IReadOnlyList<Card> IPlayer.FutureCards
     {
         get

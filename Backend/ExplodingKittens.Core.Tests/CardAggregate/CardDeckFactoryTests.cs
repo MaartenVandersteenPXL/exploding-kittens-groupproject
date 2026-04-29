@@ -51,7 +51,7 @@ public class CardDeckFactoryTests
         Assert.That(cards.Count(c => c == Card.Favor), Is.EqualTo(4), "The deck should contain 4 Favor cards");
         Assert.That(cards.Count(c => c == Card.Skip), Is.EqualTo(4), "The deck should contain 4 Skip cards");
         Assert.That(cards.Count(c => c == Card.Shuffle), Is.EqualTo(4), "The deck should contain 4 Shuffle cards");
-        Assert.That(cards.Count(c => c == Card.Nope), Is.EqualTo(4), "The deck should contain 4 Nope cards");
+        Assert.That(cards.Count(c => c == Card.Nope), Is.EqualTo(5), "The deck should contain 5 Nope cards");
 
         Assert.That(cards.Count(c => c == Card.BeardCat), Is.EqualTo(4), "The deck should contain 4 BeardCat cards");
         Assert.That(cards.Count(c => c == Card.Cattermelon), Is.EqualTo(4), "The deck should contain 4 Cattermelon cards");

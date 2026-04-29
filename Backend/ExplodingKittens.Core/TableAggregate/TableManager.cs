@@ -1,6 +1,7 @@
 ﻿using ExplodingKittens.Core.GameAggregate.Contracts;
 using ExplodingKittens.Core.TableAggregate.Contracts;
 using ExplodingKittens.Core.UserAggregate;
+using System.Reflection.Emit;
 
 namespace ExplodingKittens.Core.TableAggregate;
 
@@ -26,21 +27,42 @@ internal class TableManager : ITableManager
 
     public ITable CreateTable(User user, ITablePreferences preferences)
     {
-        throw new NotImplementedException();
+        ITable newTable = _tableFactory.CreateNewForUser(user, preferences);
+        _tableRepository.Add(newTable);
+        return newTable;
     }
 
     public ITable JoinTable(Guid tableId, User user)
     {
-        throw new NotImplementedException();
+       ITable tableToJoin = _tableRepository.Get(tableId);
+        tableToJoin.Join(user);
+
+       return tableToJoin;
     }
 
     public void LeaveTable(Guid tableId, User user)
     {
-        throw new NotImplementedException();
+        ITable tableToLeave = _tableRepository.Get(tableId);
+        tableToLeave.Leave(user.Id);
+
+        if (tableToLeave.SeatedPlayers.Count == 0)
+        {
+            _tableRepository.Remove(tableId);
+        }
     }
 
     public IGame StartGameForTable(Guid tableId)
     {
-        throw new NotImplementedException();
+        ITable tableToStart = _tableRepository.Get(tableId);
+
+        if (tableToStart.HasAvailableSeat)
+        {
+            throw new InvalidOperationException("Er zijn niet genoeg spelers aan de tafel.");
+        }
+
+        IGame newGame = _gameFactory.CreateNewForTable(tableToStart);
+        tableToStart.GameId = newGame.Id;
+        _gameRepository.Add(newGame);
+        return newGame;
     }
 }
