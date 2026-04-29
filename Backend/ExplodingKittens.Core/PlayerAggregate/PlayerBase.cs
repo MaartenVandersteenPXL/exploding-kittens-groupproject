@@ -1,31 +1,92 @@
-﻿using ExplodingKittens.Core.CardAggregate;
-using ExplodingKittens.Core.PlayerAggregate.Contracts;
+﻿using ExplodingKittens.Core.PlayerAggregate.Contracts;
 
 namespace ExplodingKittens.Core.PlayerAggregate;
 
 /// <inheritdoc cref="IPlayer"/>
-internal class PlayerBase : IPlayer
+
+internal abstract class PlayerBase : IPlayer
 {
-    //Constructor
+    private Guid _id;
+    private string _name;
+    private DateOnly _birthDate;
+    private readonly IHand _hand;
+    private List<Card> _futureCards = new();
     protected PlayerBase(Guid id, string name, DateOnly birthDate)
     {
-        Id = id;
-        Name = name;
-        BirthDate = birthDate;
+        _id = id;
+        _name = name;
+        _birthDate = birthDate;
+        _hand = new Hand();
+        _futureCards = new List<Card>();
     }
 
-    //Public Properties  - player info
-    public Guid Id { get; }
-    public string Name { get; }
-    public DateOnly BirthDate { get; }
+    public Guid Id
+    {
+        get
+        {
+            return _id;
+        }
+    }
+        //throw new NotImplementedException();
 
-    //Public Properties - Hand info and logic
-    public IHand Hand => throw new NotImplementedException();
-    public IReadOnlyList<Card> FutureCards { get; set; } = [];
+    public string Name
+    {
+        get
+        {
+            return _name;
+        }
+    }
+        //throw new NotImplementedException();
 
-    //Public Propeties - Game state
-    public bool HasExplodingKitten => throw new NotImplementedException();
-    public bool Eliminated => throw new NotImplementedException();
+    public DateOnly BirthDate
+    {
+        get
+        {
+            return _birthDate;
+        }
+    }
+        //throw new NotImplementedException();
 
-    //TIP: kijk naar de uitleg van de interface.
+    public IHand Hand
+    {
+        get
+        {
+            return _hand;
+        }
+    }
+    //throw new NotImplementedException();
+
+    public bool HasExplodingKitten
+    {
+        get
+        {
+            return Hand.Contains(Card.ExplodingKitten);
+        }
+    }
+
+
+    //=> throw new NotImplementedException();
+
+    public bool Eliminated
+    {
+        get
+        {
+            return Hand.Contains(Card.ExplodingKitten) && !Hand.Contains(Card.Defuse);
+        }
+
+    }
+        //=> throw new NotImplementedException();
+
+
+    IReadOnlyList<Card> IPlayer.FutureCards
+    {
+        get
+        {
+            return _futureCards.AsReadOnly();
+        }
+        set
+        {
+            _futureCards = value.ToList();
+        }
+    }
 }
