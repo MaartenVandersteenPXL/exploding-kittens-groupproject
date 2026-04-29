@@ -1,4 +1,6 @@
+using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.GameAggregate.Contracts;
+using ExplodingKittens.Core.PlayerAggregate.Contracts;
 
 namespace ExplodingKittens.Core.ActionAggregate;
 
@@ -6,19 +8,21 @@ namespace ExplodingKittens.Core.ActionAggregate;
 internal class FavorAction: ActionBase
 {
     private readonly IGame _game;
-    private Guid _playerId;
-    private Guid _targetPlayerId;
 
-    public FavorAction(IGame game, Guid playerId, Guid targetPlayerId): base (game, playerId, cards [], true )
+    public FavorAction(IGame game, Guid playerId, Guid targetPlayerId): 
+        base (game, playerId, cards: [], canBeNoped: true, targetCard: null, targetPlayerId: targetPlayerId, drawPileIndex: null )
     {
         _game = game;
-        _playerId = playerId;
-        _targetPlayerId = targetPlayerId;
     }
 
     protected override void Execute()
     {
-        throw new NotImplementedException();
+        if (IsNoped) return;
+        IPlayer targetPlayer = _game.GetPlayerById(TargetPlayerId!.Value);
+        IPlayer player = _game.GetPlayerById(PlayerId);
+        //TODO remove cast when actionBase is implimented
+        Card targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard(TargetCard!);
+        player.Hand.InsertCard((Card)targetPlayerPickedCard);
     }
 
 }
