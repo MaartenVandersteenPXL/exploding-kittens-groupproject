@@ -7,8 +7,6 @@ namespace ExplodingKittens.Core.ActionAggregate;
 /// <inheritdoc cref="IActionFactory"/>
 internal class ActionFactory : IActionFactory
 {
-    private int[] rangeChecker = [100, 101, 102, 103, 104]; 
-
     
     public IAction Create(
         IGame game, 
@@ -26,7 +24,7 @@ internal class ActionFactory : IActionFactory
             switch (topCard)
             {
                 case Card.Defuse:
-                    if (drawPileIndex == null)
+                    if ( drawPileIndex == null)
                     {
                         throw new InvalidOperationException("To create a 'Defuse' action, a draw pile index must be specified");
                     }
@@ -58,7 +56,7 @@ internal class ActionFactory : IActionFactory
                     throw new InvalidOperationException("A 'Nope' card cannot be used to create an action");
                 
                 default:
-                    throw new InvalidOperationException("Geen topcard");
+                    throw new InvalidOperationException("At least one card must be provided");
             }
         }
 
@@ -76,19 +74,14 @@ internal class ActionFactory : IActionFactory
             }
             else if (cards.Count == 3)
             {
-
+                if (targetPlayerId == null || targetCard == null)
                 {
-                    if (targetPlayerId == null || targetCard == null)
-                    {
-                        throw new InvalidOperationException("A target player or target card must be specified for a 'Steal specific card' action");
-                    }
-                    return new StealSpecificCardAction(game, playerId, cards, targetCard.Value, targetPlayerId.Value);
+                    throw new InvalidOperationException("A target player or target card must be specified for a 'Steal specific card' action");
                 }
+                return new StealSpecificCardAction(game, playerId, cards, targetCard.Value, targetPlayerId.Value);     
             }
             else throw new InvalidOperationException("More then three cards are provided");
         }
-        
-
         else throw new InvalidOperationException("At least one card must be provided");
     
     }
