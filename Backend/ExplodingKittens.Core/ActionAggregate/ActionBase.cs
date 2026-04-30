@@ -49,8 +49,7 @@ public abstract class ActionBase : IAction
         }
     }
         
-        
-        // => throw new NotImplementedException();
+       
 
     public IReadOnlyList<Card> Cards
     {
@@ -60,8 +59,7 @@ public abstract class ActionBase : IAction
         }
     }
         
-        
-        //=> throw new NotImplementedException();
+
 
     public bool CanBeNoped
     {
@@ -71,8 +69,7 @@ public abstract class ActionBase : IAction
         }
     } 
         
-        
-        //=> throw new NotImplementedException();
+
 
     public Guid? TargetPlayerId
     {
@@ -94,8 +91,7 @@ public abstract class ActionBase : IAction
         }
     }
             
-            
-   //=> throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 
     public int? DrawPileIndex
     {
@@ -105,23 +101,16 @@ public abstract class ActionBase : IAction
         }
     } 
         
-        
-        //=> throw new NotImplementedException();
 
     public IReadOnlyDictionary<Guid, NopeDecision> PlayerNopeDecisions
     {
         get
         {
-
-        }
-        set
-        {
-            _playerNopeDecisions = _game.Players.ToDictionary(p => p.Id, p => NopeDecision.NotDecided);
+            return _playerNopeDecisions;
         }
     }
         
-        
-        //=> throw new NotImplementedException();
+
 
     public bool IsNoped
     {
@@ -142,8 +131,6 @@ public abstract class ActionBase : IAction
     }
 
 
-    // => throw new NotImplementedException();
-
     public bool IsExecuted
     {
         get
@@ -153,41 +140,31 @@ public abstract class ActionBase : IAction
         }
     }
 
-    /// <summary>
-    /// TRUE if the action has been executed.
-    /// ALSO TRUE if the action is 'noped' and all players have confirmed that they are not 'noping' it.
-    /// FALSE otherwise.
-    /// </summary>
-    // => throw new NotImplementedException();
-
     public void ConfirmNotNoping(Guid notNopingPlayerId)
     {
         _playerNopeDecisions[notNopingPlayerId] = NopeDecision.NotNoping;
-        int count = 0;
+        int countnotnoping = 0;
+       
 
         foreach (KeyValuePair<Guid, NopeDecision> decision in _playerNopeDecisions)
         {
             if (decision.Value == NopeDecision.NotNoping)
             {
-                count++;
+                countnotnoping++;
             }
+            
         }
-        if(_playerNopeDecisions.Count == count)
+        if(_playerNopeDecisions.Count == countnotnoping )
             {
                 _isExecuted = true;
             }
 
 
-        /// <summary>
-        /// Confirms that the specified player chooses not to 'Nope' this action.
-        /// </summary>
-        /// <param name="notNopingPlayerId">Unique identifier of a player</param>
-        //throw new NotImplementedException();
     }
 
     public void Nope(Guid nopingPlayerId)
     {
-        var keys = _playerNopeDecisions.Keys;
+        ICollection<Guid> keys = _playerNopeDecisions.Keys;
         if (!IsNoped)
         {
             
@@ -219,19 +196,9 @@ public abstract class ActionBase : IAction
             }
         }
 
-        /// <summary>
-        /// When the action is not 'noped' yet:
-        ///    - Records that the specified player 'Nopes' this action.
-        ///    - Resets the 'Nope' decisions of all other players
-        /// When the action is already 'noped', the 'nope' should be undone and thus:
-        ///    - Records that the specified player is not 'Noping' this action.
-        ///    - Resets the 'Nope' decisions of all other players.
-        /// </summary>
-        //throw new NotImplementedException();
+   
     }
 
-    /// <summary>
-    /// Classes that inherit from ActionBase should implement this method to execute the specific logic of the action.
-    /// </summary>
+
     protected abstract void Execute();
 }
