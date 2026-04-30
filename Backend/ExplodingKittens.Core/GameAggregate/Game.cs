@@ -19,7 +19,11 @@ internal class Game : IGame
     private IActionFactory _actionFactory;
     public Game(Guid id, IPlayer[] players, ICardDeck drawPile, Guid startingPlayerId, IActionFactory actionFactory)
     {
-        
+        _id = id;
+        _players = players;
+        _drawPile = drawPile;
+        _playerToPlayId = startingPlayerId;
+        _actionFactory = actionFactory;
     }
 
     public Guid Id => throw new NotImplementedException();
