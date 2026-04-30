@@ -8,10 +8,15 @@ namespace ExplodingKittens.Core.GameAggregate;
 
 /// <inheritdoc cref="IGame"/>
 internal class Game : IGame
-{
+   {
     /// <summary>
     /// Creates a new game. Does not deal cards or set first player; use <see cref="IGameFactory"/> for full setup.
     /// </summary>
+    private Guid _id;
+    private IPlayer[] _players;
+    private ICardDeck _drawPile;
+    private Guid _playerToPlayId;
+    private IActionFactory _actionFactory;
     public Game(Guid id, IPlayer[] players, ICardDeck drawPile, Guid startingPlayerId, IActionFactory actionFactory)
     {
         
