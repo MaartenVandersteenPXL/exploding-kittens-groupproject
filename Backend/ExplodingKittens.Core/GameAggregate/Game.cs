@@ -50,11 +50,15 @@ internal class Game : IGame
     {
         if (_pendingDraws > 0)
         {
-            throw new InvalidOperationException("Je kunt de beurt niet beëindigen zolang er nog kaarten getrokken moeten worden.");
+            throw new InvalidOperationException("Je moet eert de kaarten trekken.");
         }
-        else
+        // FutureCards resetten voor alle spelers zodat oude informatie niet blijft hangen als er een nieuwe 'See the Future' kaart gespeeld wordt
+        foreach (IPlayer player in _players)
         {
-            /// Beurt wisselen naar de volgende speler die nog niet is geëlimineerd
+            player.FutureCards = new List<Card>();
+        }
+        {
+            // Beurt wisselen naar de volgende speler die nog niet is geëlimineerd
             int currentPlayerIndex = Array.FindIndex(_players, player => player.Id == _playerToPlayId);
             int nextPlayerIndex = (currentPlayerIndex + 1) % _players.Length;
             while (_players[nextPlayerIndex].Eliminated)
@@ -69,11 +73,15 @@ internal class Game : IGame
 
     public void ConfirmNotNopingPendingAction(Guid playerId)
     {
+        //1. Controleert of er genoped kan worden
         if (_pendingAction == null)
         {
             throw new InvalidOperationException("Er is geen actie in behandeling.");
         }
+        // 2. Geef aan de actie door dat deze speler niet gaat 'Nopen'
         _pendingAction.ConfirmNotNoping(playerId);
+
+        // 3. Als alle spelers hebben bevestigd dat ze niet nopen, voer de actie uit en maak deze in behandeling leeg
         if (_pendingAction.IsExecuted)
         {
             _pendingAction = null;
@@ -88,15 +96,15 @@ internal class Game : IGame
             throw new InvalidOperationException("Het is niet jouw beurt.");
         }
 
-        // 2. Validatie: Er mag geen actie (zoals een Favor) op antwoord wachten
-        if (_pendingAction != null)
+        // 2. Validatie: Is er een actie bezig?
+        if (_pendingAction != null && !_pendingAction.IsExecuted)
         {
-            throw new InvalidOperationException("Er is nog een actie in behandeling. Behandel deze eerst.");
+            throw new InvalidOperationException("Er is nog een actie bezig. Behandel deze eerst.");
         }
-
+        // 3. De speler trekt een kaart van de trekstapel
         IPlayer currentPlayer = GetPlayerById(playerId);
         Card drawnCard = _drawPile.DrawTopCard();
-
+        // 4. Speciale afhandeling als het een Exploding Kitten is
         if (drawnCard == Card.ExplodingKitten)
         {
             if (currentPlayer.Hand.Contains(Card.Defuse))
@@ -127,13 +135,14 @@ internal class Game : IGame
         {
             // --- NORMALE KAART ---
             currentPlayer.Hand.InsertCard(drawnCard);
+            // Trekbeurt -1
             _pendingDraws--;
         }
 
-        // 3. Beurtwissel afhandelen
+        // 5. Beurtwissel afhandelen
         if (_pendingDraws <= 0)
         {
-            // We zetten draws op 0 zodat AdvanceTurn() niet throwt
+            // Draws op 0 zodat AdvanceTurn() niet throwt
             _pendingDraws = 0;
             AdvanceTurn();
         }
@@ -154,21 +163,20 @@ internal class Game : IGame
 
     public void NopePendingAction(Guid playerId)
     {
-        //Controleert of er een actie in behandeling is
+        //1. Controleert of er genoped kan worden
         if (_pendingAction == null)
         {
             throw new InvalidOperationException("Er is geen actie in behandeling.");
         }
-        //Controleert of de speler een 'Nope' kaart in zijn hand heeft
-        if (!GetPlayerById(playerId).Hand.Contains(Card.Nope))
+        //3. Controleren of de speler een 'Nope' kaart in zijn hand heeft en deze kaart uit de hand van de speler halen en op de aflegstapel leggen
+        Card? nopeCard = GetPlayerById(playerId).Hand.PickSpecificCard(Card.Nope);
+        if (nopeCard == null)
         {
             throw new InvalidOperationException("Je hebt geen 'Nope' kaart in je hand.");
         }
-        //Haalt de 'Nope' kaart uit de hand van de speler en legt deze op de aflegstapel
-        GetPlayerById(playerId).Hand.PickSpecificCard(Card.Nope);
         _discardPile.Add(Card.Nope);
 
-        //Voert de 'Nope' actie uit op de actie in behandeling
+        //4. Voert de 'Nope' actie uit op de actie in behandeling
         _pendingAction.Nope(playerId);
         if (_pendingAction.IsExecuted)
         {
@@ -178,42 +186,33 @@ internal class Game : IGame
 
     public void PlayAction(Guid playerId, IReadOnlyList<Card> cards, Guid? targetPlayerId, Card? targetCard, int? drawPileIndex)
     {
-        //Controleert of het de speler aan de beurt is
+        // 1. Validatie: Is de juiste speler aan de beurt?
         if (playerId != _playerToPlayId)
         {
             throw new InvalidOperationException("Het is niet jouw beurt.");
         }
-        //Controleert of er al een actie bezig is
-        if (_pendingAction != null)
+        // 2. Validatie: Is er een actie bezig?
+        if (_pendingAction != null && !_pendingAction.IsExecuted)
         {
-            throw new InvalidOperationException("Er is nog een actie in behandeling. Je moet deze eerst bevestigen of nopen voordat je een kaart kunt spelen.");
+            throw new InvalidOperationException("Er is nog een actie bezig. Je moet deze eerst bevestigen of nopen voordat je een kaart kunt spelen.");
         }
-        //Controleert of de speler de kaarten in zijn hand heeft
-        foreach (Card card in cards)
+        // 3. Haalt de kaart uit de hand van de speler en legt deze op de aflegstapel. 
+        foreach (Card playedCard in cards)
         {
-            if (!GetPlayerById(playerId).Hand.Contains(card))
-            {
-                throw new InvalidOperationException($"Je hebt de kaart {card} niet in je hand.");
-            }
+            GetPlayerById(playerId).Hand.PickSpecificCard(playedCard);
+            _discardPile.Add(playedCard);
         }
-        //Haalt de kaart uit de hand van de speler
-        foreach (Card card in cards)
-        {
-            //Legt de kaart op de aflegstapel
-            GetPlayerById(playerId).Hand.PickSpecificCard(card);
-            _discardPile.Add(card);
-        }
-
+        // 6. De actie aanmaken
         IAction action = _actionFactory.Create(this, playerId, cards, targetPlayerId, targetCard, drawPileIndex);
 
-        // Als de actie genoped kan worden, blijft deze in behandeling totdat alle spelers hebben bevestigd dat ze niet nopen of totdat iemand nopt
+        // 7. Als de actie genoped kan worden, blijft deze in behandeling totdat alle spelers hebben bevestigd dat ze niet nopen of totdat iemand nopt
         if (action.CanBeNoped)
         {
             _pendingAction = action;
         }
         else
         {
-            // Direct uitvoeren voor alle spelers (nodig voor o.a. Defuse)
+            // 8. Direct uitvoeren voor alle spelers (nodig voor o.a. Defuse)
             foreach (IPlayer player in _players)
             {
                 action.ConfirmNotNoping(player.Id);
@@ -222,12 +221,18 @@ internal class Game : IGame
         }
     }
 
-    
+
     public void SelectCardToGiveAsAFavor(Guid playerId, Card card)
     {
+        // Validatie: Is er een actie in behandeling?
         if (_pendingAction == null)
         {
             throw new InvalidOperationException("Er is geen actie in behandeling.");
+        }
+        // Controleert of de actie in behandeling een favor actie is
+        if (!_pendingAction.Cards.Contains(Card.Favor))
+        {
+            throw new InvalidOperationException("Dit is geen favor actie.");
         }
         // Voegt de geselecteerde kaart toe aan de actie in behandeling en bevestigt dat de speler niet nopt
         _pendingAction.TargetCard = card;
