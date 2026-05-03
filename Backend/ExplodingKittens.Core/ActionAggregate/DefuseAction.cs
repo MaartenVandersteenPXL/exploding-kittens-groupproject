@@ -17,13 +17,13 @@ internal class DefuseAction : ActionBase
     }
     protected override void Execute()
     {
-        IPlayer player = Game.GetPlayerById(PlayerId);
+        IPlayer player = CurrentGame.GetPlayerById(PlayerId);
 
         player.Hand.PickSpecificCard(Card.ExplodingKitten);
         
-        Game.DrawPile.InsertCard(Card.ExplodingKitten, DrawPileIndex!.Value);
-        Game.PendingDraws = 0;
-        Game.AdvanceTurn();
+        CurrentGame.DrawPile.InsertCard(Card.ExplodingKitten, DrawPileIndex!.Value);
+        CurrentGame.PendingDraws = 0;
+        CurrentGame.AdvanceTurn();
 
     }
 }
