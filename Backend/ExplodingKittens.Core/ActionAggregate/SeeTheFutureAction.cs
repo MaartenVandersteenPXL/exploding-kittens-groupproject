@@ -6,18 +6,14 @@ namespace ExplodingKittens.Core.ActionAggregate;
 
 internal class SeeTheFutureAction: ActionBase
 {
-    private readonly IGame _game;
-    
-    public SeeTheFutureAction(IGame game, Guid playerId) : base(game, playerId, cards: [], true)
-    {
 
-        _game = game;
-    }
+    public SeeTheFutureAction(IGame game, Guid playerId) : base(game, playerId, new List<Card> { Card.SeeTheFuture }, true)
+    { }
 
     protected override void Execute()
     {
-        IReadOnlyList<Card> top3Cards = _game.DrawPile.PeekTopCards(3).ToList();
-        IPlayer player = _game.GetPlayerById(PlayerId);
+        IReadOnlyList<Card> top3Cards = CurrentGame.DrawPile.PeekTopCards(3).ToList();
+        IPlayer player = CurrentGame.GetPlayerById(PlayerId);
         player.FutureCards = top3Cards;
     }
 }
