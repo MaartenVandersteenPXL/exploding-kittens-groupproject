@@ -16,7 +16,6 @@ internal class SeeTheFutureAction: ActionBase
 
     protected override void Execute()
     {
-        if (IsNoped) return;
         IReadOnlyList<Card> top3Cards = _game.DrawPile.PeekTopCards(3).ToList();
         IPlayer player = _game.GetPlayerById(PlayerId);
         player.FutureCards = top3Cards;
