@@ -1,40 +1,23 @@
-using ExplodingKittens.Core.ActionAggregate.Contracts;
 using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.GameAggregate.Contracts;
+using ExplodingKittens.Core.PlayerAggregate.Contracts;
 
 namespace ExplodingKittens.Core.ActionAggregate;
 
-internal class SeeTheFutureAction: IAction
+internal class SeeTheFutureAction: ActionBase
 {
-    public SeeTheFutureAction(IGame game, Guid playerId)
+    private readonly IGame _game;
+    
+    public SeeTheFutureAction(IGame game, Guid playerId) : base(game, playerId, cards: [], true)
     {
+
+        _game = game;
     }
 
-    public Guid PlayerId => throw new NotImplementedException();
-
-    public IReadOnlyList<Card> Cards => throw new NotImplementedException();
-
-    public bool CanBeNoped => throw new NotImplementedException();
-
-    public Guid? TargetPlayerId => throw new NotImplementedException();
-
-    public Card? TargetCard { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    public int? DrawPileIndex => throw new NotImplementedException();
-
-    public IReadOnlyDictionary<Guid, NopeDecision> PlayerNopeDecisions => throw new NotImplementedException();
-
-    public bool IsNoped => throw new NotImplementedException();
-
-    public bool IsExecuted => throw new NotImplementedException();
-
-    public void ConfirmNotNoping(Guid notNopingPlayerId)
+    protected override void Execute()
     {
-        throw new NotImplementedException();
-    }
-
-    public void Nope(Guid nopingPlayerId)
-    {
-        throw new NotImplementedException();
+        IReadOnlyList<Card> top3Cards = _game.DrawPile.PeekTopCards(3).ToList();
+        IPlayer player = _game.GetPlayerById(PlayerId);
+        player.FutureCards = top3Cards;
     }
 }
