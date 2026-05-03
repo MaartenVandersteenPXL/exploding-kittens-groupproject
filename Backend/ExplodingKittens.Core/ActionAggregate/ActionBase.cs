@@ -41,6 +41,14 @@ public abstract class ActionBase : IAction
         _drawPileIndex = drawPileIndex;
     }
 
+    protected IGame Game
+    {
+        get
+        {
+            return _game;
+        }
+    }
+
     public Guid PlayerId
     {
         get
