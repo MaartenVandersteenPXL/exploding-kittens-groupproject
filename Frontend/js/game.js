@@ -1,5 +1,5 @@
 import { User, Token } from "./Classes/userClasses.js";
-import { GameModel, Card } from "./Classes/gameClasses.js";
+import { GameModel, Player, Card } from "./Classes/gameClasses.js";
 import { ProblemDetails } from "./Classes/tableClasses.js";
 
 ////CLASSES
@@ -19,13 +19,14 @@ const headerIntro = document.getElementById("headerIntro");
 const logout = document.getElementById("logout");
 //game
 const userDeskMessageBoard= document.getElementById("statusMessage");
+//Error
+const backendError = document.getElementById("backendError");
 /*
 ///Test id
-//TODO - uncomment
+const tableIdfromURL = "a1b2c3d4-1234-5678-abcd-ef1234567890";
+*/
 const urlParams = new URLSearchParams(window.location.search);
 const tableIdfromURL = urlParams.get("tableId");
-*/
-const tableIdfromURL = "a1b2c3d4-1234-5678-abcd-ef1234567890";
 ///End test id
 
 //userCardDek
@@ -33,11 +34,10 @@ const userHandCardContainer = document.getElementById("userCardHand");
 
 //DOM ON LOADING EVENT
 document.addEventListener("DOMContentLoaded", async() => {
-    /*
+    
     if(!user){
         window.location.href="index.html";
     }
-    */
     gameInit();
     await userCardsBuilder();
 });
@@ -51,7 +51,9 @@ function gameInit(){
 
 async function userCardsBuilder(){
     let gameModel = await fetchGame(tableIdfromURL);
-    gameModel.players[0].cardsInHand.forEach(element => {
+    Player userAsPlayer = gameModel.players.find(p => p.id == user.id);
+    
+    userAsPlayer.cardsInHand.forEach(element => {
         let cardContainer = document.createElement("div");
         let cardName = document.createElement("p");
         let cardEnum = document.createElement("p");
@@ -62,7 +64,8 @@ async function userCardsBuilder(){
         cardEnum.classList.add(`card-enum`);
         //cardImg.classList.add("card-img");
 
-        cardContainer.style.backgroundImage= `url('${element.card.getImage()}')`;
+        //Background card
+        //cardContainer.style.backgroundImage= `url('${element.card.getImage()}')`;
         //cardImg.alt=`${element.card.getName()}-img`;
 
         cardName.textContent = element.card.getName();
@@ -92,7 +95,6 @@ async function fetchGame(filterData){
     try {
         
         //REAL API CALL
-        /*
         const params = new URLSearchParams(filterData)
         const response = await fetch(`https://localhost:5051/api/Games/${params}`, {
             method: "GET",
@@ -101,7 +103,7 @@ async function fetchGame(filterData){
                 "Authorization": "Bearer " + Token.load()
             }
         })
-        */
+        /*
         //TEST DATA
         //const params = new URLSearchParams(filterData)
         const response = await fetch(`http://localhost:3000/api/games/${filterData}`, {
@@ -111,6 +113,7 @@ async function fetchGame(filterData){
             }
         })
         //END TEST DATA
+        */
         const dataGames = await response.json();
         if(!response.ok){
             const problemDetails = new ProblemDetails(dataGames)
@@ -121,8 +124,9 @@ async function fetchGame(filterData){
             dataGames.id,
             dataGames.players,
             dataGames.discardPile,
-            dataGames.discardPileCouny,
+            dataGames.discardPileCount,
             dataGames.playerToPlayId,
+            dataGames.pendingDraws,
             dataGames.pendingAction,
             dataGames.hasEnded
             );

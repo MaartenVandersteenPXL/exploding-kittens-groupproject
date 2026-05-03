@@ -24,7 +24,7 @@ class CardsInHand{
     }
 }
 
-class Player{
+export class Player{
     constructor(id, name, birthDate, hasExplodingKitten, eliminated, futureCards, cardsInHandCount, cardsInHand){
         this.id = id;
         this.name = name;
