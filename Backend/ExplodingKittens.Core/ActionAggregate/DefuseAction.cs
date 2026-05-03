@@ -19,7 +19,8 @@ internal class DefuseAction : ActionBase
     {
         IPlayer player = Game.GetPlayerById(PlayerId);
 
-        player.Hand.PickSpecificCard(Card.Defuse);
+        player.Hand.PickSpecificCard(Card.ExplodingKitten);
+        
         Game.DrawPile.InsertCard(Card.ExplodingKitten, DrawPileIndex!.Value);
         Game.PendingDraws = 0;
         Game.AdvanceTurn();
