@@ -41,7 +41,7 @@ public abstract class ActionBase : IAction
         _drawPileIndex = drawPileIndex;
     }
 
-    protected IGame Game
+    protected IGame CurrentGame
     {
         get
         {
@@ -151,18 +151,18 @@ public abstract class ActionBase : IAction
     public void ConfirmNotNoping(Guid notNopingPlayerId)
     {
         _playerNopeDecisions[notNopingPlayerId] = NopeDecision.NotNoping;
-        int countnotnoping = 0;
+        int countNotNoping = 0;
        
 
         foreach (KeyValuePair<Guid, NopeDecision> decision in _playerNopeDecisions)
         {
             if (decision.Value == NopeDecision.NotNoping)
             {
-                countnotnoping++;
+                countNotNoping++;
             }
             
         }
-        if(_playerNopeDecisions.Count == countnotnoping )
+        if(_playerNopeDecisions.Count == countNotNoping )
             {
                 _isExecuted = true;
             Execute();
