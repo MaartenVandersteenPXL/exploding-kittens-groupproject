@@ -1,43 +1,25 @@
 using ExplodingKittens.Core.ActionAggregate.Contracts;
 using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.GameAggregate.Contracts;
+using ExplodingKittens.Core.CardAggregate;
 
 namespace ExplodingKittens.Core.ActionAggregate;
 
 /// <summary>
 /// Player can skip turn and the next player must draw twice as many cards as the current player did.
 /// </summary>
-internal class AttackAction : IAction
+internal class AttackAction : ActionBase
 {
-    public AttackAction(IGame game, Guid playerId)
+    public AttackAction(IGame game, Guid playerId) : base(game, playerId, new List<Card> { Card.Attack }, canBeNoped: true)
     {
     }
-
-    public Guid PlayerId => throw new NotImplementedException();
-
-    public IReadOnlyList<Card> Cards => throw new NotImplementedException();
-
-    public bool CanBeNoped => throw new NotImplementedException();
-
-    public Guid? TargetPlayerId => throw new NotImplementedException();
-
-    public Card? TargetCard { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    public int? DrawPileIndex => throw new NotImplementedException();
-
-    public IReadOnlyDictionary<Guid, NopeDecision> PlayerNopeDecisions => throw new NotImplementedException();
-
-    public bool IsNoped => throw new NotImplementedException();
-
-    public bool IsExecuted => throw new NotImplementedException();
-
-    public void ConfirmNotNoping(Guid notNopingPlayerId)
+    protected override void Execute()
     {
-        throw new NotImplementedException();
-    }
+        int penaltyDraws = CurrentGame.PendingDraws * 2;
 
-    public void Nope(Guid nopingPlayerId)
-    {
-        throw new NotImplementedException();
+        CurrentGame.PendingDraws = 0;
+        CurrentGame.AdvanceTurn();
+        CurrentGame.PendingDraws = penaltyDraws;
+
     }
 }
