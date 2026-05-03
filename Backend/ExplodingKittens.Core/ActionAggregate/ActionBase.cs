@@ -7,6 +7,17 @@ namespace ExplodingKittens.Core.ActionAggregate;
 /// <inheritdoc cref="IAction"/>
 public abstract class ActionBase : IAction
 {
+
+    protected ActionBase(IGame game, Guid playerId, IReadOnlyList<Card> cards, bool canBeNoped)
+    {
+
+    }
+
+    protected ActionBase(IGame game, Guid playerId, IReadOnlyList<Card> cards, bool canBeNoped, Card? targetCard, Guid? targetPlayerId, int? drawPileIndex) : this(game, playerId, cards, canBeNoped)
+    {
+
+    }
+
     public Guid PlayerId => throw new NotImplementedException();
 
     public IReadOnlyList<Card> Cards => throw new NotImplementedException();
@@ -35,16 +46,6 @@ public abstract class ActionBase : IAction
         throw new NotImplementedException();
     }
 
-
-    protected ActionBase(IGame game, Guid playerId, IReadOnlyList<Card> cards, bool canBeNoped)
-    {
-        
-    }
-
-    protected ActionBase(IGame game, Guid playerId, IReadOnlyList<Card> cards, bool canBeNoped, Card? targetCard, Guid? targetPlayerId, int? drawPileIndex) : this(game, playerId, cards, canBeNoped)
-    {
-        
-    }
 
     /// <summary>
     /// Classes that inherit from ActionBase should implement this method to execute the specific logic of the action.
