@@ -41,7 +41,7 @@ public abstract class ActionBase : IAction
         _drawPileIndex = drawPileIndex;
     }
 
-    protected IGame currentGame
+    protected IGame CurrentGame
     {
         get
         {
