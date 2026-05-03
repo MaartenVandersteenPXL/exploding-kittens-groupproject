@@ -8,14 +8,14 @@ namespace ExplodingKittens.Core.ActionAggregate;
 internal class FavorAction: ActionBase
 {
     public FavorAction(IGame game, Guid playerId, Guid targetPlayerId): 
-        base (game, playerId, cards: [], canBeNoped: true, targetCard: null, targetPlayerId: targetPlayerId, drawPileIndex: null )
+        base (game, playerId, new List<Card> { Card.Favor }, canBeNoped: true, targetCard: null, targetPlayerId: targetPlayerId, drawPileIndex: null )
     {}
 
     protected override void Execute()
     {
         IPlayer targetPlayer = CurrentGame.GetPlayerById(TargetPlayerId!.Value);
         IPlayer player = CurrentGame.GetPlayerById(PlayerId);
-        Card targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard(TargetCard!);
+        Card? targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard((Card)TargetCard);
         player.Hand.InsertCard((Card)targetPlayerPickedCard);
     }
 

@@ -2,8 +2,6 @@ using ExplodingKittens.Core.ActionAggregate.Contracts;
 using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.GameAggregate.Contracts;
 using ExplodingKittens.Core.PlayerAggregate.Contracts;
-using System.ComponentModel.Design;
-using System.Runtime.CompilerServices;
 
 namespace ExplodingKittens.Core.ActionAggregate;
 
