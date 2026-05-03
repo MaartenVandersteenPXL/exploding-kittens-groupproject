@@ -1,5 +1,6 @@
 using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.GameAggregate.Contracts;
+using ExplodingKittens.Core.PlayerAggregate.Contracts;
 using System.Data;
 
 namespace ExplodingKittens.Core.ActionAggregate;
@@ -16,8 +17,12 @@ internal class DefuseAction : ActionBase
     }
     protected override void Execute()
     {
-        _hand.PickSpecifickCard(Card.Defuse);
-        _game.DrawPile.InsertCa(drawPileIndex.value, Card.ExplodingKitten);
+        IPlayer player = Game.GetPlayerById(PlayerId);
+
+        player.Hand.PickSpecificCard(Card.Defuse);
+        Game.DrawPile.InsertCard(Card.ExplodingKitten, DrawPileIndex!.Value);
+        Game.PendingDraws = 0;
+        Game.AdvanceTurn();
 
     }
 }
