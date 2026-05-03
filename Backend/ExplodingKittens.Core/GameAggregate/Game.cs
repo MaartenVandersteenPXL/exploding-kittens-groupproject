@@ -104,49 +104,34 @@ internal class Game : IGame
         // 3. De speler trekt een kaart van de trekstapel
         IPlayer currentPlayer = GetPlayerById(playerId);
         Card drawnCard = _drawPile.DrawTopCard();
+
         // 4. Speciale afhandeling als het een Exploding Kitten is
         if (drawnCard == Card.ExplodingKitten)
         {
-            if (currentPlayer.Hand.Contains(Card.Defuse))
+            currentPlayer.Hand.InsertCard(drawnCard);
+            _pendingDraws = 0; // Beurt stopt sowieso na een bom
+
+            // Check of de speler direct geëlimineerd is (geen defuse in hand)
+            if (currentPlayer.Eliminated)
             {
-                // --- SPELER OVERLEEFT ---
-                // Defuse gebruiken en naar de aflegstapel
-                currentPlayer.Hand.PickSpecificCard(Card.Defuse);
-                _discardPile.Add(Card.Defuse);
-
-                // Kitten terug in het deck
-                _drawPile.InsertCard(Card.ExplodingKitten, 0);
-                _drawPile.Shuffle();
-
-                // Het trekken van een kitten (en defusen) telt als één voltooide trekbeurt
-                _pendingDraws--;
+                // Speler is dood, nu mag de beurt WEL naar de volgende
+                AdvanceTurn();
             }
-            else
-            {
-                // --- SPELER ONTPLOFT ---
-                // De kitten gaat in de hand (waardoor de property 'Eliminated' op true springt)
-                currentPlayer.Hand.InsertCard(drawnCard);
-
-                // Beurt stopt onmiddellijk, ongeacht hoeveel draws er nog over waren
-                _pendingDraws = 0;
-            }
+            // Als currentPlayer.Eliminated FALSE is, doen we NIETS.
+            // De speler blijft aan de beurt en MOET nu een DefuseAction spelen.
         }
         else
         {
-            // --- NORMALE KAART ---
-            currentPlayer.Hand.InsertCard(drawnCard);
-            // Trekbeurt -1
+            // Normale kaart getrokken
             _pendingDraws--;
-        }
-
-        // 5. Beurtwissel afhandelen
-        if (_pendingDraws <= 0)
-        {
-            // Draws op 0 zodat AdvanceTurn() niet throwt
-            _pendingDraws = 0;
-            AdvanceTurn();
+            currentPlayer.Hand.InsertCard(drawnCard);
+            if (_pendingDraws <= 0)
+            {
+                AdvanceTurn();
+            }
         }
     }
+
 
     public IPlayer GetPlayerById(Guid playerId)
     {
