@@ -11,6 +11,6 @@ internal class ShuffleAction : ActionBase
 
     protected override void Execute()
     {
-        Game.DrawPile.Shuffle();
+        CurrentGame.DrawPile.Shuffle();
     }
 }
