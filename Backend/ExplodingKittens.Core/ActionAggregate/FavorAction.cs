@@ -17,10 +17,8 @@ internal class FavorAction: ActionBase
 
     protected override void Execute()
     {
-        if (IsNoped) return;
         IPlayer targetPlayer = _game.GetPlayerById(TargetPlayerId!.Value);
         IPlayer player = _game.GetPlayerById(PlayerId);
-        //TODO remove cast when actionBase is implimented
         Card targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard(TargetCard!);
         player.Hand.InsertCard((Card)targetPlayerPickedCard);
     }
