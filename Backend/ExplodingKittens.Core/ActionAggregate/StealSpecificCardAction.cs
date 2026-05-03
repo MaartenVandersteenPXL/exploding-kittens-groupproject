@@ -22,9 +22,9 @@ internal class StealSpecificCardAction : ActionBase
         {
             throw new InvalidOperationException("doelspeler and doelkaart moeten aangeduid worden");
         }
-        IPlayer targetPlayer = Game.GetPlayerById(TargetPlayerId.Value);
+        IPlayer targetPlayer = CurrentGame.GetPlayerById(TargetPlayerId.Value);
         Card? stolenCard = targetPlayer.Hand.PickSpecificCard(TargetCard.Value);
-        IPlayer actionPlayer = Game.GetPlayerById(PlayerId);
+        IPlayer actionPlayer = CurrentGame.GetPlayerById(PlayerId);
         if (stolenCard != null)
         {
             

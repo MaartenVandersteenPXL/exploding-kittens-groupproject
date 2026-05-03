@@ -16,9 +16,9 @@ internal class StealRandomCardAction : ActionBase
         {
             throw new InvalidOperationException("TargetPlayerId and TargetCard must be specified");
         }
-        IPlayer targetPlayer = Game.GetPlayerById(TargetPlayerId.Value);
+        IPlayer targetPlayer = CurrentGame.GetPlayerById(TargetPlayerId.Value);
         Card? randomCard = targetPlayer.Hand.PickRandomCard();
-        IPlayer actionPlayer = Game.GetPlayerById(PlayerId);
+        IPlayer actionPlayer = CurrentGame.GetPlayerById(PlayerId);
         if(randomCard == null)
         {
             throw new InvalidOperationException("speler is uitgeschakeld");
