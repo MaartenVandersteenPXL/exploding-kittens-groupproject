@@ -1,54 +1,213 @@
 using ExplodingKittens.Core.ActionAggregate.Contracts;
 using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.GameAggregate.Contracts;
+using ExplodingKittens.Core.PlayerAggregate.Contracts;
+using System.ComponentModel.Design;
+using System.Runtime.CompilerServices;
 
 namespace ExplodingKittens.Core.ActionAggregate;
 
 /// <inheritdoc cref="IAction"/>
 public abstract class ActionBase : IAction
 {
-
+    private IGame _game;
+    private Guid _playerId;
+    private IReadOnlyList<Card> _cards;
+    private bool _canBeNoped;
+    private Guid? _targetPlayerId;
+    private Card? _targetCard;
+    private int? _drawPileIndex;
+    private Dictionary<Guid, NopeDecision> _playerNopeDecisions;
+    private bool _isExecuted;
     protected ActionBase(IGame game, Guid playerId, IReadOnlyList<Card> cards, bool canBeNoped)
     {
+        _game = game;
+        _playerId = playerId;
+        _cards = cards;
+        _canBeNoped = canBeNoped;
+        _playerNopeDecisions = new Dictionary<Guid, NopeDecision>();
+        foreach (IPlayer player in _game.Players)
+        {
+            _playerNopeDecisions.Add(player.Id, NopeDecision.NotDecided);
+        }
+        
 
     }
 
     protected ActionBase(IGame game, Guid playerId, IReadOnlyList<Card> cards, bool canBeNoped, Card? targetCard, Guid? targetPlayerId, int? drawPileIndex) : this(game, playerId, cards, canBeNoped)
     {
-
+        _targetCard = targetCard;
+        _targetPlayerId = targetPlayerId;
+        _drawPileIndex = drawPileIndex;
     }
 
-    public Guid PlayerId => throw new NotImplementedException();
+    protected IGame CurrentGame
+    {
+        get
+        {
+            return _game;
+        }
+    }
 
-    public IReadOnlyList<Card> Cards => throw new NotImplementedException();
+    public Guid PlayerId
+    {
+        get
+        {
+            return _playerId;
+        }
+    }
+        
+       
 
-    public bool CanBeNoped => throw new NotImplementedException();
+    public IReadOnlyList<Card> Cards
+    {
+        get
+        {
+            return _cards;
+        }
+    }
+        
 
-    public Guid? TargetPlayerId => throw new NotImplementedException();
 
-    public Card? TargetCard { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public bool CanBeNoped
+    {
+        get
+        {
+            return _canBeNoped;
+        }
+    } 
+        
 
-    public int? DrawPileIndex => throw new NotImplementedException();
 
-    public IReadOnlyDictionary<Guid, NopeDecision> PlayerNopeDecisions => throw new NotImplementedException();
+    public Guid? TargetPlayerId
+    {
+        get
+        {
+            return _targetPlayerId;
+        }
+    }
 
-    public bool IsNoped => throw new NotImplementedException();
+    public Card? TargetCard
+    {
+        get
+        {
+            return _targetCard;
+        }
+        set
+        {
+            _targetCard = value;
+        }
+    }
+            
 
-    public bool IsExecuted => throw new NotImplementedException();
+
+    public int? DrawPileIndex
+    {
+        get
+        {
+            return _drawPileIndex;
+        }
+    } 
+        
+
+    public IReadOnlyDictionary<Guid, NopeDecision> PlayerNopeDecisions
+    {
+        get
+        {
+            return _playerNopeDecisions;
+        }
+    }
+        
+
+
+    public bool IsNoped
+    {
+        get
+        {
+            
+
+            foreach (KeyValuePair<Guid, NopeDecision> decision in _playerNopeDecisions)
+            {
+                if (decision.Value == NopeDecision.Nope)
+                {
+                    return true;
+                }
+            }
+            return false;
+            
+        }
+    }
+
+
+    public bool IsExecuted
+    {
+        get
+        {
+
+            return _isExecuted;
+        }
+    }
 
     public void ConfirmNotNoping(Guid notNopingPlayerId)
     {
-        throw new NotImplementedException();
+        _playerNopeDecisions[notNopingPlayerId] = NopeDecision.NotNoping;
+        int countNotNoping = 0;
+       
+
+        foreach (KeyValuePair<Guid, NopeDecision> decision in _playerNopeDecisions)
+        {
+            if (decision.Value == NopeDecision.NotNoping)
+            {
+                countNotNoping++;
+            }
+            
+        }
+        if(_playerNopeDecisions.Count == countNotNoping )
+            {
+                _isExecuted = true;
+            Execute();
+            }
+
+
     }
 
     public void Nope(Guid nopingPlayerId)
     {
-        throw new NotImplementedException();
+        ICollection<Guid> keys = _playerNopeDecisions.Keys;
+        if (!IsNoped)
+        {
+            
+
+            foreach (Guid key in keys)
+            {
+                if (key.Equals(nopingPlayerId))
+                {
+                    _playerNopeDecisions[key] = NopeDecision.Nope;
+                } else
+                {
+                    _playerNopeDecisions[key] = NopeDecision.NotDecided;
+                }
+            }
+           
+        }
+        else
+        {
+            foreach (Guid key in keys)
+            {
+                if (key.Equals(nopingPlayerId))
+                {
+                    _playerNopeDecisions[key] = NopeDecision.NotNoping;
+                }
+                else
+                {
+                    _playerNopeDecisions[key] = NopeDecision.NotDecided;
+                }
+            }
+        }
+
+   
     }
 
 
-    /// <summary>
-    /// Classes that inherit from ActionBase should implement this method to execute the specific logic of the action.
-    /// </summary>
     protected abstract void Execute();
 }
