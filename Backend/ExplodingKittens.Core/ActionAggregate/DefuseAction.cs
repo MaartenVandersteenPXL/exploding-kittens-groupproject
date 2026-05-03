@@ -1,6 +1,7 @@
-using ExplodingKittens.Core.ActionAggregate.Contracts;
 using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.GameAggregate.Contracts;
+using ExplodingKittens.Core.PlayerAggregate.Contracts;
+using System.Data;
 
 namespace ExplodingKittens.Core.ActionAggregate;
 
@@ -8,38 +9,21 @@ namespace ExplodingKittens.Core.ActionAggregate;
 /// Defuse an Exploding Kitten: place it back in the draw pile at the chosen index.
 /// The turn is over after playing this card
 /// </summary>
-internal class DefuseAction: IAction
+internal class DefuseAction : ActionBase
 {
-    public DefuseAction(IGame game, Guid playerId, int drawPileIndex)
+    public DefuseAction(IGame game, Guid playerId, int drawPileIndex) : base(game, playerId, new List<Card> { Card.Defuse }, canBeNoped: false, targetCard: null, targetPlayerId: null, drawPileIndex: drawPileIndex)
     {
+
+    }
+    protected override void Execute()
+    {
+        IPlayer player = CurrentGame.GetPlayerById(PlayerId);
+
+        player.Hand.PickSpecificCard(Card.ExplodingKitten);
         
-    }
+        CurrentGame.DrawPile.InsertCard(Card.ExplodingKitten, DrawPileIndex!.Value);
+        CurrentGame.PendingDraws = 0;
+        CurrentGame.AdvanceTurn();
 
-    public Guid PlayerId => throw new NotImplementedException();
-
-    public IReadOnlyList<Card> Cards => throw new NotImplementedException();
-
-    public bool CanBeNoped => throw new NotImplementedException();
-
-    public Guid? TargetPlayerId => throw new NotImplementedException();
-
-    public Card? TargetCard { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    public int? DrawPileIndex => throw new NotImplementedException();
-
-    public IReadOnlyDictionary<Guid, NopeDecision> PlayerNopeDecisions => throw new NotImplementedException();
-
-    public bool IsNoped => throw new NotImplementedException();
-
-    public bool IsExecuted => throw new NotImplementedException();
-
-    public void ConfirmNotNoping(Guid notNopingPlayerId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Nope(Guid nopingPlayerId)
-    {
-        throw new NotImplementedException();
     }
 }
