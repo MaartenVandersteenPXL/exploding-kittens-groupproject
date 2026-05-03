@@ -157,6 +157,7 @@ public abstract class ActionBase : IAction
         if(_playerNopeDecisions.Count == countnotnoping )
             {
                 _isExecuted = true;
+            Execute();
             }
 
 
