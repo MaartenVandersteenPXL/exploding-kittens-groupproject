@@ -13,11 +13,11 @@ internal class AttackAction : ActionBase
     }
     protected override void Execute()
     {
-        int penaltyDraws = _game.PendingDraws * 2;
+        int penaltyDraws = Game.PendingDraws * 2;
 
-        _game.PendingDraws = 0;
-        _game.AdvanceTurn();
-        _game.PendingDraws = penaltyDraws;
+        Game.PendingDraws = 0;
+        Game.AdvanceTurn();
+        Game.PendingDraws = penaltyDraws;
 
     }
 }
