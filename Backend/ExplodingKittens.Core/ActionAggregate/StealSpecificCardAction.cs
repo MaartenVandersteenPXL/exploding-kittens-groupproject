@@ -20,11 +20,11 @@ internal class StealSpecificCardAction : ActionBase
     {
         if(TargetPlayerId == null || TargetCard == null)
         {
-            throw new InvalidOperationException("TargetPlayerId and TargetCard must be specified");
+            throw new InvalidOperationException("doelspeler and doelkaart moeten aangeduid worden");
         }
-        IPlayer targetPlayer = _game.GetPlayerById(TargetPlayerId.Value);
+        IPlayer targetPlayer = Game.GetPlayerById(TargetPlayerId.Value);
         Card? stolenCard = targetPlayer.Hand.PickSpecificCard(TargetCard.Value);
-        IPlayer actionPlayer = _game.GetPlayerById(PlayerId);
+        IPlayer actionPlayer = Game.GetPlayerById(PlayerId);
         if (stolenCard != null)
         {
             
