@@ -41,6 +41,14 @@ public abstract class ActionBase : IAction
         _drawPileIndex = drawPileIndex;
     }
 
+    protected IGame Game
+    {
+        get
+        {
+            return _game;
+        }
+    }
+
     public Guid PlayerId
     {
         get
@@ -157,6 +165,7 @@ public abstract class ActionBase : IAction
         if(_playerNopeDecisions.Count == countnotnoping )
             {
                 _isExecuted = true;
+            Execute();
             }
 
 
