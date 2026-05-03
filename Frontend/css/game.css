@@ -13,6 +13,13 @@ h1{
     color: #5f2f45;
     margin: 0;
 }
+h2{
+    font-family: 'Abel';
+    font-weight: 200;
+    font-size: 2em;
+    color: #a02f40;
+    margin: 0;
+}
 
 p {
     font-family: 'Abel';
@@ -253,56 +260,41 @@ header{
 
 /* Eigen hand */
 .hand-area {
-    background-color: #ab2d48;
+    display: flex;
+    direction: row;
+    background-color: #a02f40;
     padding: 15px;
     border-radius: 20px;
-    position: relative;
     min-height: 250px;
-    display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-}
-
-/* HET BERICHTVAK: RECHTSONDER */
-.game-message {
-    position: absolute;
-    top: 15px;
-    right: 30px;
-    background-color: #5f2f45;
-    color: #f5ddbc;
-    padding: 10px 25px;
-    border-radius: 10px;
-    font-weight: bold;
-    min-width: 200px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    gap:120px;/* Geeft berichtenvak ruimte */
 }
 
 .hand-container {
     display: flex;
+    flex-wrap: wrap;
+    height: 100%;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
     max-width: 580px;
-    padding-right: 120px; /* Geeft berichtenvak ruimte */
-    row-gap: 20px;
 }
 
 /* Eigen kaarten */
 .own-card {
     display: flex;
     flex-direction: column;
-    position: relative;
-    flex: 0 0 80px;
     height: 100px;
-    background-color: #bdc3c7;
+    background-color: #f5ddbc;
     border: 2px solid #5f2f45;
     border-radius: 10px;
-    margin-left: -35px; /* DIT ZORGT VOOR DE OVERLAP */
     align-items: center;
-    justify-content: space-around;
     padding: 10px;
     transition: transform 0.2s;
-    box-shadow:  -4px 0 10px rgba(0,0,0,0.3);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .own-card:hover {
@@ -320,7 +312,7 @@ header{
     text-align: center;
 }
 
-.cart-enum {
+.card-enum {
     background: #f8ddb7;
     width: 35px;
     height: 35px;
@@ -333,28 +325,41 @@ header{
     border: 1px solid #5f2f45;
 }
 /* Zorgt dat de kaarten op de 2de rij gelijk met de eerste beginnen */
-.own-card:first-child,
-.own-card:nth-child(10){
+.own-card:nth-child(n+1){
+    margin-left: -35px; /* DIT ZORGT VOOR DE OVERLAP */
+}
+.own-card:first-child, .own-card:nth-child(10){
     margin-left: 10px;
 }
-.deck button{
-    background: none;
-    border: none;
+
+/* mesage board */
+.hand-controls{
+    display: flex;
+    flex-direction: column;
 }
+.game-message {
+    background-color: #5f2f45;
+    color: #f5ddbc;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    width: 200px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    flex-grow: 1;
+}
+
 /* Speel knop */
 .play-btn {
-    position: absolute;
-    bottom: 15px;
-    right: 30px;
-    background-color: cornflowerblue;
-    color: white;
-    border: 2px solid beige;
-    width: 100px;
-    height: 100px;
+    display: flex;
+    flex-shrink: 1;
+    justify-content: center;
+    background-color: #7396d5;
+    color: #f5ddbc;
+    border: 2px solid #f5ddbc;
+    width: 200px;
     border-radius: 10px;
     font-family: 'Abel';
-    font-size: 1.4em;
-    font-weight: bold;
+    font-size: 1.5rem;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 

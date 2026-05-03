@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Exploding Kittens - Game</title>
     <link rel="stylesheet" href="css/game.css"/>
-    <script src="js/game.js" defer></script>
+    <script type="module" src="js/game.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
 </head>
 <body>
@@ -14,7 +14,7 @@
         <img src="./assets/cat-svgrepo-com.svg" alt="logo">
     </div>
     <nav class="sidebar-menu">
-        <a id="game-on" href="">GAME ON</a>
+        <a id="logout" href="index.html">LOG OUT</a>
         <a id="XXX" href="">XXX</a>
         <a id="XXX1" href="">XXX</a>
         <a id="XXX2" href="">XXX</a>
@@ -56,14 +56,13 @@
 
     <!-- Dashboard onderaan -->
     <section class="hand-area">
-        <div class="hand-container" id="myHand">
-
-            <div class="own-card"><p>Placeholder</p><div class="cart-enum">0</div>
-            <!-- JS gaat hier kaarten in 'injecteren' -->
-            </div>
-
+        <div class="hand-container" id="userCardHand">
+            <!-- inject cards -->
+        </div>
+        <div class="hand-controls">
             <div class="game-message">
-                <p id="statusMessage">Start the game already</p>
+                <p id="statusMessage"></p>
+                <p class="backend-error" id="backendErrorPlayersTable"></p>
             </div>
             <button id="playActionBtn" class="play-btn">SPEEL</button>
         </div>
