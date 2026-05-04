@@ -80,9 +80,6 @@ internal class Game : IGame
         }
         // 2. Geef aan de actie door dat deze speler niet gaat 'Nopen'
         _pendingAction.ConfirmNotNoping(playerId);
-
-        // 3. Als alle spelers hebben bevestigd dat ze niet nopen, voer de actie uit en maak deze in behandeling leeg
-
     }
 
     public void DrawCard(Guid playerId)
@@ -106,7 +103,7 @@ internal class Game : IGame
         if (drawnCard == Card.ExplodingKitten)
         {
             currentPlayer.Hand.InsertCard(drawnCard);
-            _pendingDraws = 0; // Beurt stopt sowieso na een bom
+            _pendingDraws = 0; // Beurt stopt sowieso na een Exploding Kitteb
 
             // Check of de speler direct geëlimineerd is (geen defuse in hand)
             if (currentPlayer.Eliminated)
@@ -128,7 +125,6 @@ internal class Game : IGame
             }
         }
     }
-
 
     public IPlayer GetPlayerById(Guid playerId)
     {
@@ -157,10 +153,8 @@ internal class Game : IGame
         }
 
         _discardPile.Add(Card.Nope);
-
         _pendingAction.Nope(playerId);
     }
-
 
     public void PlayAction(Guid playerId, IReadOnlyList<Card> cards, Guid? targetPlayerId, Card? targetCard, int? drawPileIndex)
     {
@@ -199,22 +193,21 @@ internal class Game : IGame
             {
                 action.ConfirmNotNoping(player.Id);
             }
-
         }
         _pendingAction = action;
     }
 
-
     public void SelectCardToGiveAsAFavor(Guid playerId, Card card)
     {
+
         if (_pendingAction == null)
         {
-            throw new InvalidOperationException("Er is geen pending action.");
+            throw new InvalidOperationException("Er is geen actie in behandeling."));
         }
 
         if (_pendingAction.Cards[0] != Card.Favor)
         {
-            throw new InvalidOperationException("De pending action is geen Favor.");
+            throw new InvalidOperationException("De action is geen Favor.");
         }
 
         _pendingAction.TargetCard = card;
