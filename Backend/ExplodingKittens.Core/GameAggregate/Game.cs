@@ -73,12 +73,10 @@ internal class Game : IGame
 
     public void ConfirmNotNopingPendingAction(Guid playerId)
     {
-        //1. Controleert of er genoped kan worden
         if (_pendingAction == null)
         {
             throw new InvalidOperationException("Er is geen actie in behandeling.");
         }
-        // 2. Geef aan de actie door dat deze speler niet gaat 'Nopen'
         _pendingAction.ConfirmNotNoping(playerId);
     }
 
