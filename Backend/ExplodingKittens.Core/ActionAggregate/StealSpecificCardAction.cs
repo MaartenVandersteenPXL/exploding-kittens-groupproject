@@ -17,7 +17,7 @@ internal class StealSpecificCardAction : ActionBase
     {
         if(TargetPlayerId == null || TargetCard == null)
         {
-            throw new InvalidOperationException("doelspeler and doelkaart moeten aangeduid worden");
+            throw new InvalidOperationException("doelspeler en doelkaart moeten aangeduid worden");
         }
         IPlayer targetPlayer = CurrentGame.GetPlayerById(TargetPlayerId.Value);
         Card? stolenCard = targetPlayer.Hand.PickSpecificCard(TargetCard.Value);
@@ -27,18 +27,8 @@ internal class StealSpecificCardAction : ActionBase
             
             actionPlayer.Hand.InsertCard(stolenCard.Value);
         }
-        else
-        {
-            Card? randomCard = targetPlayer.Hand.PickRandomCard();
-            if (randomCard == null)
-            {
-                throw new InvalidOperationException("speler is reeds uitgeschakeld");
-            }
-            else
-            {
-                actionPlayer.Hand.InsertCard(randomCard.Value);
-            }
-        }
+        //else er gebeurt niets
+       
         
     }
 }
