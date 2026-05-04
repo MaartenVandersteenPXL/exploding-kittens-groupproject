@@ -1,41 +1,28 @@
-using ExplodingKittens.Core.ActionAggregate.Contracts;
 using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.GameAggregate.Contracts;
 
 namespace ExplodingKittens.Core.ActionAggregate;
 
 /// <summary>End your turn without drawing a card.</summary>
-internal class SkipAction : IAction
+internal class SkipAction : ActionBase
 {
     public SkipAction(IGame game, Guid playerId)
-    {
+        : base(game, playerId, new List<Card> { Card.Skip } , true)
+    {      
     }
 
-    public Guid PlayerId => throw new NotImplementedException();
-
-    public IReadOnlyList<Card> Cards => throw new NotImplementedException();
-
-    public bool CanBeNoped => throw new NotImplementedException();
-
-    public Guid? TargetPlayerId => throw new NotImplementedException();
-
-    public Card? TargetCard { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    public int? DrawPileIndex => throw new NotImplementedException();
-
-    public IReadOnlyDictionary<Guid, NopeDecision> PlayerNopeDecisions => throw new NotImplementedException();
-
-    public bool IsNoped => throw new NotImplementedException();
-
-    public bool IsExecuted => throw new NotImplementedException();
-
-    public void ConfirmNotNoping(Guid notNopingPlayerId)
+    protected override void Execute()
     {
-        throw new NotImplementedException();
+        if (CurrentGame.PendingDraws > 1)
+        {
+            CurrentGame.PendingDraws--;
+        }
+        else
+        {
+            CurrentGame.PendingDraws = 0;
+            CurrentGame.AdvanceTurn();
+        }
+        
     }
-
-    public void Nope(Guid nopingPlayerId)
-    {
-        throw new NotImplementedException();
-    }
-}
+  }
+ 
