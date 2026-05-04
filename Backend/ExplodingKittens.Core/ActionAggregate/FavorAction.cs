@@ -15,7 +15,16 @@ internal class FavorAction: ActionBase
     {
         IPlayer targetPlayer = CurrentGame.GetPlayerById(TargetPlayerId!.Value);
         IPlayer player = CurrentGame.GetPlayerById(PlayerId);
-        Card? targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard((Card)TargetCard);
+        Card? targetPlayerPickedCard;
+        if (targetPlayer.Hand.Contains(TargetCard!.Value))
+        {
+            targetPlayerPickedCard  = targetPlayer.Hand.PickSpecificCard((Card)TargetCard);
+        } else
+        {
+            targetPlayerPickedCard = targetPlayer.Hand.PickRandomCard();
+        }
+        
+        //Card? targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard((Card)TargetCard);
         player.Hand.InsertCard((Card)targetPlayerPickedCard);
     }
 
