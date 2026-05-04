@@ -202,7 +202,7 @@ internal class Game : IGame
 
         if (_pendingAction == null)
         {
-            throw new InvalidOperationException("Er is geen actie in behandeling."));
+            throw new InvalidOperationException("Er is geen actie in behandeling.");
         }
 
         if (_pendingAction.Cards[0] != Card.Favor)
