@@ -99,8 +99,8 @@ public class GameFactoryTests
         deckMock.Verify(d => d.InsertCard(Card.ExplodingKitten), Times.Exactly(expectedNumberOfExplodingKittens),
             $"There should be exactly {expectedNumberOfExplodingKittens} exploding kitten card(s) in the deck");
 
-        Assert.That(deckMock.Object.CardCount, Is.EqualTo(23),
-            "After dealing and inserting defuse and exploding kitten cards, there should be exactly 23 cards in the deck in a 2-player game. " +
+        Assert.That(deckMock.Object.CardCount, Is.EqualTo(24),
+            "After dealing and inserting defuse and exploding kitten cards, there should be exactly 24 cards in the deck in a 2-player game. " +
             "Remember to remove one third of the cards when there are 3 players or less");
 
         Assert.That(game.DrawPile, Is.SameAs(_cardDeckFactoryMockBuilder.CardDeckMock.Object),

@@ -7,7 +7,7 @@ namespace ExplodingKittens.Core.Tests.Builders;
 
 public class CardDeckMockBuilder : MockBuilder<ICardDeck>
 {
-    private int _cardCount = 47;
+    private int _cardCount = 48;
 
     public CardDeckMockBuilder()
     {
