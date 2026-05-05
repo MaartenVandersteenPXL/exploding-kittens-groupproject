@@ -125,13 +125,11 @@ createNewTableButton.addEventListener("click", async (event) => {
     const result = await createTable(numberOfNewPlayers.value, numberOfNewAiPlayers.value);
     if (!result) return;
     // END HAMZA CODE
+
+    //GoToTable
+    playerTableCandidateId = result.id;
+    goToTableButton.click();
     createNewTableNav.style.display=""
-    if(numberOfNewPlayers.value === "2" && numberOfNewAiPlayers.value === "1"){
-        playerTableCandidateId = result.id;
-        goToTableButton.click();
-    }else{
-        toonSectie(lobbyBrowser, titles[0], intros[0]);
-    }
     numberOfNewPlayers.value = "";
     numberOfNewAiPlayers.value = "";
 });
