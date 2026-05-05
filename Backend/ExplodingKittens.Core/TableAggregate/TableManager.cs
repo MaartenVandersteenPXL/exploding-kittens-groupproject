@@ -35,7 +35,7 @@ internal class TableManager : ITableManager
     public ITable JoinTable(Guid tableId, User user)
     {
        ITable tableToJoin = _tableRepository.Get(tableId);
-        tableToJoin.Join(user);
+       tableToJoin.Join(user);
 
        return tableToJoin;
     }
