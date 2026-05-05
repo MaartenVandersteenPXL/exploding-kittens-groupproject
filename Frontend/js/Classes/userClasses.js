@@ -7,7 +7,7 @@ export class User {
         this.birthdate = birthdate;
     }
 
-    save(){
+    static save(){
         sessionStorage.setItem("user", JSON.stringify(this));
     }
 
@@ -15,7 +15,7 @@ export class User {
         return JSON.parse(sessionStorage.getItem("user"));
     }
 
-    delete(){
+    static delete(){
         sessionStorage.removeItem("user");
     }
 }
@@ -26,7 +26,7 @@ export class Token {
         this.token = token;
     }
 
-    save(){
+    static save(){
         sessionStorage.setItem("token", this);
     }
 
@@ -34,7 +34,7 @@ export class Token {
         return sessionStorage.getItem("token");
     }
 
-    delete(){
+    static delete(){
         sessionStorage.removeItem("token");
     }
 }
