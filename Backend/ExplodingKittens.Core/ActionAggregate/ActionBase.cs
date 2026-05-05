@@ -16,7 +16,7 @@ public abstract class ActionBase : IAction
     private Card? _targetCard;
     private int? _drawPileIndex;
     private Dictionary<Guid, NopeDecision> _playerNopeDecisions;
-    private bool _isExecuted;
+    private bool _isExecuted = false;
     protected ActionBase(IGame game, Guid playerId, IReadOnlyList<Card> cards, bool canBeNoped)
     {
         _game = game;
@@ -29,7 +29,6 @@ public abstract class ActionBase : IAction
             _playerNopeDecisions.Add(player.Id, NopeDecision.NotDecided);
         }
         
-
     }
 
     protected ActionBase(IGame game, Guid playerId, IReadOnlyList<Card> cards, bool canBeNoped, Card? targetCard, Guid? targetPlayerId, int? drawPileIndex) : this(game, playerId, cards, canBeNoped)
@@ -55,8 +54,6 @@ public abstract class ActionBase : IAction
         }
     }
         
-       
-
     public IReadOnlyList<Card> Cards
     {
         get
@@ -65,8 +62,6 @@ public abstract class ActionBase : IAction
         }
     }
         
-
-
     public bool CanBeNoped
     {
         get
@@ -75,8 +70,6 @@ public abstract class ActionBase : IAction
         }
     } 
         
-
-
     public Guid? TargetPlayerId
     {
         get
@@ -97,8 +90,6 @@ public abstract class ActionBase : IAction
         }
     }
             
-
-
     public int? DrawPileIndex
     {
         get
@@ -107,7 +98,6 @@ public abstract class ActionBase : IAction
         }
     } 
         
-
     public IReadOnlyDictionary<Guid, NopeDecision> PlayerNopeDecisions
     {
         get
@@ -116,57 +106,55 @@ public abstract class ActionBase : IAction
         }
     }
         
-
-
     public bool IsNoped
     {
         get
         {
             
-
-            foreach (KeyValuePair<Guid, NopeDecision> decision in _playerNopeDecisions)
+            int check = _playerNopeDecisions.Count(x => x.Value == NopeDecision.Nope);
+            if(check > 2)
             {
-                if (decision.Value == NopeDecision.Nope)
-                {
-                    return true;
-                }
+                _isExecuted = true;
+                return false;
             }
-            return false;
-            
+
+            else if(_playerNopeDecisions.Values.Contains(NopeDecision.Nope)){
+
+                return true;
+
+            }
+            else
+            {
+                _isExecuted = true;
+                return false;
+            }
         }
     }
-
 
     public bool IsExecuted
     {
         get
         {
-
             return _isExecuted;
         }
     }
 
     public void ConfirmNotNoping(Guid notNopingPlayerId)
     {
+        //_game.ConfirmNotNopingPendingAction(notNopingPlayerId);
         _playerNopeDecisions[notNopingPlayerId] = NopeDecision.NotNoping;
-        int countNotNoping = 0;
-       
-
-        foreach (KeyValuePair<Guid, NopeDecision> decision in _playerNopeDecisions)
+        int notDecidedPlayers = _playerNopeDecisions.Count(x => x.Value == NopeDecision.NotDecided);
+        
+        if (notDecidedPlayers > 0)
         {
-            if (decision.Value == NopeDecision.NotNoping)
-            {
-                countNotNoping++;
-            }
-            
-        }
-        if(_playerNopeDecisions.Count == countNotNoping )
-            {
-                _isExecuted = true;
+            _isExecuted = false;
+            return;
+        } 
+        else
+        {
+            _isExecuted = true;
             Execute();
-            }
-
-
+        };
     }
 
     public void Nope(Guid nopingPlayerId)
@@ -174,8 +162,6 @@ public abstract class ActionBase : IAction
         ICollection<Guid> keys = _playerNopeDecisions.Keys;
         if (!IsNoped)
         {
-            
-
             foreach (Guid key in keys)
             {
                 if (key.Equals(nopingPlayerId))
@@ -202,9 +188,8 @@ public abstract class ActionBase : IAction
                 }
             }
         }
-
-   
     }
+
 
 
     protected abstract void Execute();
