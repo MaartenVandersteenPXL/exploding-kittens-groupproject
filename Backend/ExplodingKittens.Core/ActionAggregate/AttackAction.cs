@@ -1,7 +1,6 @@
 using ExplodingKittens.Core.ActionAggregate.Contracts;
 using ExplodingKittens.Core.CardAggregate;
 using ExplodingKittens.Core.GameAggregate.Contracts;
-using ExplodingKittens.Core.CardAggregate;
 
 namespace ExplodingKittens.Core.ActionAggregate;
 
@@ -15,7 +14,16 @@ internal class AttackAction : ActionBase
     }
     protected override void Execute()
     {
-        int penaltyDraws = CurrentGame.PendingDraws * 2;
+        int penaltyDraws;
+            
+            if (CurrentGame.PendingDraws <= 1)
+        {
+            penaltyDraws = 2;
+        }
+        else
+        {
+            penaltyDraws = CurrentGame.PendingDraws + 2; 
+        }
 
         CurrentGame.PendingDraws = 0;
         CurrentGame.AdvanceTurn();
