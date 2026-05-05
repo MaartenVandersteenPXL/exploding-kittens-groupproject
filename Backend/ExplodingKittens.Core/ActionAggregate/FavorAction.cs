@@ -14,15 +14,14 @@ internal class FavorAction : ActionBase
 
     protected override void Execute()
     {
-        IPlayer targetPlayer = CurrentGame.GetPlayerById(TargetPlayerId.Value);
-        IPlayer player = CurrentGame.GetPlayerById(PlayerId);
-        Card? targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard(TargetCard.Value);
-
-
         if (!TargetPlayerId.HasValue || !TargetCard.HasValue)
         {
             return;
         }
+
+        IPlayer targetPlayer = CurrentGame.GetPlayerById(TargetPlayerId.Value);
+        IPlayer player = CurrentGame.GetPlayerById(PlayerId);
+        Card? targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard(TargetCard.Value);
 
         if (targetPlayerPickedCard.HasValue)
         {
