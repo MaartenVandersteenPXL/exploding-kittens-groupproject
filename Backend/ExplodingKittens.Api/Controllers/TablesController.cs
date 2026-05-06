@@ -87,13 +87,11 @@ public class TablesController : ApiControllerBase
         User currentUser = (await _userManager.GetUserAsync(User))!;
         ITable table = _tableManager.JoinTable(id, currentUser);
 
-        /*
         if(!table.HasAvailableSeat)
         {
             _tableManager.StartGameForTable(table.Id);
         }
-        */
-
+        
         TableModel tableModel = _mapper.MapTable(table);
 
         return Ok(tableModel);

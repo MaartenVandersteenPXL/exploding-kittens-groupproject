@@ -69,7 +69,6 @@ internal class GameFactory : IGameFactory
         }
 
         // 8. Maak het spel aan
-        return null;
-        //return new Game(Guid.NewGuid(), players, deck, startingPlayer.Id, _actionFactory);
+        return new Game(Guid.NewGuid(), players, deck, startingPlayer.Id, _actionFactory);
     }
 }
