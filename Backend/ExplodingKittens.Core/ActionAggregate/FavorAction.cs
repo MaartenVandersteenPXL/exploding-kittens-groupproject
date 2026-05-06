@@ -5,31 +5,32 @@ using ExplodingKittens.Core.PlayerAggregate.Contracts;
 namespace ExplodingKittens.Core.ActionAggregate;
 
 /// <summary>Target player gives you a card of their choice. Target chooses which card to give.</summary>
-internal class FavorAction: ActionBase
+internal class FavorAction : ActionBase
 {
-    public FavorAction(IGame game, Guid playerId, Guid targetPlayerId): 
-        base (game, playerId, new List<Card> { Card.Favor }, canBeNoped: true, targetCard: null, targetPlayerId: targetPlayerId, drawPileIndex: null )
-    {}
+    public FavorAction(IGame game, Guid playerId, Guid targetPlayerId) :
+        base(game, playerId, new List<Card> { Card.Favor }, canBeNoped: true, targetCard: null, targetPlayerId: targetPlayerId, drawPileIndex: null)
+    { }
+
 
     protected override void Execute()
     {
-        IPlayer targetPlayer = CurrentGame.GetPlayerById(TargetPlayerId!.Value);
-        IPlayer player = CurrentGame.GetPlayerById(PlayerId);
-        Card? targetPlayerPickedCard;
-        if (targetPlayer.Hand.Cards.Count == 0)
+        if (!TargetPlayerId.HasValue || !TargetCard.HasValue)
         {
-            //throw new InvalidOperationException("A target player must have cards available");
             return;
         }
-        if (targetPlayer.Hand.Contains(TargetCard!.Value))
+
+        IPlayer targetPlayer = CurrentGame.GetPlayerById(TargetPlayerId.Value);
+        IPlayer player = CurrentGame.GetPlayerById(PlayerId);
+        Card? targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard(TargetCard.Value);
+
+        if (targetPlayerPickedCard.HasValue)
         {
-            targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard(TargetCard!.Value);
-        }else
-        {
-            targetPlayerPickedCard = targetPlayer.Hand.PickRandomCard();
+            player.Hand.InsertCard(targetPlayerPickedCard.Value);
         }
-        //Card? targetPlayerPickedCard = targetPlayer.Hand.PickSpecificCard((Card)TargetCard);
-        player.Hand.InsertCard((Card)targetPlayerPickedCard);
+        // AANPASSINGEN:
+        // 1. PickRandomCard verwijderd: Volgt nu de officiële regels (slachtoffer kiest, geen automatisme).
+        // 2. Null-checks toegevoegd: Voorkomt crashes (NullReferenceExceptions) als TargetCard of kaartselectie leeg is.
+        // 3. Data-validatie: De actie stopt nu netjes als de benodigde input (wie/wat) nog ontbreekt.
     }
 
 }

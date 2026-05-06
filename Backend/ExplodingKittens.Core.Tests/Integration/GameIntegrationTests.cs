@@ -80,8 +80,8 @@ public class GameIntegrationTests
     [MonitoredTest]
     [TestCase("BeardCat,BeardCat,BeardCat,TacoCat,TacoCat,TacoCat,Shuffle,SeeTheFuture",
         "Attack,Favor",
-        "Attack,TacoCat",
-        "Attack,Shuffle")]
+        "Attack,Shuffle",
+        "Attack,TacoCat")]
     public void ThreePlayerGame_PlayAttackActions_NoNoping(
         string drawPileCards, string player1Hand, string player2Hand, string player3Hand)
     {
@@ -94,25 +94,28 @@ public class GameIntegrationTests
             IPlayer playerToPlay = GetPlayerToPlay(game);
             Assert.That(playerToPlay.Eliminated, Is.False, "The player to play should not be marked as eliminated");
 
-            int numberOfPendingDrawsBeforeTurn = game.PendingDraws;
+            TestContext.Out.WriteLine($"Player '{playerToPlay.Name}' has to draw {game.PendingDraws} cards");
 
-            if (playerToPlay.Hand.Contains(Card.Attack))
-            {
-                var attackAction = PlayCardWithoutNoping<AttackAction>(game, playerToPlay, Card.Attack) as IAction;
-                Assert.That(attackAction.CanBeNoped, Is.True, "An 'Attack' action should be noppable");
-
-                bool turnAdvanced = game.PlayerToPlayId != playerToPlay.Id;
-                Assert.That(turnAdvanced, Is.True, "After playing an 'Attack' action, the turn should advance to the next player");
-                Assert.That(game.PendingDraws, Is.EqualTo(numberOfPendingDrawsBeforeTurn * 2),
-                    "After playing an 'Attack' action, the number of pending draws should have doubled");
-            }
-            else
+            if (!playerToPlay.Hand.Contains(Card.Attack) || game.PendingDraws == 4)
             {
                 DrawCard(game, playerToPlay);
 
                 Assert.That(game.DrawPile.CardCount, Is.EqualTo(previousDrawPileCardCount - 1),
                     "After drawing a card, the draw pile should have one less card");
                 previousDrawPileCardCount = game.DrawPile.CardCount;
+            }
+            else
+            {
+                int pendingDrawsBeforeAttack = game.PendingDraws;
+                var attackAction = PlayCardWithoutNoping<AttackAction>(game, playerToPlay, Card.Attack) as IAction;
+                Assert.That(attackAction.CanBeNoped, Is.True, "An 'Attack' action should be nopable");
+
+                bool turnAdvanced = game.PlayerToPlayId != playerToPlay.Id;
+                Assert.That(turnAdvanced, Is.True, "After playing an 'Attack' action, the turn should advance to the next player");
+
+                int expectedPendingDraws = pendingDrawsBeforeAttack == 1 ? 2 : pendingDrawsBeforeAttack + 2;
+                Assert.That(game.PendingDraws, Is.EqualTo(expectedPendingDraws),
+                    "After playing an 'Attack' action, the number of pending draws should be incremented with 2");
             }
         }
         WriteGameSituation(game);
