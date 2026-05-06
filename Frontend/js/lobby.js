@@ -11,6 +11,7 @@ import { User, Token } from "./Classes/userClasses.js";
 
 //VARIABLES
     let playerTableCandidateId;
+    let gameId;
 
 ///// elements
 //header
@@ -78,6 +79,7 @@ leaveTableNav.addEventListener("click", async (event) => {
     document.querySelectorAll('[class^="tableCandidate-"].active').forEach(x => x.classList.remove('active'))
     //tableTicker = false;
     playerTableCandidateId = "";
+    gameId = "";
     createNewTableNav.style.display="";
     leaveTableNav.style.display="none";
     lobbyTableList.replaceChildren();
@@ -193,7 +195,7 @@ startTableButton.addEventListener("click", () => {
     }
     */
     //tableTicker = false;
-    window.location.href = "game.html?tableId=" + encodeURIComponent(playerTableCandidateId);
+    window.location.href = "game.html?gameId=" + encodeURIComponent(gameId);
 });
 
 ////FORMS
@@ -432,6 +434,7 @@ async function playerJoinTable(tableId){
             dataJoinedTable.seatedPlayers,
             dataJoinedTable.hasAvailableSeat,
             dataJoinedTable.gameId);
+        gameId = joinedTable.gameId;
         return joinedTable;
     }catch(error){
         backendError.textContent = error.message;

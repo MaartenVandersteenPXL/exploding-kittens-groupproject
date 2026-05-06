@@ -4,12 +4,13 @@ import { ProblemDetails } from "./Classes/tableClasses.js";
 
 ////CLASSES
 let user = User.load();
-let titels = ["Game on"]
+let titels = ["Game on"];
 let intros = ["This is amazing! Prrt!",
     "Zoom zoom! Catch me if you can! Mrrrow!",
     "I got it! I got it! …wait—gone. Hmph!",
     "Best game ever! Pounce! Prrrp!",
-    "You saw that, right? Im incredible. Meow!"]
+    "You saw that, right? Im incredible. Meow!"];
+let userAsPlayer;
 
 ///// ELEMENTS
 //header
@@ -23,10 +24,11 @@ const userDeskMessageBoard= document.getElementById("statusMessage");
 const backendError = document.getElementById("backendError");
 /*
 ///Test id
-const tableIdfromURL = "a1b2c3d4-1234-5678-abcd-ef1234567890";
+const gameIdfromURL = "a1b2c3d4-1234-5678-abcd-ef1234567890";
 */
 const urlParams = new URLSearchParams(window.location.search);
-const tableIdfromURL = urlParams.get("tableId");
+let gameIdfromURL = urlParams.get("gameId");
+console.log("tableIdfromURL", gameIdfromURL);
 ///End test id
 
 //userCardDek
@@ -50,8 +52,8 @@ function gameInit(){
 }
 
 async function userCardsBuilder(){
-    let gameModel = await fetchGame(tableIdfromURL);
-    Player userAsPlayer = gameModel.players.find(p => p.id == user.id);
+    let gameModel = await fetchGame(gameIdfromURL);
+    userAsPlayer = gameModel.players.find(p => p.id === user.id);
     
     userAsPlayer.cardsInHand.forEach(element => {
         let cardContainer = document.createElement("div");
@@ -95,8 +97,9 @@ async function fetchGame(filterData){
     try {
         
         //REAL API CALL
-        const params = new URLSearchParams(filterData)
-        const response = await fetch(`https://localhost:5051/api/Games/${params}`, {
+        //const params = new URLSearchParams(filterData)
+        //console.log(filterData)
+        const response = await fetch(`https://localhost:5051/api/Games/${filterData}`, {
             method: "GET",
             headers: {
                 'Content-type' : 'Application/json',
