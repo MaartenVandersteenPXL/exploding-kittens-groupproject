@@ -141,20 +141,26 @@ public abstract class ActionBase : IAction
 
     public void ConfirmNotNoping(Guid notNopingPlayerId)
     {
-        //_game.ConfirmNotNopingPendingAction(notNopingPlayerId);
         _playerNopeDecisions[notNopingPlayerId] = NopeDecision.NotNoping;
-        int notDecidedPlayers = _playerNopeDecisions.Count(x => x.Value == NopeDecision.NotDecided);
-        
-        if (notDecidedPlayers > 0)
+
+        bool allDecided = true;
+        foreach (KeyValuePair<Guid, NopeDecision> decision in _playerNopeDecisions)
         {
-            _isExecuted = false;
-            return;
-        } 
-        else
+            if (decision.Value == NopeDecision.NotDecided)
+            {
+                allDecided = false;
+                break;
+            }
+        }
+
+        // Een actie is pas uitgevoerd (of afgehandeld) als iedereen beslist heeft.
+        // Als er nog iemand op 'NotDecided' staat, MOET _isExecuted false zijn.
+        _isExecuted = allDecided;
+
+        if (allDecided && !IsNoped)
         {
-            _isExecuted = true;
             Execute();
-        };
+        }
     }
 
     public void Nope(Guid nopingPlayerId)
