@@ -85,6 +85,9 @@ public class TablesController : ApiControllerBase
     public async Task<IActionResult> Join(Guid id)
     {
         User currentUser = (await _userManager.GetUserAsync(User))!;
+        
+        
+        
         ITable table = _tableManager.JoinTable(id, currentUser);
 
         if(!table.HasAvailableSeat)
