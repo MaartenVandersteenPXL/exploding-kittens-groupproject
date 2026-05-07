@@ -135,6 +135,7 @@ createNewTableButton.addEventListener("click", async (event) => {
     numberOfNewPlayers.value = "";
     numberOfNewAiPlayers.value = "";
 });
+
 //selectPlayersTable
 goToTableButton.addEventListener("click", async (event) => {
     //tableTicker = true;
@@ -152,6 +153,7 @@ goToTableButton.addEventListener("click", async (event) => {
     candidateTable = await playerJoinTable(playerTableCandidateId)
     let playersTable = await fetchPlayerTable(playerTableCandidateId);
     let playersTotal = playersTable.preferences.numberOfPlayers;
+    gameId = playersTable.gameId;
     let playerTableListOutput = document.querySelector(".table-player-output")
     playerTableListOutput.replaceChildren();
         for(let player = 0; player < playersTotal; player++ ){
@@ -168,6 +170,7 @@ goToTableButton.addEventListener("click", async (event) => {
     toonSectie(lobbyTable, titles[1], intros[1]);
     while(playersTable.hasAvailableSeat){
         playersTable = await fetchPlayerTable(playerTableCandidateId);
+        gameId = playersTable.gameId;
         playerTableListOutput.replaceChildren();
         for(let player = 0; player < playersTotal; player++ ){
             let row = document.createElement("tr");
@@ -195,6 +198,7 @@ startTableButton.addEventListener("click", () => {
     }
     */
     //tableTicker = false;
+    console.log("gameID", gameId);
     window.location.href = "game.html?gameId=" + encodeURIComponent(gameId);
 });
 

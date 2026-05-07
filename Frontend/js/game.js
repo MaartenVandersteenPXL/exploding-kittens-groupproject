@@ -28,7 +28,6 @@ const gameIdfromURL = "a1b2c3d4-1234-5678-abcd-ef1234567890";
 */
 const urlParams = new URLSearchParams(window.location.search);
 let gameIdfromURL = urlParams.get("gameId");
-console.log("tableIdfromURL", gameIdfromURL);
 ///End test id
 
 //userCardDek
