@@ -54,22 +54,8 @@ async function userCardsBuilder(){
     let gameModel = await fetchGame(gameIdfromURL);
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
 
-    const opponentDivs = document.querySelectorAll(".opponent");
-    let opponentIndex = 0;
-    gameModel.players.forEach(player => {
-        if (player !== userAsPlayer) {
-            const opponentDiv = opponentDivs[opponentIndex];
-            opponentDiv.querySelector("span").textContent = player.name;
-            opponentDiv.querySelector(".nr-cards-opponents").textContent = player.cardsInHandCount;
+    opponentsBuilder(gameModel);
 
-            opponentIndex++;
-        }
-    });
-    while(opponentIndex < opponentDivs.length){
-        const opponentDiv = opponentDivs[opponentIndex];
-        opponentDiv.style.display = "none";
-        opponentIndex++;
-    }
     const drawPileCountNow = document.querySelector(".nr-cards-left-deck");
     drawPileCountNow.textContent= gameModel.drawPileCount;
 
@@ -82,8 +68,6 @@ async function userCardsBuilder(){
         lastDiscardedCard.textContent = lastCard.discardPile.getName();
     }
 
-
-    
     userAsPlayer.cardsInHand.forEach(element => {
         let cardContainer = document.createElement("div");
         let cardName = document.createElement("p");
@@ -108,6 +92,24 @@ async function userCardsBuilder(){
         userHandCardContainer.appendChild(cardContainer);
     });
     userDeskMessageBoard.textContent="Klaar om te spelen!";
+}
+function opponentsBuilder(gameModel) {
+    const opponentDivs = document.querySelectorAll(".opponent");
+    let opponentIndex = 0;
+    gameModel.players.forEach(player => {
+        if (player.id !== user.id) {
+            const opponentDiv = opponentDivs[opponentIndex];
+            opponentDiv.querySelector("span").textContent = player.name;
+            opponentDiv.querySelector(".nr-cards-opponents").textContent = player.cardsInHandCount;
+
+            opponentIndex++;
+        }
+    });
+    while(opponentIndex < opponentDivs.length){
+        const opponentDiv = opponentDivs[opponentIndex];
+        opponentDiv.style.display = "none";
+        opponentIndex++;
+    }
 }
 
 

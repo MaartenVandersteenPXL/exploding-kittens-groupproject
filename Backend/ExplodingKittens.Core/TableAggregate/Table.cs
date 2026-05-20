@@ -26,7 +26,7 @@ internal class Table : ITable
     //Public Properties - Players
     public IReadOnlyList<IPlayer> SeatedPlayers => _seatedPlayers.AsReadOnly();
 
-    public bool HasAvailableSeat => _seatedPlayers.Count < Preferences.NumberOfPlayers;
+    public bool HasAvailableSeat => _seatedPlayers.Count < Preferences.NumberOfPlayers + Preferences.NumberOfArtificialPlayers;
 
 
     //Public Properties - Game
