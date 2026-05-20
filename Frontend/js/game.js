@@ -70,7 +70,19 @@ async function userCardsBuilder(){
         opponentDiv.style.display = "none";
         opponentIndex++;
     }
-}
+    const drawPileCountNow = document.querySelector(".nr-cards-left-deck");
+    drawPileCountNow.textContent= gameModel.drawPileCount;
+
+    const lastDiscardedCard = document.getElementById("lastDiscardedCard");
+
+    if (gameModel.discardPile.length === 0) {
+        lastDiscardedCard.textContent = "LEEG";
+    } else {
+        const lastCard = gameModel.discardPile[gameModel.discardPile.length - 1];
+        lastDiscardedCard.textContent = lastCard.discardPile.getName();
+    }
+
+
     
     userAsPlayer.cardsInHand.forEach(element => {
         let cardContainer = document.createElement("div");
@@ -144,7 +156,7 @@ async function fetchGame(filterData){
             dataGames.id,
             dataGames.players,
             dataGames.discardPile,
-            dataGames.discardPileCount,
+            dataGames.drawPileCount,
             dataGames.playerToPlayId,
             dataGames.pendingDraws,
             dataGames.pendingAction,
@@ -155,5 +167,5 @@ async function fetchGame(filterData){
     }catch(error){
          backendError.textContent = error.message
     }
-};
+}
 
