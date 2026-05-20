@@ -53,6 +53,36 @@ function gameInit(){
 async function userCardsBuilder(){
     let gameModel = await fetchGame(gameIdfromURL);
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
+
+    const opponentDivs = document.querySelectorAll(".opponent");
+    let opponentIndex = 0;
+    gameModel.players.forEach(player => {
+        if (player !== userAsPlayer) {
+            const opponentDiv = opponentDivs[opponentIndex];
+            opponentDiv.querySelector("span").textContent = player.name;
+            opponentDiv.querySelector(".nr-cards-opponents").textContent = player.cardsInHandCount;
+
+            opponentIndex++;
+        }
+    });
+    while(opponentIndex < opponentDivs.length){
+        const opponentDiv = opponentDivs[opponentIndex];
+        opponentDiv.style.display = "none";
+        opponentIndex++;
+    }
+    const drawPileCountNow = document.querySelector(".nr-cards-left-deck");
+    drawPileCountNow.textContent= gameModel.drawPileCount;
+
+    const lastDiscardedCard = document.getElementById("lastDiscardedCard");
+
+    if (gameModel.discardPile.length === 0) {
+        lastDiscardedCard.textContent = "LEEG";
+    } else {
+        const lastCard = gameModel.discardPile[gameModel.discardPile.length - 1];
+        lastDiscardedCard.textContent = lastCard.discardPile.getName();
+    }
+
+
     
     userAsPlayer.cardsInHand.forEach(element => {
         let cardContainer = document.createElement("div");
@@ -126,7 +156,7 @@ async function fetchGame(filterData){
             dataGames.id,
             dataGames.players,
             dataGames.discardPile,
-            dataGames.discardPileCount,
+            dataGames.drawPileCount,
             dataGames.playerToPlayId,
             dataGames.pendingDraws,
             dataGames.pendingAction,
@@ -137,5 +167,5 @@ async function fetchGame(filterData){
     }catch(error){
          backendError.textContent = error.message
     }
-};
+}
 
