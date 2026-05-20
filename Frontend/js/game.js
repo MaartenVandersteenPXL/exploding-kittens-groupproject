@@ -21,6 +21,7 @@ const headerIntro = document.getElementById("headerIntro");
 const logout = document.getElementById("logout");
 //game
 const userDeskMessageBoard= document.getElementById("statusMessage");
+const playButton = document.getElementById("playActionBtn");
 //Error
 const backendError = document.getElementById("backendError");
 /*
@@ -50,26 +51,23 @@ async function gameInit(){
     headerTitle.textContent=titels[0];
     headerIntro.textContent=intros[0];
     userDeskMessageBoard.textContent = "Het spel wordt geladen";
-    gameModel = await fetchGame(gameIdfromURL);
-}
-
-function BuildGameTable(){
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
-    buildOpponents();
-    buildTableInfo()
-    buildMyCards();
-    userDeskMessageBoard.textContent="Klaar om te spelen!";
+    gameModel = await fetchGame(gameIdfromURL);
 }
 
 async function startGameLoop(){
     while(!gameModel.hasEnded){
-        await new Promise(t=> setTimeout(t, 3000));
-        //SPELER LOGICA - TREK KAART - LEG EEN KAART - NOPE een KAART
-        console.log("LLOOOOPING")
         gameModel = await fetchGame(gameIdfromURL);
-        console.log("NEW GAMEMODEL")
         BuildGameTable();
     }
+}
+
+function BuildGameTable(){
+    buildOpponents();
+    buildTableInfo()
+    buildMyCards();
+    buildTurnControls();
+    //userDeskMessageBoard.textContent="Klaar om te spelen!";
 }
 
 function buildOpponents() {
@@ -131,6 +129,30 @@ function buildMyCards(){
     });
 }
 
+function buildTurnControls(){
+    //dynamische gebouwd - hier pas asignen
+    const myCards = document.querySelectorAll(".own-card");
+    const isMyTurn = gameModel.playerToPlayId === user.id;
+
+    if (isMyTurn) {
+        playButton.disabled = false;
+        playButton.classList.remove("disabled");
+
+        myCards.forEach(card => {
+            // Nog af te wachten waar de "clickable" class selector naar toe gaat
+            card.classList.add("clickable");
+        });
+
+    } else {
+        playButton.disabled = true;
+        playButton.classList.add("disabled");
+        myCards.forEach(card => {
+            // Nog af te wachten waar de "clickable" / "selected" class selector naar toe gaat
+            card.classList.remove("clickable");
+            card.classList.remove("selected"); // also deselect if it was your turn before
+        });
+    }
+}
 
 ///// EVENTS
 ////ROUTES
