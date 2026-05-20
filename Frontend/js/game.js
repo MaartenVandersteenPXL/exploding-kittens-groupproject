@@ -53,6 +53,24 @@ function gameInit(){
 async function userCardsBuilder(){
     let gameModel = await fetchGame(gameIdfromURL);
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
+
+    const opponentDivs = document.querySelectorAll(".opponent");
+    let opponentIndex = 0;
+    gameModel.players.forEach(player => {
+        if (player !== userAsPlayer) {
+            const opponentDiv = opponentDivs[opponentIndex];
+            opponentDiv.querySelector("span").textContent = player.name;
+            opponentDiv.querySelector(".nr-cards-opponents").textContent = player.cardsInHandCount;
+
+            opponentIndex++;
+        }
+    });
+    while(opponentIndex < opponentDivs.length){
+        const opponentDiv = opponentDivs[opponentIndex];
+        opponentDiv.style.display = "none";
+        opponentIndex++;
+    }
+}
     
     userAsPlayer.cardsInHand.forEach(element => {
         let cardContainer = document.createElement("div");
