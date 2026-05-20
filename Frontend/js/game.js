@@ -41,8 +41,8 @@ document.addEventListener("DOMContentLoaded", async() => {
         window.location.href="index.html";
     }
     await gameInit();
-    await BuildGameTable();
-
+    BuildGameTable();
+    await startGameLoop();
 });
 
 ////FUNCTIES
@@ -53,12 +53,23 @@ async function gameInit(){
     gameModel = await fetchGame(gameIdfromURL);
 }
 
-async function BuildGameTable(){
+function BuildGameTable(){
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
-    await buildOpponents();
-    await buildTableInfo()
-    await buildMyCards();
+    buildOpponents();
+    buildTableInfo()
+    buildMyCards();
     userDeskMessageBoard.textContent="Klaar om te spelen!";
+}
+
+async function startGameLoop(){
+    while(!gameModel.hasEnded){
+        await new Promise(t=> setTimeout(t, 3000));
+        //SPELER LOGICA - TREK KAART - LEG EEN KAART - NOPE een KAART
+        console.log("LLOOOOPING")
+        gameModel = await fetchGame(gameIdfromURL);
+        console.log("NEW GAMEMODEL")
+        BuildGameTable();
+    }
 }
 
 function buildOpponents() {
@@ -94,6 +105,7 @@ function buildTableInfo(){
 }
 
 function buildMyCards(){
+    userHandCardContainer.replaceChildren();
     userAsPlayer.cardsInHand.forEach(element => {
         let cardContainer = document.createElement("div");
         let cardName = document.createElement("p");
