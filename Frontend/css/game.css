@@ -1,0 +1,379 @@
+/* START TEMPLATE SKELETON*/
+
+* {
+    box-sizing: border-box;
+}
+/* FONTS */
+
+h1{
+    font-family: 'Abel';
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    font-size: 4em;
+    color: #5f2f45;
+    margin: 0;
+}
+h2{
+    font-family: 'Abel';
+    font-weight: 200;
+    font-size: 2em;
+    color: #a02f40;
+    margin: 0;
+}
+
+p {
+    font-family: 'Abel';
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    font-size: 1.5em;
+}
+
+label{
+    font-family: 'Abel';
+    font-weight: 400;
+    font-size: 1.8em;
+    color: #f8ddb7;
+    font-variant-caps: all-small-caps;
+}
+
+/* END FONTS */
+
+
+html{
+    display: flex;
+    justify-content: center;
+    background-color: #ab2d48;
+}
+
+
+body{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color:#fabb64;
+    min-height:768px;
+    min-width: 1024px;
+    gap: 2em;
+}
+
+aside{
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0 3em ;
+    align-items: center;
+    max-width: 12em;
+}
+
+main{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: 0 3em 1rem 0 ;
+}
+
+header{
+    display: flex;
+    height: 150px;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    max-width: 100%;
+    justify-content: center;
+}
+
+.logo img{
+    width: auto;
+    height: 150px;
+    display: block;
+
+}
+
+.sidebar-menu {
+    background-color: #f86f53;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex: 1;
+    border-radius: 15px 15px 0 0;
+    padding: 3rem 1rem  3rem;
+}
+.sidebar-menu a {
+    font-family: Abel;
+    font-size:  2em;
+    text-decoration: none;
+    color: #5f2f45 ;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-menu a:first-child{
+    margin-bottom: 2rem;
+}
+
+.sidebar-menu a:hover{
+    transform: scale(1.2);
+    color: #f5ddbc ;
+}
+
+/* adjust id to the id of the page */
+#XXX{
+    color: #f5ddbc;
+    text-shadow:#000000 4px 4px 10px;
+}
+
+/* END TEMPLATE SKELETON*/
+
+/* TAFEL & CIRKEL */
+
+.table-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.circle {
+    width: 450px;
+    height: 320px;
+    background-color: #5f2f45;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.opponent {
+    position: absolute;
+    width: 100px;
+    height: 130px;
+    background-image: url("../assets/AchterkantDek.jpeg");
+    background-size: 100% 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.p2 {
+    top: -0px;
+    left: -30px;
+}
+
+.p3 {
+    top: -0px;
+    right: -30px;
+}
+
+.p1 {
+    bottom: -30px;
+    left: -30px;
+}
+
+.p4 {
+    bottom: -30px;
+    right: -30px;
+}
+
+.opponent span {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f5ddbc;
+    border: #ab2d48 solid 2px;
+    padding: 2px 12px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    white-space: nowrap;
+}
+
+.nr-cards-opponents {
+    display: flex;
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    background: #ab2d48;
+    color: #f5ddbc;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+.deck {
+    display: flex;
+    width: 100px;
+    height: 130px;
+    background: #f86f53;
+    border-radius: 8px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.discard-pile {
+    display: flex;
+    width: 100px;
+    height: 130px;
+    background-color: #bdc3c7;
+    border: 2px dashed #5f2f45;
+    border-radius: 8px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.discard-pile span {
+    font-size: 0.7em;
+    color: #5f2f45;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.discard-card-value {
+    font-size: 1em;
+    color: #5f2f45;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.nr-carts-left-deck {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: #ab2d48;
+    color: #f5ddbc;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Eigen hand */
+.hand-area {
+    display: flex;
+    direction: row;
+    background-color: #a02f40;
+    padding: 15px;
+    border-radius: 20px;
+    min-height: 250px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap:120px;/* Geeft berichtenvak ruimte */
+}
+
+.hand-container {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    max-width: 580px;
+}
+
+/* Eigen kaarten */
+.own-card {
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    background-color: #f5ddbc;
+    border: 2px solid #5f2f45;
+    border-radius: 10px;
+    align-items: center;
+    padding: 10px;
+    transition: transform 0.2s;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.own-card:hover {
+    z-index: 100; /* Kaart komt naar voren */
+    transform: translateY(-50px);
+    background-color: #f5ddbc;
+}
+
+.own-card p {
+    margin: 0;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #5f2f45;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.card-enum {
+    background: #f8ddb7;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5f2f45;
+    font-weight: bold;
+    border: 1px solid #5f2f45;
+}
+/* Zorgt dat de kaarten op de 2de rij gelijk met de eerste beginnen */
+.own-card:nth-child(n+1){
+    margin-left: -35px; /* DIT ZORGT VOOR DE OVERLAP */
+}
+.own-card:first-child, .own-card:nth-child(10){
+    margin-left: 10px;
+}
+
+/* mesage board */
+.hand-controls{
+    display: flex;
+    flex-direction: column;
+}
+.game-message {
+    background-color: #5f2f45;
+    color: #f5ddbc;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    width: 200px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    flex-grow: 1;
+}
+
+/* Speel knop */
+.play-btn {
+    display: flex;
+    flex-shrink: 1;
+    justify-content: center;
+    background-color: #7396d5;
+    color: #f5ddbc;
+    border: 2px solid #f5ddbc;
+    width: 200px;
+    border-radius: 10px;
+    font-family: 'Abel';
+    font-size: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.play-btn:hover {
+    transform: scale(1.05);
+}
+
+.play-btn:active {
+    transform: scale(0.95);
+}
+
+/* Voor later: als je niet aan de beurt bent */
+.play-btn:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
