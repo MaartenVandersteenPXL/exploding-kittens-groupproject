@@ -4,6 +4,7 @@ import { ProblemDetails } from "./Classes/tableClasses.js";
 
 ////CLASSES
 let user = User.load();
+let gameModel = {};
 let titels = ["Game on"];
 let intros = ["This is amazing! Prrt!",
     "Zoom zoom! Catch me if you can! Mrrrow!",
@@ -20,6 +21,7 @@ const headerIntro = document.getElementById("headerIntro");
 const logout = document.getElementById("logout");
 //game
 const userDeskMessageBoard= document.getElementById("statusMessage");
+const playButton = document.getElementById("playActionBtn");
 //Error
 const backendError = document.getElementById("backendError");
 /*
@@ -39,61 +41,36 @@ document.addEventListener("DOMContentLoaded", async() => {
     if(!user){
         window.location.href="index.html";
     }
-    gameInit();
-    await userCardsBuilder();
+    await gameInit();
+    BuildGameTable();
+    await startGameLoop();
 });
 
 ////FUNCTIES
-function gameInit(){
+async function gameInit(){
     headerTitle.textContent=titels[0];
     headerIntro.textContent=intros[0];
     userDeskMessageBoard.textContent = "Het spel wordt geladen";
-}
-
-async function userCardsBuilder(){
-    let gameModel = await fetchGame(gameIdfromURL);
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
-
-    opponentsBuilder(gameModel);
-
-    const drawPileCountNow = document.querySelector(".nr-cards-left-deck");
-    drawPileCountNow.textContent= gameModel.drawPileCount;
-
-    const lastDiscardedCard = document.getElementById("lastDiscardedCard");
-
-    if (gameModel.discardPile.length === 0) {
-        lastDiscardedCard.textContent = "LEEG";
-    } else {
-        const lastCard = gameModel.discardPile[gameModel.discardPile.length - 1];
-        lastDiscardedCard.textContent = lastCard.discardPile.getName();
-    }
-
-    userAsPlayer.cardsInHand.forEach(element => {
-        let cardContainer = document.createElement("div");
-        let cardName = document.createElement("p");
-        let cardEnum = document.createElement("p");
-        let cardImg = document.createElement("img");
-        
-        cardContainer.classList.add(`own-card`, `${element.card.getName()}`);
-        cardName.classList.add(`card-name`);
-        cardEnum.classList.add(`card-enum`);
-        //cardImg.classList.add("card-img");
-
-        //Background card
-        //cardContainer.style.backgroundImage= `url('${element.card.getImage()}')`;
-        //cardImg.alt=`${element.card.getName()}-img`;
-
-        cardName.textContent = element.card.getName();
-        cardEnum.textContent = element.card.typeNr;
-
-        cardContainer.appendChild(cardName);
-        cardContainer.appendChild(cardEnum);
-        //cardContainer.appendChild(cardImg);
-        userHandCardContainer.appendChild(cardContainer);
-    });
-    userDeskMessageBoard.textContent="Klaar om te spelen!";
+    gameModel = await fetchGame(gameIdfromURL);
 }
-function opponentsBuilder(gameModel) {
+
+async function startGameLoop(){
+    while(!gameModel.hasEnded){
+        gameModel = await fetchGame(gameIdfromURL);
+        BuildGameTable();
+    }
+}
+
+function BuildGameTable(){
+    buildOpponents();
+    buildTableInfo()
+    buildMyCards();
+    buildTurnControls();
+    //userDeskMessageBoard.textContent="Klaar om te spelen!";
+}
+
+function buildOpponents() {
     const opponentDivs = document.querySelectorAll(".opponent");
     let opponentIndex = 0;
     gameModel.players.forEach(player => {
@@ -112,7 +89,70 @@ function opponentsBuilder(gameModel) {
     }
 }
 
+function buildTableInfo(){
+    const drawPileCountNow = document.querySelector(".nr-cards-left-deck");
+    drawPileCountNow.textContent= gameModel.drawPileCount;
 
+    const lastDiscardedCard = document.getElementById("lastDiscardedCard");
+    if (gameModel.discardPile.length === 0) {
+        lastDiscardedCard.textContent = "LEEG";
+    } else {
+        const lastCard = gameModel.discardPile[gameModel.discardPile.length - 1];
+        lastDiscardedCard.textContent = lastCard.discardPile.getName();
+    }
+}
+
+function buildMyCards(){
+    userHandCardContainer.replaceChildren();
+    userAsPlayer.cardsInHand.forEach(element => {
+        let cardContainer = document.createElement("div");
+        let cardName = document.createElement("p");
+        let cardEnum = document.createElement("p");
+        let cardImg = document.createElement("img");
+
+        cardContainer.classList.add(`own-card`, `${element.card.getName()}`);
+        cardName.classList.add(`card-name`);
+        cardEnum.classList.add(`card-enum`);
+        //cardImg.classList.add("card-img");
+
+        //Background card
+        //cardContainer.style.backgroundImage= `url('${element.card.getImage()}')`;
+        //cardImg.alt=`${element.card.getName()}-img`;
+
+        cardName.textContent = element.card.getName();
+        cardEnum.textContent = element.card.typeNr;
+
+        cardContainer.appendChild(cardName);
+        cardContainer.appendChild(cardEnum);
+        //cardContainer.appendChild(cardImg);
+        userHandCardContainer.appendChild(cardContainer);
+    });
+}
+
+function buildTurnControls(){
+    //dynamische gebouwd - hier pas asignen
+    const myCards = document.querySelectorAll(".own-card");
+    const isMyTurn = gameModel.playerToPlayId === user.id;
+
+    if (isMyTurn) {
+        playButton.disabled = false;
+        playButton.classList.remove("disabled");
+
+        myCards.forEach(card => {
+            // Nog af te wachten waar de "clickable" class selector naar toe gaat
+            card.classList.add("clickable");
+        });
+
+    } else {
+        playButton.disabled = true;
+        playButton.classList.add("disabled");
+        myCards.forEach(card => {
+            // Nog af te wachten waar de "clickable" / "selected" class selector naar toe gaat
+            card.classList.remove("clickable");
+            card.classList.remove("selected"); // also deselect if it was your turn before
+        });
+    }
+}
 
 ///// EVENTS
 ////ROUTES
