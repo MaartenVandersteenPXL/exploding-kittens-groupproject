@@ -1,7 +1,7 @@
 ﻿using ExplodingKittens.Core.GameAggregate.Contracts;
 using ExplodingKittens.Core.TableAggregate.Contracts;
+using ExplodingKittens.Core.PlayerAggregate.Contracts;
 using ExplodingKittens.Core.UserAggregate;
-using System.Reflection.Emit;
 
 namespace ExplodingKittens.Core.TableAggregate;
 
@@ -34,10 +34,16 @@ internal class TableManager : ITableManager
 
     public ITable JoinTable(Guid tableId, User user)
     {
-       ITable tableToJoin = _tableRepository.Get(tableId);
+       ITable tableToJoin = _tableRepository.Get(tableId);        
+        foreach (IPlayer SeatedPlayer in tableToJoin.SeatedPlayers)
+        {
+            if (SeatedPlayer.Id == user.Id)
+            {
+                return tableToJoin;
+            };
+        }
         tableToJoin.Join(user);
-
-       return tableToJoin;
+        return tableToJoin;
     }
 
     public void LeaveTable(Guid tableId, User user)

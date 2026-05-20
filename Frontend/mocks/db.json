@@ -1,0 +1,148 @@
+{
+  "tables": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "preferences": {
+        "numberOfPlayers": 2,
+        "numberOfArtificialPlayers": 0
+      },
+      "seatedPlayers": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "name": "John",
+          "birthDate": "2000-01-01"
+        }
+      ],
+      "hasAvailableSeat": true,
+      "gameId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    {
+      "id": "4ab96g75-6828-5673-c4gd-3d074g77bgb7",
+      "preferences": {
+        "numberOfPlayers": 4,
+        "numberOfArtificialPlayers": 1
+      },
+      "seatedPlayers": [],
+      "hasAvailableSeat": true,
+      "gameId": "4ab96g75-6828-5673-c4gd-3d074g77bgb7"
+    },
+    {
+      "id": "00000000-6828-5673-c4gd-3d074g77bgb7",
+      "preferences": {
+        "numberOfPlayers": 4,
+        "numberOfArtificialPlayers": 1
+      },
+      "seatedPlayers": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "name": "John",
+          "birthDate": "2000-01-01"
+        },
+        {
+          "id": "5bc07h86-7939-6784-d5he-4e185h88chc8",
+          "name": "Jane",
+          "birthDate": "1995-05-15"
+        }
+      ],
+      "hasAvailableSeat": true,
+      "gameId": "4ab96g75-6828-5673-c4gd-3d074g77bgb7"
+    },
+    {
+      "id": "5bc07h86-7939-6784-d5he-4e185h88chc8",
+      "preferences": {
+        "numberOfPlayers": 3,
+        "numberOfArtificialPlayers": 2
+      },
+      "seatedPlayers": [
+        {
+          "id": "5bc07h86-7939-6784-d5he-4e185h88chc8",
+          "name": "Jane",
+          "birthDate": "1995-05-15"
+        }
+      ],
+      "hasAvailableSeat": false,
+      "gameId": "5bc07h86-7939-6784-d5he-4e185h88chc8"
+    }
+  ],
+  "tablesNew": [
+    {
+      "numberOfPlayers": null,
+      "numberOfArtificialPlayers": null,
+      "id": 1
+    },
+    {
+      "numberOfPlayers": 2,
+      "numberOfArtificialPlayers": 3,
+      "id": 2
+    },
+    {
+      "numberOfPlayers": 2,
+      "numberOfArtificialPlayers": 3,
+      "id": 3
+    },
+    {
+      "numberOfPlayers": 2,
+      "numberOfArtificialPlayers": 3,
+      "id": 4
+    },
+    {
+      "numberOfPlayers": 2,
+      "numberOfArtificialPlayers": 3,
+      "id": 5
+    },
+    {
+      "numberOfPlayers": 2,
+      "numberOfArtificialPlayers": 3,
+      "id": 6
+    },
+    {
+      "numberOfPlayers": null,
+      "numberOfArtificialPlayers": null,
+      "id": 7
+    },
+    {
+      "numberOfPlayers": 2,
+      "numberOfArtificialPlayers": 2,
+      "id": 8
+    },
+    {
+      "numberOfPlayers": null,
+      "numberOfArtificialPlayers": null,
+      "id": 9
+    },
+    {
+      "numberOfPlayers": null,
+      "numberOfArtificialPlayers": null,
+      "id": 10
+    },
+    {
+      "numberOfPlayers": null,
+      "numberOfArtificialPlayers": null,
+      "id": 11
+    }
+  ],
+
+  "gamesModel": [
+    {
+      "id": "a1b2c3d4-1234-5678-abcd-ef1234567890",
+      "players": [
+        {
+          "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+          "name": "Alice",
+          "birthDate": "1995-03-12",
+          "hasExplodingKitten": false,
+          "eliminated": false,
+          "futureCards": [],
+          "cardsInHandCount": 7,
+          "cardsInHand": [1, 2, 7, 100, 103, 4, 6]
+        }
+      ],
+      "discardPile": [3, 7, 101],
+      "drawPileCount": 24,
+      "playerToPlayId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "pendingDraws": 0,
+      "pendingAction": null,
+      "hasEnded": false
+    }
+  ]
+}

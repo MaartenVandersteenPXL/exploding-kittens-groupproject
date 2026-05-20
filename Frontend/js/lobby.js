@@ -1,14 +1,17 @@
 //IMPORTS
-import { User, Token, Tables, Table, ProblemDetails} from "./classes.js";
+import { Tables, Table, ProblemDetails} from "./Classes/tableClasses.js";
+import { User, Token } from "./Classes/userClasses.js";
 
 //classes
     let user = User.load();
     let titles = ["lobby browser", "lobby tafel", "nieuwe tafel"];
     let intros = ["Miauwkes, ", "Hiiiisssss, ", "Purrrrr, " ];
-    let tableTicker = true;
+    //let tableTicker = true;
+    let candidateTable;
 
 //VARIABLES
     let playerTableCandidateId;
+    let gameId;
 
 ///// elements
 //header
@@ -54,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!user){
         window.location.href="index.html";
     }
-
     //first page after redirect
     leaveTableNav.style.display="none"
     toonSectie(lobbyBrowser,titles[0], intros[0] );
@@ -75,8 +77,9 @@ createNewTableNav.addEventListener("click", (event) => {
 leaveTableNav.addEventListener("click", async (event) => {
     await playerLeaveTable(playerTableCandidateId)
     document.querySelectorAll('[class^="tableCandidate-"].active').forEach(x => x.classList.remove('active'))
-    tableTicker = false;
+    //tableTicker = false;
     playerTableCandidateId = "";
+    gameId = "";
     createNewTableNav.style.display="";
     leaveTableNav.style.display="none";
     lobbyTableList.replaceChildren();
@@ -124,12 +127,18 @@ createNewTableButton.addEventListener("click", async (event) => {
     const result = await createTable(numberOfNewPlayers.value, numberOfNewAiPlayers.value);
     if (!result) return;
     // END HAMZA CODE
+
+    //GoToTable
+    playerTableCandidateId = result.id;
+    goToTableButton.click();
     createNewTableNav.style.display=""
-    toonSectie(lobbyBrowser, titles[0], intros[0]);
+    numberOfNewPlayers.value = "";
+    numberOfNewAiPlayers.value = "";
 });
+
 //selectPlayersTable
 goToTableButton.addEventListener("click", async (event) => {
-    tableTicker = true;
+    //tableTicker = true;
     event.preventDefault();
     //check playerTableId
     if(!playerTableCandidateId){
@@ -141,9 +150,10 @@ goToTableButton.addEventListener("click", async (event) => {
     leaveTableNav.style.display="";
     backendErrorPlayersTabel.textContent="";
     //BUILD Players table
-    await playerJoinTable(playerTableCandidateId)
+    candidateTable = await playerJoinTable(playerTableCandidateId)
     let playersTable = await fetchPlayerTable(playerTableCandidateId);
     let playersTotal = playersTable.preferences.numberOfPlayers;
+    gameId = playersTable.gameId;
     let playerTableListOutput = document.querySelector(".table-player-output")
     playerTableListOutput.replaceChildren();
         for(let player = 0; player < playersTotal; player++ ){
@@ -158,8 +168,9 @@ goToTableButton.addEventListener("click", async (event) => {
             playerTableListOutput.appendChild(row);
         }
     toonSectie(lobbyTable, titles[1], intros[1]);
-    while(playersTable.hasAvailableSeat && tableTicker){
+    while(playersTable.hasAvailableSeat){
         playersTable = await fetchPlayerTable(playerTableCandidateId);
+        gameId = playersTable.gameId;
         playerTableListOutput.replaceChildren();
         for(let player = 0; player < playersTotal; player++ ){
             let row = document.createElement("tr");
@@ -180,12 +191,15 @@ goToTableButton.addEventListener("click", async (event) => {
 
 //startPlayersTable
 startTableButton.addEventListener("click", () => {
-    if(startTableButton.textContent != "Start tafel"){
+    /*
+    if(candidateTable.hasAvailableSeat){
         backendErrorPlayersTabel.textContent="Kan tafel nog niet starten. Wachten op andere spelers";
         return;
     }
-    tableTicker = false;
-    window.location.href = "game.html?gameId=" + encodeURIComponent(playerTableCandidateId);
+    */
+    //tableTicker = false;
+    console.log("gameID", gameId);
+    window.location.href = "game.html?gameId=" + encodeURIComponent(gameId);
 });
 
 ////FORMS
@@ -256,7 +270,6 @@ lobbyTableList.addEventListener('click', (event) => {
     row.classList.add('active');
     const tdTableId = row.querySelector(".tableId");
     playerTableCandidateId = tdTableId.innerText;
-    console.log("playerTableCandidate:", playerTableCandidateId);
 });
 
 ///////// FUNCTIONS
@@ -339,11 +352,18 @@ async function createTable(players, ai){
         })
         // END TEST DATA
         */
-        const createdTable = await response.json();
+        const dataCreatedTable = await response.json();
         if (!response.ok) {
-            throw new Error(createdTable.message);
+            throw new Error(dataCreatedTable.message);
         }
-        return createTable;
+        const createdTable = new Table(
+            dataCreatedTable.id,
+            dataCreatedTable.preferences,
+            dataCreatedTable.seatedPlayers,
+            dataCreatedTable.hasAvailableSeat,
+            dataCreatedTable.gameId
+        )
+        return createdTable;
         console.log("//INFO: Tafel gemaakt",createdTable);// voor mijn debug
     }catch(error){
         backendError.textContent = error.message;
@@ -418,6 +438,7 @@ async function playerJoinTable(tableId){
             dataJoinedTable.seatedPlayers,
             dataJoinedTable.hasAvailableSeat,
             dataJoinedTable.gameId);
+        gameId = joinedTable.gameId;
         return joinedTable;
     }catch(error){
         backendError.textContent = error.message;
