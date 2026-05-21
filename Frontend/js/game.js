@@ -12,6 +12,7 @@ let intros = ["This is amazing! Prrt!",
     "Best game ever! Pounce! Prrrp!",
     "You saw that, right? Im incredible. Meow!"];
 let userAsPlayer;
+let selectedUserPlayerCardsId = [];
 
 ///// ELEMENTS
 //header
@@ -20,7 +21,6 @@ const headerIntro = document.getElementById("headerIntro");
 //nav
 const logout = document.getElementById("logout");
 //game
-const userDeskMessageBoard= document.getElementById("statusMessage");
 const playButton = document.getElementById("playActionBtn");
 const nopePrompt = document.getElementById("nopePrompt");
 const nopeButton = document.getElementById("nopeBtn");
@@ -37,6 +37,7 @@ let gameIdfromURL = urlParams.get("gameId");
 
 //userCardDek
 const userHandCardContainer = document.getElementById("userCardHand");
+const userDeskMessageBoard= document.getElementById("statusMessage");
 
 //DOM ON LOADING EVENT
 document.addEventListener("DOMContentLoaded", async() => {
@@ -66,51 +67,13 @@ async function startGameLoop(){
     }
 }
 
-async function playAction(selectedCards){
-    try{
-        const body = {
-            cards: selectedCards,
-            targetPlayerId: null,
-            targetCard: null,
-            drawPileIndex: 0
-        };
-
-        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/play-action`, {
-            method: "POST",
-            headers: {
-                'Content-type': 'Application/json',
-                "Authorization": "Bearer " + Token.load()
-            },
-            body: JSON.stringify(body)
-        });
-
-        const data = await response.json();
-        if(!response.ok){
-            throw new Error(data.message);
-        }
-
-        return new GameModel(
-            data.id,
-            data.players,
-            data.discardPile,
-            data.drawPileCount,
-            data.playerToPlayId,
-            data.pendingDraws,
-            data.pendingAction,
-            data.hasEnded
-        );
-
-    }catch(error){
-        backendError.textContent = error.message;
-    }
-}
-
 function BuildGameTable(){
     buildMyCards();
     buildOpponents();
     buildTableInfo()
     buildTurnControls();
     buildNopePrompt();
+
     //userDeskMessageBoard.textContent="Klaar om te spelen!";
 }
 
@@ -218,30 +181,72 @@ function buildTurnControls(){
     }
 }
 
+function buildSelectedCards(){
+    selectedUserPlayerCardsId = [];
+    const selectedUserPlayerCardsContainer = userHandCardContainer.querySelectorAll(".selected");
+    selectedUserPlayerCardsContainer.forEach(cardElement => {
+        let cardTypeNr = parseInt(cardElement.querySelector(".card-enum").textContent);
+        selectedUserPlayerCardsId.push(cardTypeNr);
+    });
+}
+
+//playActions methods
+async function defuseExplodingKitten(){
+    gameModel = await playAction(selectedUserPlayerCardsId, null, null, 1 )
+}
+
+async function drawCardFromPile(){
+    gameModel = await drawAction();
+    //WANNNEER WEET JE DAT JE EEN EXPLODING KITTEN HEBT GETROKKEN ?
+    if(explodingkitten){
+        userHandCardContainer.forEach( cardElement => {
+            if ((parseInt(cardElement.querySelector(".card-enum").textContent) === 1){
+                defuseExplodingKitten();
+            }else{
+                //EXPLODE IN FREAKING BLOODY PIECES
+            }
+        })
+
+    }
+}
+
 ///// EVENTS
 nopeButton.addEventListener("click", async() => {
-    gameModel = await nopePlay();
+    gameModel = await nopeAction();
     userDeskMessageBoard.textContent = "Nope gespeeld";
     nopePrompt.style.display ="none";
 });
-
 passButton.addEventListener("click", async() => {
     gameModel = await confirmNotNoppingPlay();
     userDeskMessageBoard.textContent = "Pass gespeeld";
     nopePrompt.style.display ="none";
 });
+
 playButton.addEventListener("click", async () => {
-    const selectedCardDivs = userHandCardContainer.querySelectorAll(".selected");
-    const selectedCards = [];
+    buildSelectedCards()
+    if(selectedUserPlayerCardsId.length !== 0){
+        switch(selectedUserPlayerCardsId){
+            case 1:
+                defuseExplodingKitten();
+            case 2:
+                playSkipCard();
+            case 3:
+                playAttackCard();
+            case 4:
+                playFavorCard();
+            case 5:
+                playShuffleCard();
+            case 6:
+                playSeeTheFutureCard()
+            default:
+                break;
+        }
+    } else {
+        drawCardFromPile();
+    }
 
-    selectedCardDivs.forEach(card => {
-        const typeNr = parseInt(card.querySelector(".card-enum").textContent);
-        selectedCards.push(typeNr);
-    });
 
-    gameModel = await playAction(selectedCards);
-
-    selectedCardDivs.forEach(card => card.classList.remove("selected"));
+    //selectedCardDivs.forEach(card => card.classList.remove("selected"));
 });
 
 ////ROUTES
@@ -299,7 +304,7 @@ async function fetchGame(filterData){
     }
 }
 
-async function nopePlay(){
+async function nopeAction(){
     try{
         const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/nope`, {
             method: "POST",
@@ -309,19 +314,19 @@ async function nopePlay(){
             }
         });
 
-        const nopeGame = await response.json();
+        const nopePlay = await response.json();
         if(!response.ok){
-            throw new Error(nopeGame.message );
+            throw new Error(nopePlay.message );
         }
         return new GameModel(
-            nopeGame.id,
-            nopeGame.players,
-            nopeGame.discardPile,
-            nopeGame.drawPileCount,
-            nopeGame.playerToPlayId,
-            nopeGame.pendingDraws,
-            nopeGame.pendingAction,
-            nopeGame.hasEnded
+            nopePlay.id,
+            nopePlay.players,
+            nopePlay.discardPile,
+            nopePlay.drawPileCount,
+            nopePlay.playerToPlayId,
+            nopePlay.pendingDraws,
+            nopePlay.pendingAction,
+            nopePlay.hasEnded
         )
     }catch(error){
         backendError.textContent = error.message
@@ -351,6 +356,74 @@ async function confirmNotNoppingPlay(){
             confirmNotNopping.pendingDraws,
             confirmNotNopping.pendingAction,
             confirmNotNopping.hasEnded
+        )
+    }catch(error){
+        backendError.textContent = error.message
+    }
+}
+
+async function playAction(selectedCards, targetPlayer, targetCard, drawPileIndex){
+    try{
+        const body = {
+            cards: selectedCards,
+            targetPlayerId: targetPlayer,
+            targetCard: targetCard,
+            drawPileIndex: drawPileIndex
+        };
+
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/play-action`, {
+            method: "POST",
+            headers: {
+                'Content-type': 'Application/json',
+                "Authorization": "Bearer " + Token.load()
+            },
+            body: JSON.stringify(body)
+        });
+
+        const playActionData = await response.json();
+        if(!response.ok){
+            throw new Error(data.message);
+        }
+
+        return new GameModel(
+            playActionData.id,
+            playActionData.players,
+            playActionData.discardPile,
+            playActionData.drawPileCount,
+            playActionData.playerToPlayId,
+            playActionData.pendingDraws,
+            playActionData.pendingAction,
+            playActionData.hasEnded
+        );
+
+    }catch(error){
+        backendError.textContent = error.message;
+    }
+}
+
+async function drawAction(){
+    try{
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/draw-card`, {
+            method: "POST",
+            headers: {
+                'Content-type' : 'Application/json',
+                "Authorization": "Bearer " + Token.load()
+            }
+        });
+
+        const drawPlay = await response.json();
+        if(!response.ok){
+            throw new Error(drawPlay.message );
+        }
+        return new GameModel(
+            drawPlay.id,
+            drawPlay.players,
+            drawPlay.discardPile,
+            drawPlay.drawPileCount,
+            drawPlay.playerToPlayId,
+            drawPlay.pendingDraws,
+            drawPlay.pendingAction,
+            drawPlay.hasEnded
         )
     }catch(error){
         backendError.textContent = error.message
