@@ -43,6 +43,19 @@ class DiscardPile{
     }
 }
 
+class PendingAction{
+    constructor(playerId, cards, canBeNoped, targetPlayerId, targetCard, drawPileIndex, playerNopeDecisions, isExecuted){
+        this.playerId = playerId;
+        this.cards = cards.map(f => new CardsInHand(f));
+        this.canBeNoped = canBeNoped;
+        this.targetPlayerId = targetPlayerId;
+        this.targetCard = targetCard?.map(f => new Card(f));
+        this.drawPileIndex = drawPileIndex;
+        this.playerNopeDecisions = playerNopeDecisions;
+        this.isExecuted = isExecuted;
+    }
+}
+
 export class GameModel {
     constructor(id, players, discardPile, drawPileCount, playerToPlayId, pendingDraws, pendingAction, hasEnded){
         this.id = id;
@@ -51,7 +64,7 @@ export class GameModel {
         this.drawPileCount = drawPileCount;
         this.playerToPlayId = playerToPlayId;
         this.pendingDraws = pendingDraws;
-        this.pendingAction = pendingAction;
+        this.pendingAction = pendingAction?.map(p => new PendingAction(p));
         this.hasEnded = hasEnded;
     }
 }
