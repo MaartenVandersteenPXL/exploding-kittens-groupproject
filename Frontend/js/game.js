@@ -60,6 +60,7 @@ async function gameInit(){
 
 async function startGameLoop(){
     while(!gameModel.hasEnded){
+        await new Promise(resolve => setTimeout(resolve, 3000));
         gameModel = await fetchGame(gameIdfromURL);
         BuildGameTable();
     }
@@ -69,8 +70,8 @@ function BuildGameTable(){
     buildMyCards();
     buildOpponents();
     buildTableInfo()
-    buildNopePrompt();
     buildTurnControls();
+    buildNopePrompt();
     //userDeskMessageBoard.textContent="Klaar om te spelen!";
 }
 
@@ -135,25 +136,12 @@ function buildTableInfo(){
 
 function buildNopePrompt(){
     const hasPendingAction = gameModel.pendingAction != null;
-    const isMyAction = gameModel.pendingAction?.pendingAction.playerId == user.id;
+    const isMyAction = gameModel.pendingAction?.playerId === user.id;
 
-    if(hasPendingAction && isMyAction){
+    if(hasPendingAction && !isMyAction){
         nopePrompt.style.display = "block";
-        userDeskMessageBoard.textContent = "";
-        userDeskMessageBoard.textContent = "Een speler speelde:" + gameModel.pendingAction.cards.forEach(c => c.getName()) + "wil je NOPE spelen?";
+        userDeskMessageBoard.textContent = "Een speler speelde:" + gameModel.pendingAction.cards.map(c => c.getName()).join(", ") + "wil je NOPE spelen?";
 
-        nopeButton.addEventListener("click", async() => {
-            gameModel = await nopePlay();
-            userDeskMessageBoard.textContent = "";
-            userDeskMessageBoard.textContent = "Nope gespeeld";
-        })
-
-        passButton.addEventListener("click", async() => {
-            gameModel = await confirmNotNoppingPlay();
-            userDeskMessageBoard.textContent = "";
-            userDeskMessageBoard.textContent = "Pass gespeeld";
-            nopePrompt.style.display = "none";
-        })
     }else {
         nopePrompt.style.display = "none";
     }
@@ -165,6 +153,7 @@ function buildTurnControls(){
     const isMyTurn = gameModel.playerToPlayId === user.id;
 
     if (isMyTurn) {
+        userDeskMessageBoard.textContent = "jouw beurt"
         playButton.disabled = false;
         playButton.classList.remove("disabled");
 
@@ -174,6 +163,7 @@ function buildTurnControls(){
         });
 
     } else {
+        userDeskMessageBoard.textContent = "wachten op andere spelers"
         playButton.disabled = true;
         playButton.classList.add("disabled");
         myCards.forEach(card => {
@@ -185,6 +175,18 @@ function buildTurnControls(){
 }
 
 ///// EVENTS
+nopeButton.addEventListener("click", async() => {
+    gameModel = await nopePlay();
+    userDeskMessageBoard.textContent = "Nope gespeeld";
+    nopePrompt.style.display ="none";
+});
+
+passButton.addEventListener("click", async() => {
+    gameModel = await confirmNotNoppingPlay();
+    userDeskMessageBoard.textContent = "Pass gespeeld";
+    nopePrompt.style.display ="none";
+});
+
 ////ROUTES
 //LogOut
 logout.addEventListener("click", async (Event) => {
@@ -256,7 +258,7 @@ async function nopePlay(){
         }
         return new GameModel(
             nopeGame.id,
-            nopeGame.playerId,
+            nopeGame.players,
             nopeGame.discardPile,
             nopeGame.drawPileCount,
             nopeGame.playerToPlayId,
@@ -285,7 +287,7 @@ async function confirmNotNoppingPlay(){
         }
         return new GameModel(
             confirmNotNopping.id,
-            confirmNotNopping.playerId,
+            confirmNotNopping.players,
             confirmNotNopping.discardPile,
             confirmNotNopping.drawPileCount,
             confirmNotNopping.playerToPlayId,
