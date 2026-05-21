@@ -40,7 +40,7 @@ const userHandCardContainer = document.getElementById("userCardHand");
 
 //DOM ON LOADING EVENT
 document.addEventListener("DOMContentLoaded", async() => {
-    
+
     if(!user){
         window.location.href="index.html";
     }
@@ -63,6 +63,45 @@ async function startGameLoop(){
         await new Promise(resolve => setTimeout(resolve, 3000));
         gameModel = await fetchGame(gameIdfromURL);
         BuildGameTable();
+    }
+}
+
+async function playAction(selectedCards){
+    try{
+        const body = {
+            cards: selectedCards,
+            targetPlayerId: null,
+            targetCard: null,
+            drawPileIndex: 0
+        };
+
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/play-action`, {
+            method: "POST",
+            headers: {
+                'Content-type': 'Application/json',
+                "Authorization": "Bearer " + Token.load()
+            },
+            body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+        if(!response.ok){
+            throw new Error(data.message);
+        }
+
+        return new GameModel(
+            data.id,
+            data.players,
+            data.discardPile,
+            data.drawPileCount,
+            data.playerToPlayId,
+            data.pendingDraws,
+            data.pendingAction,
+            data.hasEnded
+        );
+
+    }catch(error){
+        backendError.textContent = error.message;
     }
 }
 
@@ -99,6 +138,11 @@ function buildMyCards(){
         cardContainer.appendChild(cardEnum);
         //cardContainer.appendChild(cardImg);
         userHandCardContainer.appendChild(cardContainer);
+        cardContainer.addEventListener("click", () => {
+            if(cardContainer.classList.contains("clickable")) {
+                cardContainer.classList.toggle("selected")
+            }
+        });
     });
 }
 
@@ -186,6 +230,19 @@ passButton.addEventListener("click", async() => {
     userDeskMessageBoard.textContent = "Pass gespeeld";
     nopePrompt.style.display ="none";
 });
+playButton.addEventListener("click", async () => {
+    const selectedCardDivs = userHandCardContainer.querySelectorAll(".selected");
+    const selectedCards = [];
+
+    selectedCardDivs.forEach(card => {
+        const typeNr = parseInt(card.querySelector(".card-enum").textContent);
+        selectedCards.push(typeNr);
+    });
+
+    gameModel = await playAction(selectedCards);
+
+    selectedCardDivs.forEach(card => card.classList.remove("selected"));
+});
 
 ////ROUTES
 //LogOut
@@ -198,7 +255,7 @@ logout.addEventListener("click", async (Event) => {
 //Fetch Game
 async function fetchGame(filterData){
     try {
-        
+
         //REAL API CALL
         //const params = new URLSearchParams(filterData)
         //console.log(filterData)
@@ -238,7 +295,7 @@ async function fetchGame(filterData){
         );
 
     }catch(error){
-         backendError.textContent = error.message
+        backendError.textContent = error.message
     }
 }
 
@@ -296,6 +353,6 @@ async function confirmNotNoppingPlay(){
             confirmNotNopping.hasEnded
         )
     }catch(error){
-            backendError.textContent = error.message
+        backendError.textContent = error.message
     }
 }
