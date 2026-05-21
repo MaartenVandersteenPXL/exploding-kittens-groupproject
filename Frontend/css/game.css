@@ -377,3 +377,24 @@ header{
     cursor: not-allowed;
     opacity: 0.5;
 }
+
+.own-card.clickable{
+    cursor: pointer;
+}
+
+.own-card.clickable:hover{
+    transform: scale(1.2);
+    color: #f5ddbc ;
+}
+
+button.disabled{
+    background-color: grey;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.backend-error {
+    height: 1.8rem;
+    margin: 0 0 0 1rem;
+    color: red;
+}

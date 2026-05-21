@@ -241,51 +241,59 @@ async function fetchGame(filterData){
 }
 
 async function nopePlay(){
-    const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/nope`, {
-        method: "POST",
-        headers: {
-            'Content-type' : 'Application/json',
-            "Authorization": "Bearer " + Token.load()
-        }
-    });
+    try{
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/nope`, {
+            method: "POST",
+            headers: {
+                'Content-type' : 'Application/json',
+                "Authorization": "Bearer " + Token.load()
+            }
+        });
 
-    const nopeGame = await response.json();
-    if(!response.ok){
-        throw new Error(nopeGame.message );
+        const nopeGame = await response.json();
+        if(!response.ok){
+            throw new Error(nopeGame.message );
+        }
+        return new GameModel(
+            nopeGame.id,
+            nopeGame.playerId,
+            nopeGame.discardPile,
+            nopeGame.drawPileCount,
+            nopeGame.playerToPlayId,
+            nopeGame.pendingDraws,
+            nopeGame.pendingAction,
+            nopeGame.hasEnded
+        )
+    }catch(error){
+        backendError.textContent = error.message
     }
-    return new GameModel(
-        nopeGame.id,
-        nopeGame.playerId,
-        nopeGame.discardPile,
-        nopeGame.drawPileCount,
-        nopeGame.playerToPlayId,
-        nopeGame.pendingDraws,
-        nopeGame.pendingAction,
-        nopeGame.hasEnded
-    )
 }
 
 async function confirmNotNoppingPlay(){
-    const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/confirm-not-nopin`, {
-        method: "POST",
-        headers: {
-            'Content-type' : 'Application/json',
-            "Authorization": "Bearer " + Token.load()
-        }
-    });
+    try{
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/confirm-not-nopin`, {
+            method: "POST",
+            headers: {
+                'Content-type' : 'Application/json',
+                "Authorization": "Bearer " + Token.load()
+            }
+        });
 
-    const confirmNotNopping = await response.json();
-    if(!response.ok){
-        throw new Error(confirmNotNopping.message);
+        const confirmNotNopping = await response.json();
+        if(!response.ok){
+            throw new Error(confirmNotNopping.message);
+        }
+        return new GameModel(
+            confirmNotNopping.id,
+            confirmNotNopping.playerId,
+            confirmNotNopping.discardPile,
+            confirmNotNopping.drawPileCount,
+            confirmNotNopping.playerToPlayId,
+            confirmNotNopping.pendingDraws,
+            confirmNotNopping.pendingAction,
+            confirmNotNopping.hasEnded
+        )
+    }catch(error){
+            backendError.textContent = error.message
     }
-    return new GameModel(
-        confirmNotNopping.id,
-        confirmNotNopping.playerId,
-        confirmNotNopping.discardPile,
-        confirmNotNopping.drawPileCount,
-        confirmNotNopping.playerToPlayId,
-        confirmNotNopping.pendingDraws,
-        confirmNotNopping.pendingAction,
-        confirmNotNopping.hasEnded
-    )
 }
