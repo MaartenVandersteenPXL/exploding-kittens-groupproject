@@ -25,6 +25,7 @@ const playButton = document.getElementById("playActionBtn");
 const nopePrompt = document.getElementById("nopePrompt");
 const nopeButton = document.getElementById("nopeBtn");
 const passButton = document.getElementById("passBtn");
+const gameState = document.getElementById("gameState");
 //Error
 const backendError = document.getElementById("backendError");
 /*
@@ -73,8 +74,6 @@ function BuildGameTable(){
     buildTableInfo()
     buildTurnControls();
     buildNopePrompt();
-
-    //userDeskMessageBoard.textContent="Klaar om te spelen!";
 }
 
 function buildMyCards(){
@@ -160,6 +159,7 @@ function buildTurnControls(){
     const isMyTurn = gameModel.playerToPlayId === user.id;
 
     if (isMyTurn) {
+
         userDeskMessageBoard.textContent = "jouw beurt"
         playButton.disabled = false;
         playButton.classList.remove("disabled");
@@ -168,6 +168,17 @@ function buildTurnControls(){
             // Nog af te wachten waar de "clickable" class selector naar toe gaat
             card.classList.add("clickable");
         });
+
+        ///INCOMMING REQUEST
+        //WANNEER FAVOR VRAAG KOMT -> KAART SELECTEREN -> selectCardAsFavor(cardId)
+        // setGameState(`${user.name} IS CHOOSING A CARD TO FAVOR`)
+        //WANNEER DOUBLE KOMT -> ...
+        // setGameState(`${user.name} ???`)
+        //WANNEER TRIPLE KOMT -> ...
+        // setGameState(`${user.name} ???`)
+        //WANNNER EEN NOPE KOMT
+        // setGameState(`${user.name} IS THINKING ABOUT NOPPING THE NOPE CARD`)
+
 
     } else {
         userDeskMessageBoard.textContent = "wachten op andere spelers"
@@ -190,35 +201,79 @@ function buildSelectedCards(){
     });
 }
 
-//playActions methods
+//// ACTIONS -> see events!!!
+//PLAY-ACTIONS METHODS
 async function defuseExplodingKitten(){
-    gameModel = await playAction(selectedUserPlayerCardsId, null, null, 1 )
+    //DEFUSE A EXPLODING KITTEN - ONLY SEND CARD ENUM
+    gameModel = await playAction(selectedUserPlayerCardsId)
+    setGameState(`${user.name} DEFUSED THA BOMB`)
+}
+async function playSkipCard(){
+    //SKIP CARD - ONLY SEND CARD ENUM
+    gameModel = await playAction(selectedUserPlayerCardsId)
+    setGameState(`${user.name} IS A PUSSY, SKIPPING A CARD DRAW`)
+}
+async function playAttackCard(){
+    //ENDS TURN - NEW PLAYER 2 CARDS
+    let targetPlayer = 0 // NEEDS TO BE SET???
+    gameModel = await playAction(selectedUserPlayerCardsId, targetPlayer )
+    setGameState(`${user.name} ATTACKS`)
+}
+async function playFavorCard(){
+    //playerID SELECT ELEMENT WITH PLAYER ID
+    while(PLAYER ID == null){
+        userDeskMessageBoard.textContent = "Kies een speler"
+        setGameState(`${user.name} NEEDS TO ASK A FAVOR CARD - WHO WILL BE CHOOSEN?`)
+    }
+    setGameState(`${user.name} ASKS A FAVOR OF ....`)
+    //gameModel = await playAction(selectedUserPlayerCardsId, PLAYER ID)
 }
 
+//playShuffleCard()
+//playSeeTheFutureCard()
+//...
+
+//INCOMMING-ACTION METHODS
+//giveFavorCard()
+//NOPE A NOPING CARD()
+//...
+
+//DRAW CARD
 async function drawCardFromPile(){
     gameModel = await drawAction();
     //WANNNEER WEET JE DAT JE EEN EXPLODING KITTEN HEBT GETROKKEN ?
     if(explodingkitten){
         userHandCardContainer.forEach( cardElement => {
-            if ((parseInt(cardElement.querySelector(".card-enum").textContent) === 1){
+            if ((parseInt(cardElement.querySelector(".card-enum").textContent) === 1)){
                 defuseExplodingKitten();
-            }else{
-                //EXPLODE IN FREAKING BLOODY PIECES
+                setGameState(`${user.name} ENDED PLAY ROUND`)
+                //END PLAYER ROUND
+                return;
             }
-        })
-
+        });
+        setGameState(`${user.name} EXPLODED IN 100 BLOODY MEATY PIECES`)
     }
+}
+
+///HELPERS
+function setGameState(newText){
+    //HOW TO FEDERATE TO OTHER USER? WITH GAMEMODEL? WITCH GAMEMODEL PARAMETER?
+    gameState.textContent = gameState.textContent.replace(
+        gameState.textContent,
+        newText);
 }
 
 ///// EVENTS
 nopeButton.addEventListener("click", async() => {
     gameModel = await nopeAction();
     userDeskMessageBoard.textContent = "Nope gespeeld";
+    setGameState(`${user.name} heeft genoped!`)
     nopePrompt.style.display ="none";
 });
 passButton.addEventListener("click", async() => {
     gameModel = await confirmNotNoppingPlay();
     userDeskMessageBoard.textContent = "Pass gespeeld";
+    setGameState(`${user.name} doet niet mee aan de nope vraag`)
     nopePrompt.style.display ="none";
 });
 
@@ -244,7 +299,6 @@ playButton.addEventListener("click", async () => {
     } else {
         drawCardFromPile();
     }
-
 
     //selectedCardDivs.forEach(card => card.classList.remove("selected"));
 });
@@ -362,7 +416,7 @@ async function confirmNotNoppingPlay(){
     }
 }
 
-async function playAction(selectedCards, targetPlayer, targetCard, drawPileIndex){
+async function playAction(selectedCards, targetPlayer = null, targetCard = null, drawPileIndex = 0){
     try{
         const body = {
             cards: selectedCards,
@@ -427,5 +481,41 @@ async function drawAction(){
         )
     }catch(error){
         backendError.textContent = error.message
+    }
+}
+
+async function selectCardAsFavor(cardId){
+    try{
+        const body = {
+            card: cardId,
+        };
+
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/select-card-to-give-as-favor`, {
+            method: "POST",
+            headers: {
+                'Content-type': 'Application/json',
+                "Authorization": "Bearer " + Token.load()
+            },
+            body: JSON.stringify(body)
+        });
+
+        const playSelectFavorData = await response.json();
+        if(!response.ok){
+            throw new Error(playSelectFavorData.message);
+        }
+
+        return new GameModel(
+            playSelectFavorData.id,
+            playSelectFavorData.players,
+            playSelectFavorData.discardPile,
+            playSelectFavorData.drawPileCount,
+            playSelectFavorData.playerToPlayId,
+            playSelectFavorData.pendingDraws,
+            playSelectFavorData.pendingAction,
+            playSelectFavorData.hasEnded
+        );
+
+    }catch(error){
+        backendError.textContent = error.message;
     }
 }
