@@ -66,6 +66,45 @@ async function startGameLoop(){
     }
 }
 
+async function playAction(selectedCards){
+    try{
+        const body = {
+            cards: selectedCards,
+            targetPlayerId: null,
+            targetCard: null,
+            drawPileIndex: 0
+        };
+
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/play-action`, {
+            method: "POST",
+            headers: {
+                'Content-type': 'Application/json',
+                "Authorization": "Bearer " + Token.load()
+            },
+            body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+        if(!response.ok){
+            throw new Error(data.message);
+        }
+
+        return new GameModel(
+            data.id,
+            data.players,
+            data.discardPile,
+            data.drawPileCount,
+            data.playerToPlayId,
+            data.pendingDraws,
+            data.pendingAction,
+            data.hasEnded
+        );
+
+    }catch(error){
+        backendError.textContent = error.message;
+    }
+}
+
 function BuildGameTable(){
     buildMyCards();
     buildOpponents();
@@ -99,6 +138,11 @@ function buildMyCards(){
         cardContainer.appendChild(cardEnum);
         //cardContainer.appendChild(cardImg);
         userHandCardContainer.appendChild(cardContainer);
+        cardContainer.addEventListener("click", () => {
+            if(cardContainer.classList.contains("clickable")) {
+                cardContainer.classList.toggle("selected")
+            }
+        });
     });
 }
 
@@ -185,6 +229,21 @@ passButton.addEventListener("click", async() => {
     gameModel = await confirmNotNoppingPlay();
     userDeskMessageBoard.textContent = "Pass gespeeld";
     nopePrompt.style.display ="none";
+});
+playButton.addEventListener("click", async () => {
+    const selectedCardDivs = userHandCardContainer.querySelectorAll(".selected");
+    const selectedCards = [];
+
+    selectedCardDivs.forEach(card => {
+        const typeNr = parseInt(card.querySelector(".card-enum").textContent);
+        selectedCards.push(typeNr);
+    });
+
+    gameModel = await playAction(selectedCards);
+
+    userDeskMessageBoard.textContent = "je speelde: " + selectedCards.join(", ");
+
+    selectedCardDivs.forEach(card => card.classList.remove("selected"));
 });
 
 ////ROUTES
