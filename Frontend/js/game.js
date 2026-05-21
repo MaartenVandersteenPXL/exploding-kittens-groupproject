@@ -22,6 +22,9 @@ const logout = document.getElementById("logout");
 //game
 const userDeskMessageBoard= document.getElementById("statusMessage");
 const playButton = document.getElementById("playActionBtn");
+const nopePrompt = document.getElementById("nopePrompt");
+const nopeButton = document.getElementById("nopeBtn");
+const passButton = document.getElementById("passBtn");
 //Error
 const backendError = document.getElementById("backendError");
 /*
@@ -48,26 +51,55 @@ document.addEventListener("DOMContentLoaded", async() => {
 
 ////FUNCTIES
 async function gameInit(){
+    gameModel = await fetchGame(gameIdfromURL);
     headerTitle.textContent=titels[0];
     headerIntro.textContent=intros[0];
     userDeskMessageBoard.textContent = "Het spel wordt geladen";
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
-    gameModel = await fetchGame(gameIdfromURL);
 }
 
 async function startGameLoop(){
     while(!gameModel.hasEnded){
+        await new Promise(resolve => setTimeout(resolve, 3000));
         gameModel = await fetchGame(gameIdfromURL);
         BuildGameTable();
     }
 }
 
 function BuildGameTable(){
+    buildMyCards();
     buildOpponents();
     buildTableInfo()
-    buildMyCards();
     buildTurnControls();
+    buildNopePrompt();
     //userDeskMessageBoard.textContent="Klaar om te spelen!";
+}
+
+function buildMyCards(){
+    userHandCardContainer.replaceChildren();
+    userAsPlayer.cardsInHand.forEach(element => {
+        let cardContainer = document.createElement("div");
+        let cardName = document.createElement("p");
+        let cardEnum = document.createElement("p");
+        let cardImg = document.createElement("img");
+
+        cardContainer.classList.add(`own-card`, `${element.card.getName()}`);
+        cardName.classList.add(`card-name`);
+        cardEnum.classList.add(`card-enum`);
+        //cardImg.classList.add("card-img");
+
+        //Background card
+        //cardContainer.style.backgroundImage= `url('${element.card.getImage()}')`;
+        //cardImg.alt=`${element.card.getName()}-img`;
+
+        cardName.textContent = element.card.getName();
+        cardEnum.textContent = element.card.typeNr;
+
+        cardContainer.appendChild(cardName);
+        cardContainer.appendChild(cardEnum);
+        //cardContainer.appendChild(cardImg);
+        userHandCardContainer.appendChild(cardContainer);
+    });
 }
 
 function buildOpponents() {
@@ -102,31 +134,17 @@ function buildTableInfo(){
     }
 }
 
-function buildMyCards(){
-    userHandCardContainer.replaceChildren();
-    userAsPlayer.cardsInHand.forEach(element => {
-        let cardContainer = document.createElement("div");
-        let cardName = document.createElement("p");
-        let cardEnum = document.createElement("p");
-        let cardImg = document.createElement("img");
+function buildNopePrompt(){
+    const hasPendingAction = gameModel.pendingAction != null;
+    const isMyAction = gameModel.pendingAction?.playerId === user.id;
 
-        cardContainer.classList.add(`own-card`, `${element.card.getName()}`);
-        cardName.classList.add(`card-name`);
-        cardEnum.classList.add(`card-enum`);
-        //cardImg.classList.add("card-img");
+    if(hasPendingAction && !isMyAction){
+        nopePrompt.style.display = "block";
+        userDeskMessageBoard.textContent = "Een speler speelde:" + gameModel.pendingAction.cards.map(c => c.getName()).join(", ") + "wil je NOPE spelen?";
 
-        //Background card
-        //cardContainer.style.backgroundImage= `url('${element.card.getImage()}')`;
-        //cardImg.alt=`${element.card.getName()}-img`;
-
-        cardName.textContent = element.card.getName();
-        cardEnum.textContent = element.card.typeNr;
-
-        cardContainer.appendChild(cardName);
-        cardContainer.appendChild(cardEnum);
-        //cardContainer.appendChild(cardImg);
-        userHandCardContainer.appendChild(cardContainer);
-    });
+    }else {
+        nopePrompt.style.display = "none";
+    }
 }
 
 function buildTurnControls(){
@@ -135,6 +153,7 @@ function buildTurnControls(){
     const isMyTurn = gameModel.playerToPlayId === user.id;
 
     if (isMyTurn) {
+        userDeskMessageBoard.textContent = "jouw beurt"
         playButton.disabled = false;
         playButton.classList.remove("disabled");
 
@@ -144,6 +163,7 @@ function buildTurnControls(){
         });
 
     } else {
+        userDeskMessageBoard.textContent = "wachten op andere spelers"
         playButton.disabled = true;
         playButton.classList.add("disabled");
         myCards.forEach(card => {
@@ -155,6 +175,18 @@ function buildTurnControls(){
 }
 
 ///// EVENTS
+nopeButton.addEventListener("click", async() => {
+    gameModel = await nopePlay();
+    userDeskMessageBoard.textContent = "Nope gespeeld";
+    nopePrompt.style.display ="none";
+});
+
+passButton.addEventListener("click", async() => {
+    gameModel = await confirmNotNoppingPlay();
+    userDeskMessageBoard.textContent = "Pass gespeeld";
+    nopePrompt.style.display ="none";
+});
+
 ////ROUTES
 //LogOut
 logout.addEventListener("click", async (Event) => {
@@ -194,7 +226,7 @@ async function fetchGame(filterData){
             console.log("TROUBLES"+ problemDetails);
             throw new Error(dataGames.message );
         }
-        const gameModel = new GameModel(
+        return new GameModel(
             dataGames.id,
             dataGames.players,
             dataGames.discardPile,
@@ -203,11 +235,67 @@ async function fetchGame(filterData){
             dataGames.pendingDraws,
             dataGames.pendingAction,
             dataGames.hasEnded
-            );
-        return gameModel;
+        );
 
     }catch(error){
          backendError.textContent = error.message
     }
 }
 
+async function nopePlay(){
+    try{
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/nope`, {
+            method: "POST",
+            headers: {
+                'Content-type' : 'Application/json',
+                "Authorization": "Bearer " + Token.load()
+            }
+        });
+
+        const nopeGame = await response.json();
+        if(!response.ok){
+            throw new Error(nopeGame.message );
+        }
+        return new GameModel(
+            nopeGame.id,
+            nopeGame.players,
+            nopeGame.discardPile,
+            nopeGame.drawPileCount,
+            nopeGame.playerToPlayId,
+            nopeGame.pendingDraws,
+            nopeGame.pendingAction,
+            nopeGame.hasEnded
+        )
+    }catch(error){
+        backendError.textContent = error.message
+    }
+}
+
+async function confirmNotNoppingPlay(){
+    try{
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/confirm-not-nopin`, {
+            method: "POST",
+            headers: {
+                'Content-type' : 'Application/json',
+                "Authorization": "Bearer " + Token.load()
+            }
+        });
+
+        const confirmNotNopping = await response.json();
+        if(!response.ok){
+            throw new Error(confirmNotNopping.message);
+        }
+        return new GameModel(
+            confirmNotNopping.id,
+            confirmNotNopping.players,
+            confirmNotNopping.discardPile,
+            confirmNotNopping.drawPileCount,
+            confirmNotNopping.playerToPlayId,
+            confirmNotNopping.pendingDraws,
+            confirmNotNopping.pendingAction,
+            confirmNotNopping.hasEnded
+        )
+    }catch(error){
+            backendError.textContent = error.message
+    }
+}
