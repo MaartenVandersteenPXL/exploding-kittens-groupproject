@@ -88,7 +88,7 @@ function buildMyCards(){
         cardContainer.classList.add(`own-card`, `${element.card.getName()}`);
         cardName.classList.add(`card-name`);
         cardEnum.classList.add(`card-enum`);
-        //cardImg.classList.add("card-img");
+        cardImg.classList.add("card-img");
 
         //Background card
         //cardContainer.style.backgroundImage= `url('${element.card.getImage()}')`;
@@ -222,12 +222,12 @@ async function playAttackCard(){
 }
 async function playFavorCard(){
     //playerID SELECT ELEMENT WITH PLAYER ID
-    while(PLAYER ID == null){
+    /*while(PLAYER ID == null){
         userDeskMessageBoard.textContent = "Kies een speler"
         setGameState(`${user.name} NEEDS TO ASK A FAVOR CARD - WHO WILL BE CHOOSEN?`)
     }
     setGameState(`${user.name} ASKS A FAVOR OF ....`)
-    //gameModel = await playAction(selectedUserPlayerCardsId, PLAYER ID)
+    //gameModel = await playAction(selectedUserPlayerCardsId, PLAYER ID)*/
 }
 
 //playShuffleCard()
@@ -241,7 +241,7 @@ async function playFavorCard(){
 
 //DRAW CARD
 async function drawCardFromPile(){
-    gameModel = await drawAction();
+    /*gameModel = await drawAction();
     //WANNNEER WEET JE DAT JE EEN EXPLODING KITTEN HEBT GETROKKEN ?
     if(explodingkitten){
         userHandCardContainer.forEach( cardElement => {
@@ -253,7 +253,7 @@ async function drawCardFromPile(){
             }
         });
         setGameState(`${user.name} EXPLODED IN 100 BLOODY MEATY PIECES`)
-    }
+    }*/
 }
 
 ///HELPERS
