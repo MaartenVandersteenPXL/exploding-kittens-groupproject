@@ -261,7 +261,7 @@ header{
 /* Eigen hand */
 .hand-area {
     display: flex;
-    direction: row;
+    flex-direction: row;
     background-color: #a02f40;
     padding: 15px;
     border-radius: 20px;
@@ -285,7 +285,8 @@ header{
 .own-card {
     display: flex;
     flex-direction: column;
-    height: 100px;
+    width: 80px;
+    height: 120px;
     background-color: #f5ddbc;
     border: 2px solid #5f2f45;
     border-radius: 10px;
@@ -299,7 +300,7 @@ header{
 
 .own-card:hover {
     z-index: 100; /* Kaart komt naar voren */
-    transform: translateY(-50px);
+    transform: translateY(-50px) scale(2.0);
     background-color: #f5ddbc;
 }
 
@@ -313,20 +314,23 @@ header{
 }
 
 .card-enum {
+    display: none;
     background: #f8ddb7;
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    display: flex;
+    /* display: flex; */
     align-items: center;
     justify-content: center;
     color: #5f2f45;
     font-weight: bold;
     border: 1px solid #5f2f45;
 }
+
+
 /* Zorgt dat de kaarten op de 2de rij gelijk met de eerste beginnen */
 .own-card:nth-child(n+1){
-    margin-left: -35px; /* DIT ZORGT VOOR DE OVERLAP */
+    margin-left: -45px; /* DIT ZORGT VOOR DE OVERLAP */
 }
 .own-card:first-child, .own-card:nth-child(10){
     margin-left: 10px;
@@ -383,7 +387,7 @@ header{
 }
 
 .own-card.clickable:hover{
-    transform: scale(1.2);
+    transform: translate(-50px) scale(2.0);
     color: #f5ddbc ;
 }
 
