@@ -1,7 +1,8 @@
 import { User, Token } from "./Classes/userClasses.js";
 import { GameModel, Player, Card } from "./Classes/gameClasses.js";
 import { ProblemDetails } from "./Classes/tableClasses.js";
-
+import { CardType } from "./Enums/cardEnums.js";
+import { CardImage } from "./Enums/cardEnums.js";
 ////CLASSES
 let user = User.load();
 let gameModel = {};
@@ -280,20 +281,28 @@ passButton.addEventListener("click", async() => {
 playButton.addEventListener("click", async () => {
     buildSelectedCards()
     if(selectedUserPlayerCardsId.length !== 0){
-        switch(selectedUserPlayerCardsId){
-            case 1:
-                defuseExplodingKitten();
-            case 2:
-                playSkipCard();
-            case 3:
-                playAttackCard();
-            case 4:
-                playFavorCard();
-            case 5:
-                playShuffleCard();
-            case 6:
-                playSeeTheFutureCard()
+        switch(selectedUserPlayerCardsId[0]){
+            case CardType.Defuse:
+                await defuseExplodingKitten();
+                break;
+            case CardType.Skip:
+                await playSkipCard();
+                break
+            case CardType.Attack:
+                await playAttackCard();
+                break
+            case CardType.Favor:
+                await playFavorCard();
+                break
+            case CardType.Shuffle:
+                await playShuffleCard();
+                break
+            case CardType.SeeTheFuture:
+                await playSeeTheFutureCard();
+                break
             default:
+                //kattenpaar, meer dan 1 kaart
+                await playAction(selectedUserPlayerCardsId);
                 break;
         }
     } else {
