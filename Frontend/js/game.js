@@ -81,23 +81,23 @@ function buildMyCards(){
     userHandCardContainer.replaceChildren();
     userAsPlayer.cardsInHand.forEach(element => {
         let cardContainer = document.createElement("div");
-        let cardName = document.createElement("p");
+        //let cardName = document.createElement("p");
         let cardEnum = document.createElement("p");
-        let cardImg = document.createElement("img");
+        //let cardImg = document.createElement("img");
 
         cardContainer.classList.add(`own-card`, `${element.card.getName()}`);
-        cardName.classList.add(`card-name`);
+        //cardName.classList.add(`card-name`);
         cardEnum.classList.add(`card-enum`);
-        cardImg.classList.add("card-img");
+        //cardImg.classList.add("card-img");
 
         //Background card
-        //cardContainer.style.backgroundImage= `url('${element.card.getImage()}')`;
+        cardContainer.style.backgroundImage= `url('${CardImage[element.card.typeNr]}')`;
         //cardImg.alt=`${element.card.getName()}-img`;
 
-        cardName.textContent = element.card.getName();
+        //cardName.textContent = element.card.getName();
         cardEnum.textContent = element.card.typeNr;
 
-        cardContainer.appendChild(cardName);
+        //cardContainer.appendChild(cardName);
         cardContainer.appendChild(cardEnum);
         //cardContainer.appendChild(cardImg);
         userHandCardContainer.appendChild(cardContainer);
@@ -241,7 +241,7 @@ async function playFavorCard(){
 
 //DRAW CARD
 async function drawCardFromPile(){
-    /*gameModel = await drawAction();
+    gameModel = await drawAction();/*
     //WANNNEER WEET JE DAT JE EEN EXPLODING KITTEN HEBT GETROKKEN ?
     if(explodingkitten){
         userHandCardContainer.forEach( cardElement => {
