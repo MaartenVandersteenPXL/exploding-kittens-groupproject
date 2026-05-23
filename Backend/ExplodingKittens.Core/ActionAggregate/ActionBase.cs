@@ -154,13 +154,9 @@ public abstract class ActionBase : IAction
             {
                 _playerNopeDecisions[key] = NopeDecision.Nope;
             }
-            else if (CurrentGame.GetPlayerById(key).Hand.Contains(Card.Nope))
-            {
-                _playerNopeDecisions[key] = NopeDecision.NotDecided;
-            }
             else
             {
-                _playerNopeDecisions[key] = NopeDecision.NotNoping;
+                _playerNopeDecisions[key] = NopeDecision.NotDecided;
             }
         }
     }
