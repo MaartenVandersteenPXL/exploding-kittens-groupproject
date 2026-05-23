@@ -9,9 +9,6 @@ namespace ExplodingKittens.Core.GameAggregate;
 /// <inheritdoc cref="IGame"/>
 internal class Game : IGame
 {
-    /// <summary>
-    /// Creates a new game. Does not deal cards or set first player; use <see cref="IGameFactory"/> for full setup.
-    /// </summary>
     private Guid _id;
     private IPlayer[] _players;
     private ICardDeck _drawPile;
@@ -52,13 +49,12 @@ internal class Game : IGame
         {
             throw new InvalidOperationException("Je moet eert de kaarten trekken.");
         }
-        // FutureCards resetten voor alle spelers zodat oude informatie niet blijft hangen als er een nieuwe 'See the Future' kaart gespeeld wordt
+
         foreach (IPlayer player in _players)
         {
             player.FutureCards = new List<Card>();
         }
         {
-            // Beurt wisselen naar de volgende speler die nog niet is geëlimineerd
             int currentPlayerIndex = Array.FindIndex(_players, player => player.Id == _playerToPlayId);
             int nextPlayerIndex = (currentPlayerIndex + 1) % _players.Length;
             while (_players[nextPlayerIndex].Eliminated)
@@ -78,47 +74,35 @@ internal class Game : IGame
             throw new InvalidOperationException("Er is geen actie in behandeling.");
         }
         _pendingAction.ConfirmNotNoping(playerId);
-        if (_pendingAction.IsExecuted)
-        {
-            _pendingAction = null;
-        }
     }
 
     public void DrawCard(Guid playerId)
     {
-        // 1. Validatie: Is de juiste speler aan de beurt?
         if (playerId != _playerToPlayId)
         {
             throw new InvalidOperationException("Het is niet jouw beurt.");
         }
 
-        // 2. Validatie: Is er een actie bezig?
         if (_pendingAction != null && !_pendingAction.IsExecuted)
         {
             throw new InvalidOperationException("Er is nog een actie bezig. Behandel deze eerst.");
         }
-        // 3. De speler trekt een kaart van de trekstapel
+
         IPlayer currentPlayer = GetPlayerById(playerId);
         Card drawnCard = _drawPile.DrawTopCard();
 
-        // 4. Speciale afhandeling als het een Exploding Kitten is
         if (drawnCard == Card.ExplodingKitten)
         {
             currentPlayer.Hand.InsertCard(drawnCard);
-            _pendingDraws = 0; // Beurt stopt sowieso na een Exploding Kitteb
+            _pendingDraws = 0;
 
-            // Check of de speler direct geëlimineerd is (geen defuse in hand)
             if (currentPlayer.Eliminated)
             {
-                // Speler is dood, nu mag de beurt WEL naar de volgende
                 AdvanceTurn();
             }
-            // Als currentPlayer.Eliminated FALSE is, doen we NIETS.
-            // De speler blijft aan de beurt en MOET nu een DefuseAction spelen.
         }
         else
         {
-            // Normale kaart getrokken
             _pendingDraws--;
             currentPlayer.Hand.InsertCard(drawnCard);
             if (_pendingDraws <= 0)
@@ -130,7 +114,6 @@ internal class Game : IGame
 
     public IPlayer GetPlayerById(Guid playerId)
     {
-        //Zoekt de speler met de gegeven ID en retourneert deze. Gooi een fout als er geen speler is met die ID.
         foreach (IPlayer player in _players)
         {
             if (player.Id == playerId)
@@ -156,37 +139,31 @@ internal class Game : IGame
 
         _discardPile.Add(Card.Nope);
         _pendingAction.Nope(playerId);
-        if (_pendingAction.IsExecuted)
-        {
-            _pendingAction = null;
-        }
     }
 
     public void PlayAction(Guid playerId, IReadOnlyList<Card> cards, Guid? targetPlayerId, Card? targetCard, int? drawPileIndex)
     {
-        // 1. Validatie: Is de juiste speler aan de beurt?
         if (playerId != _playerToPlayId)
         {
             throw new InvalidOperationException("Het is niet jouw beurt.");
         }
-        // 2. Validatie: Is er een actie bezig?
+
         if (_pendingAction != null && !_pendingAction.IsExecuted)
         {
             throw new InvalidOperationException("Er is nog een actie bezig. Je moet deze eerst bevestigen of nopen voordat je een kaart kunt spelen.");
         }
-        // 3. Haalt de kaart uit de hand van de speler en legt deze op de aflegstapel. 
+
         foreach (Card playedCard in cards)
         {
             GetPlayerById(playerId).Hand.PickSpecificCard(playedCard);
             _discardPile.Add(playedCard);
         }
-        // 6. De actie aanmaken
-        IAction action = _actionFactory.Create(this, playerId, cards, targetPlayerId, targetCard, drawPileIndex);
 
-        // 7. Als de actie genoped kan worden, blijft deze in behandeling totdat alle spelers hebben bevestigd dat ze niet nopen of totdat iemand nopt
+        IAction action = _actionFactory.Create(this, playerId, cards, targetPlayerId, targetCard, drawPileIndex);
+        _pendingAction = action;
+
         if (action.CanBeNoped)
         {
-            _pendingAction = action;
             if (!action.Cards.Contains(Card.Favor))
             {
                 action.ConfirmNotNoping(playerId);
@@ -194,7 +171,6 @@ internal class Game : IGame
         }
         else
         {
-            // 8. Direct uitvoeren voor alle spelers (nodig voor o.a. Defuse)
             foreach (IPlayer player in _players)
             {
                 action.ConfirmNotNoping(player.Id);

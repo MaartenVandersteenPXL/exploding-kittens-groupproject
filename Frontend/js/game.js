@@ -14,7 +14,12 @@ let intros = ["This is amazing! Prrt!",
     "You saw that, right? Im incredible. Meow!"];
 let userAsPlayer;
 let selectedUserPlayerCardsId = [];
-
+let autoPassInProgress = false;
+const NopeDecision = Object.freeze({
+    NotDecided: 0,
+    Nope: 1,
+    NotNoping: 2
+});
 ///// ELEMENTS
 //header
 const headerTitle = document.getElementById("headerTitle");
@@ -150,19 +155,78 @@ function buildTableInfo(){
 
 function buildNopePrompt(){
     const hasPendingAction = gameModel.pendingAction != null;
-    const isMyAction = gameModel.pendingAction?.playerId === user.id;
-    const hasNopeCard = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Nope);
 
-    if(hasPendingAction && !isMyAction && hasNopeCard){
-        nopePrompt.style.display = "block";
-        userDeskMessageBoard.textContent = "Een speler speelde: " +
-            gameModel.pendingAction.cards.map(c => Object.keys(CardType).find(key => CardType[key] === c)).join(", ") + " - wil je NOPE spelen?";
-
-    }else {
+    if(!hasPendingAction){
         nopePrompt.style.display = "none";
+        return;
     }
 
+    const isMyAction = gameModel.pendingAction.playerId === user.id;
+    const hasNopeCard = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Nope);
 
+    const nopeDecisions = gameModel.pendingAction.playerNopeDecisions ?? {};
+    const myNopeDecision = Object.entries(nopeDecisions)
+        .find(([playerId]) => playerId.toLowerCase() === user.id.toLowerCase())?.[1];
+
+    const isMyDecisionPending =
+        myNopeDecision === 0 ||
+        myNopeDecision === "0" ||
+        myNopeDecision === NopeDecision.NotDecided ||
+        myNopeDecision === "NotDecided";
+
+    const actionIsNoped = Object.values(nopeDecisions)
+        .some(decision =>
+            decision === 1 ||
+            decision === "1" ||
+            decision === NopeDecision.Nope ||
+            decision === "Nope"
+        );
+
+    const canRespondToNope = !isMyAction || actionIsNoped;
+
+    const shouldRespond =
+        !gameModel.pendingAction.isExecuted &&
+        isMyDecisionPending &&
+        canRespondToNope;
+
+    if(shouldRespond && !hasNopeCard){
+        nopePrompt.style.display = "none";
+
+        if(!autoPassInProgress){
+            autoPassInProgress = true;
+
+            confirmNotNoppingPlay()
+                .then(updatedGame => {
+                    if(updatedGame){
+                        gameModel = updatedGame;
+                        userAsPlayer = gameModel.players.find(p => p.id === user.id);
+                        BuildGameTable();
+                    }
+                })
+                .finally(() => {
+                    autoPassInProgress = false;
+                });
+        }
+
+        return;
+    }
+
+    const shouldShowNopePrompt = shouldRespond && hasNopeCard;
+
+    if(shouldShowNopePrompt){
+        nopePrompt.style.display = "block";
+        nopeButton.disabled = false;
+
+        const pendingCards = gameModel.pendingAction.cards
+            .map(c => Object.keys(CardType).find(key => CardType[key] === c))
+            .join(", ");
+
+        userDeskMessageBoard.textContent = actionIsNoped
+            ? `Er is een NOPE gespeeld op: ${pendingCards} - wil je terug NOPE spelen?`
+            : `Een speler speelde: ${pendingCards} - wil je NOPE spelen?`;
+    } else {
+        nopePrompt.style.display = "none";
+    }
 }
 
 function buildTurnControls(){
