@@ -21,8 +21,11 @@ const headerTitle = document.getElementById("headerTitle");
 const headerIntro = document.getElementById("headerIntro");
 //nav
 const logout = document.getElementById("logout");
+//table
+const discardPile = document.getElementById("discardPile");
 //game
 const playButton = document.getElementById("playActionBtn");
+const drawButton = document.getElementById("drawActionBtn");
 const nopePrompt = document.getElementById("nopePrompt");
 const nopeButton = document.getElementById("nopeBtn");
 const passButton = document.getElementById("passBtn");
@@ -65,6 +68,7 @@ async function startGameLoop(){
     while(!gameModel.hasEnded){
         await new Promise(resolve => setTimeout(resolve, 3000));
         gameModel = await fetchGame(gameIdfromURL);
+        userAsPlayer = gameModel.players.find(p => p.id === user.id);
         BuildGameTable();
     }
 }
@@ -81,25 +85,21 @@ function buildMyCards(){
     userHandCardContainer.replaceChildren();
     userAsPlayer.cardsInHand.forEach(element => {
         let cardContainer = document.createElement("div");
-        //let cardName = document.createElement("p");
         let cardEnum = document.createElement("p");
-        //let cardImg = document.createElement("img");
+        let cardName = document.createElement("p");
 
         cardContainer.classList.add(`own-card`, `${element.card.getName()}`);
-        //cardName.classList.add(`card-name`);
+        cardName.classList.add(`card-name`);
         cardEnum.classList.add(`card-enum`);
-        //cardImg.classList.add("card-img");
 
         //Background card
         cardContainer.style.backgroundImage= `url('${CardImage[element.card.typeNr]}')`;
-        //cardImg.alt=`${element.card.getName()}-img`;
 
-        //cardName.textContent = element.card.getName();
+        cardName.textContent = element.card.getName();
         cardEnum.textContent = element.card.typeNr;
 
-        //cardContainer.appendChild(cardName);
+        cardContainer.appendChild(cardName);
         cardContainer.appendChild(cardEnum);
-        //cardContainer.appendChild(cardImg);
         userHandCardContainer.appendChild(cardContainer);
         cardContainer.addEventListener("click", () => {
             if(cardContainer.classList.contains("clickable")) {
@@ -147,7 +147,8 @@ function buildNopePrompt(){
 
     if(hasPendingAction && !isMyAction){
         nopePrompt.style.display = "block";
-        userDeskMessageBoard.textContent = "Een speler speelde:" + gameModel.pendingAction.cards.map(c => c.getName()).join(", ") + "wil je NOPE spelen?";
+        userDeskMessageBoard.textContent = "Een speler speelde:" + gameModel.pendingAction + "wil je NOPE spelen?";
+        //console.log("PendingAction shizzle:", gameModel.pendingAction)
 
     }else {
         nopePrompt.style.display = "none";
@@ -166,7 +167,6 @@ function buildTurnControls(){
         playButton.classList.remove("disabled");
 
         myCards.forEach(card => {
-            // Nog af te wachten waar de "clickable" class selector naar toe gaat
             card.classList.add("clickable");
         });
 
@@ -191,15 +191,6 @@ function buildTurnControls(){
             card.classList.remove("selected"); // also deselect if it was your turn before
         });
     }
-}
-
-function buildSelectedCards(){
-    selectedUserPlayerCardsId = [];
-    const selectedUserPlayerCardsContainer = userHandCardContainer.querySelectorAll(".selected");
-    selectedUserPlayerCardsContainer.forEach(cardElement => {
-        let cardTypeNr = parseInt(cardElement.querySelector(".card-enum").textContent);
-        selectedUserPlayerCardsId.push(cardTypeNr);
-    });
 }
 
 //// ACTIONS -> see events!!!
@@ -264,6 +255,32 @@ function setGameState(newText){
         newText);
 }
 
+function buildDiscardPile(selectedUserPlayerCards){
+
+    console.log("what is discardPile", gameModel.discardPile)
+    let discaredPileLastEnum= gameModel.discardPile.at(-1);
+
+    /*
+    let cardDiscardPileContainer = document.createElement("div");
+    let discardPileCardEnum = document.createElement("p");
+    let discardPileCardName = document.createElement("p");
+
+    cardDiscardPileContainer.classList.add(`own-card-discard`, `${discaredPileLastEnum}`);
+    discardPileCardEnum.classList.add(`card-name-discard`);
+    discardPileCardName.classList.add(`card-enum-discard`);
+
+    //Background card
+    cardDiscardPileContainer.style.backgroundImage= `url('${CardImage[discaredPileLastEnum]}')`;
+
+    discardPileCardName.textContent = "NAAM NOG OP TE HALEN";
+    discardPileCardEnum.textContent = discaredPileLastEnum.toString();
+
+    discardPile.appendChild(discardPileCardName);
+    discardPile.appendChild(discardPileCardEnum);
+    */
+
+}
+
 ///// EVENTS
 nopeButton.addEventListener("click", async() => {
     gameModel = await nopeAction();
@@ -275,11 +292,13 @@ passButton.addEventListener("click", async() => {
     gameModel = await confirmNotNoppingPlay();
     userDeskMessageBoard.textContent = "Pass gespeeld";
     setGameState(`${user.name} doet niet mee aan de nope vraag`)
-    nopePrompt.style.display ="none";
+    nopePrompt.style.display = "none";
 });
-
 playButton.addEventListener("click", async () => {
-    buildSelectedCards()
+
+
+    console.log("Selected Array", selectedUserPlayerCardsId);
+
     if(selectedUserPlayerCardsId.length !== 0){
         switch(selectedUserPlayerCardsId[0]){
             case CardType.Defuse:
@@ -308,9 +327,36 @@ playButton.addEventListener("click", async () => {
     } else {
         drawCardFromPile();
     }
-
+    buildDiscardPile(selectedUserPlayerCardsId)
     //selectedCardDivs.forEach(card => card.classList.remove("selected"));
 });
+drawButton.addEventListener("click", async () => {
+    console.log("kaart trekken klik")
+    drawCardFromPile();
+})
+
+userHandCardContainer.addEventListener('click', (event) => {
+    console.log("state array begin", selectedUserPlayerCardsId);
+    const selectedCardDiv = event.target.closest('.own-card');
+    if(selectedCardDiv === null){return}
+    let selectedCardId = selectedCardDiv.querySelector(".card-enum").textContent;
+    let selectedCardName = selectedCardDiv.querySelector(".card-name").textContent;
+
+    if(selectedUserPlayerCardsId.includes(parseInt(selectedCardId))){
+        selectedUserPlayerCardsId = selectedUserPlayerCardsId.filter(
+            card => card !== parseInt(selectedCardId)
+        )
+
+        console.log("card removed");
+    }else{
+        selectedUserPlayerCardsId.push(parseInt(selectedCardId));
+        userDeskMessageBoard.textContent = (`${selectedCardName} gekozen`)
+        console.log("card added");
+    }
+    console.log("state array end", selectedUserPlayerCardsId)
+
+});
+
 
 ////ROUTES
 //LogOut
@@ -398,7 +444,7 @@ async function nopeAction(){
 
 async function confirmNotNoppingPlay(){
     try{
-        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/confirm-not-nopin`, {
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/confirm-not-noping`, {
             method: "POST",
             headers: {
                 'Content-type' : 'Application/json',
@@ -445,7 +491,7 @@ async function playAction(selectedCards, targetPlayer = null, targetCard = null,
 
         const playActionData = await response.json();
         if(!response.ok){
-            throw new Error(data.message);
+            throw new Error(playActionData.message);
         }
 
         return new GameModel(

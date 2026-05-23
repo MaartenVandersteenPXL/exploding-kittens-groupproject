@@ -44,7 +44,7 @@
                 <div class="nr-cards-opponents">8</div>
             </div>
             <!-- Kaarten op tafel -->
-            <div class="discard-pile"><span>AFLEGSTAPEL</span>
+            <div class="discard-pile" id="discardPile"><span>AFLEGSTAPEL</span>
                 <div class="discard-card-value" id="lastDiscardedCard">LEEG</div>
             </div>
             <div class="deck">
@@ -66,6 +66,8 @@
             </div>
             <p class="backend-error" id="backendError"></p>
             <button id="playActionBtn" class="play-btn">SPEEL</button>
+            <button id="drawActionBtn" class="draw-btn">NEEM KAART</button>
+            <!-- NEEDS DRAW BUTTION -->
             <div id="nopePrompt" style="display:none">
                 <button id="nopeBtn" class="nope-btn">NOPE!</button>
                 <button id="passBtn" class="pass-btn">PASS</button>
@@ -75,5 +77,4 @@
 </main>
 
 </body>
-<footer><p id="gameState"></p></footer>
 </html>
