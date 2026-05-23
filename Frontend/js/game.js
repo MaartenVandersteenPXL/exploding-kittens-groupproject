@@ -101,6 +101,9 @@ function buildMyCards(){
         cardContainer.appendChild(cardName);
         cardContainer.appendChild(cardEnum);
         userHandCardContainer.appendChild(cardContainer);
+        if(selectedUserPlayerCardsId.includes(element.card.typeNr)){
+            cardContainer.classList.add("highlight_me");
+        }
         cardContainer.addEventListener("click", () => {
             if(cardContainer.classList.contains("clickable")) {
                 cardContainer.classList.toggle("selected")
@@ -347,11 +350,13 @@ userHandCardContainer.addEventListener('click', (event) => {
     if(selectedUserPlayerCardsId.includes(parseInt(selectedCardId))){
         selectedUserPlayerCardsId = selectedUserPlayerCardsId.filter(
             card => card !== parseInt(selectedCardId)
-        )
+        );
+        selectedCardDiv.classList.remove("highlight_me");
 
         console.log("card removed");
     }else{
         selectedUserPlayerCardsId.push(parseInt(selectedCardId));
+        selectedCardDiv.classList.add("highlight_me");
         userDeskMessageBoard.textContent = (`${selectedCardName} gekozen`)
         console.log("card added");
     }

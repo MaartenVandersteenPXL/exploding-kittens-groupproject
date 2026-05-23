@@ -396,5 +396,11 @@ header{
     margin: 0 0 0 1rem;
     color: red;
 }
+.own-card.highlight_me {
+    border: 2px solid #f5ddbc;
+    box-shadow: 0 0 12px 4px rgba(245, 221, 188, 0.8);
+    transform: translateY(-8px);
+    /*transition: transform 0.2s ease, box-shadow 0.2s ease;*/
+}
 
 
