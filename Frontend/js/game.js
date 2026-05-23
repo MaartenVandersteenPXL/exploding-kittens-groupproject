@@ -145,6 +145,7 @@ function buildNopePrompt(){
     const hasPendingAction = gameModel.pendingAction != null;
     const isMyAction = gameModel.pendingAction?.playerId === user.id;
 
+    //CHECK IF YOU HAVE A NOPE CARD IN HAND
     if(hasPendingAction && !isMyAction){
         nopePrompt.style.display = "block";
         userDeskMessageBoard.textContent = "Een speler speelde:" + gameModel.pendingAction + "wil je NOPE spelen?";
@@ -233,6 +234,7 @@ async function playFavorCard(){
 //DRAW CARD
 async function drawCardFromPile(){
     gameModel = await drawAction();/*
+
     //WANNNEER WEET JE DAT JE EEN EXPLODING KITTEN HEBT GETROKKEN ?
     if(explodingkitten){
         userHandCardContainer.forEach( cardElement => {
