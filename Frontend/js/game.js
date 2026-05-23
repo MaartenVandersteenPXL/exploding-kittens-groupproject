@@ -365,6 +365,7 @@ userHandCardContainer.addEventListener('click', (event) => {
     console.log("state array begin", selectedUserPlayerCardsId);
     const selectedCardDiv = event.target.closest('.own-card');
     if(selectedCardDiv === null){return}
+    if(!selectedCardDiv.classList.contains("clickable")){return}
     let selectedCardId = selectedCardDiv.querySelector(".card-enum").textContent;
     let selectedCardName = selectedCardDiv.querySelector(".card-name").textContent;
 
