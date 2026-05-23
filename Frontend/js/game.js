@@ -267,12 +267,14 @@ function buildTurnControls(){
 
     } else {
         userDeskMessageBoard.textContent = "wachten op andere spelers"
+        selectedUserPlayerCardsId = [];
         playButton.disabled = true;
         playButton.classList.add("disabled");
         myCards.forEach(card => {
             // Nog af te wachten waar de "clickable" / "selected" class selector naar toe gaat
             card.classList.remove("clickable");
             card.classList.remove("selected"); // also deselect if it was your turn before
+            card.classList.remove("highlight_me")
         });
     }
 }
