@@ -156,13 +156,17 @@ function buildNopePrompt(){
 
     //CHECK IF YOU HAVE A NOPE CARD IN HAND
     if(hasPendingAction && !isMyAction && hasNopeCard){
+        // console.log("pendingAction cards:", gameModel.pendingAction.cards);
         nopePrompt.style.display = "block";
-        userDeskMessageBoard.textContent = "Een speler speelde:" + gameModel.pendingAction + "wil je NOPE spelen?";
+        userDeskMessageBoard.textContent = "Een speler speelde: " +
+            gameModel.pendingAction.cards.map(c => Object.keys(CardType).find(key => CardType[key] === c)).join(", ") + " - wil je NOPE spelen?";
         //console.log("PendingAction shizzle:", gameModel.pendingAction)
 
     }else {
         nopePrompt.style.display = "none";
     }
+
+
 }
 
 function buildTurnControls(){
