@@ -153,14 +153,10 @@ function buildNopePrompt(){
     const isMyAction = gameModel.pendingAction?.playerId === user.id;
     const hasNopeCard = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Nope);
 
-
-    //CHECK IF YOU HAVE A NOPE CARD IN HAND
     if(hasPendingAction && !isMyAction && hasNopeCard){
-        // console.log("pendingAction cards:", gameModel.pendingAction.cards);
         nopePrompt.style.display = "block";
         userDeskMessageBoard.textContent = "Een speler speelde: " +
             gameModel.pendingAction.cards.map(c => Object.keys(CardType).find(key => CardType[key] === c)).join(", ") + " - wil je NOPE spelen?";
-        //console.log("PendingAction shizzle:", gameModel.pendingAction)
 
     }else {
         nopePrompt.style.display = "none";
@@ -176,7 +172,17 @@ function buildTurnControls(){
 
     if (isMyTurn) {
 
-        userDeskMessageBoard.textContent = "jouw beurt"
+        if(selectedUserPlayerCardsId.length === 0){
+            userDeskMessageBoard.textContent = "jouw beurt";
+        } else {
+            const allSame = selectedUserPlayerCardsId.every(c => c === selectedUserPlayerCardsId[0]);
+            if(selectedUserPlayerCardsId.length === 1 || (selectedUserPlayerCardsId.length >= 2 && allSame)){
+                const cardName = Object.keys(CardType).find(key => CardType[key] === selectedUserPlayerCardsId[0]);
+                userDeskMessageBoard.textContent = `${cardName} gekozen`;
+            } else {
+                userDeskMessageBoard.textContent = "foute combinatie";
+            }
+        }
         playButton.disabled = false;
         playButton.classList.remove("disabled");
 
