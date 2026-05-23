@@ -3,9 +3,10 @@
 * {
     box-sizing: border-box;
 }
+
 /* FONTS */
 
-h1{
+h1 {
     font-family: 'Abel';
     font-weight: 400;
     font-variant-caps: all-small-caps;
@@ -13,7 +14,8 @@ h1{
     color: #5f2f45;
     margin: 0;
 }
-h2{
+
+h2 {
     font-family: 'Abel';
     font-weight: 200;
     font-size: 2em;
@@ -28,7 +30,7 @@ p {
     font-size: 1.5em;
 }
 
-label{
+label {
     font-family: 'Abel';
     font-weight: 400;
     font-size: 1.8em;
@@ -39,39 +41,39 @@ label{
 /* END FONTS */
 
 
-html{
+html {
     display: flex;
     justify-content: center;
     background-color: #ab2d48;
 }
 
 
-body{
+body {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    background-color:#fabb64;
-    min-height:768px;
+    background-color: #fabb64;
+    min-height: 768px;
     min-width: 1024px;
     gap: 2em;
 }
 
-aside{
+aside {
     display: flex;
     flex-direction: column;
-    margin: 0 0 0 3em ;
+    margin: 0 0 0 3em;
     align-items: center;
     max-width: 12em;
 }
 
-main{
+main {
     display: flex;
     flex: 1;
     flex-direction: column;
-    margin: 0 3em 1rem 0 ;
+    margin: 0 3em 1rem 0;
 }
 
-header{
+header {
     display: flex;
     height: 150px;
     align-items: center;
@@ -83,7 +85,7 @@ header{
     justify-content: center;
 }
 
-.logo img{
+.logo img {
     width: auto;
     height: 150px;
     display: block;
@@ -99,29 +101,30 @@ header{
     align-self: stretch;
     flex: 1;
     border-radius: 15px 15px 0 0;
-    padding: 3rem 1rem  3rem;
+    padding: 3rem 1rem 3rem;
 }
+
 .sidebar-menu a {
     font-family: Abel;
-    font-size:  2em;
+    font-size: 2em;
     text-decoration: none;
-    color: #5f2f45 ;
+    color: #5f2f45;
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.sidebar-menu a:first-child{
+.sidebar-menu a:first-child {
     margin-bottom: 2rem;
 }
 
-.sidebar-menu a:hover{
+.sidebar-menu a:hover {
     transform: scale(1.2);
-    color: #f5ddbc ;
+    color: #f5ddbc;
 }
 
 /* adjust id to the id of the page */
-#XXX{
+#XXX {
     color: #f5ddbc;
-    text-shadow:#000000 4px 4px 10px;
+    text-shadow: #000000 4px 4px 10px;
 }
 
 /* END TEMPLATE SKELETON*/
@@ -154,7 +157,7 @@ header{
     background-image: url("../assets/AchterkantDek.jpeg");
     background-size: 100% 100%;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .p2 {
@@ -213,7 +216,7 @@ header{
     position: relative;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .discard-pile {
@@ -227,7 +230,7 @@ header{
     align-items: center;
     justify-content: center;
     margin-right: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .discard-pile span {
@@ -268,7 +271,7 @@ header{
     min-height: 250px;
     justify-content: flex-start;
     align-items: flex-start;
-    gap:120px;/* Geeft berichtenvak ruimte */
+    gap: 120px; /* Geeft berichtenvak ruimte */
 }
 
 .hand-container {
@@ -329,18 +332,20 @@ header{
 
 
 /* Zorgt dat de kaarten op de 2de rij gelijk met de eerste beginnen */
-.own-card:nth-child(n+1){
+.own-card:nth-child(n+1) {
     margin-left: -45px; /* DIT ZORGT VOOR DE OVERLAP */
 }
-.own-card:first-child, .own-card:nth-child(10){
+
+.own-card:first-child, .own-card:nth-child(10) {
     margin-left: 10px;
 }
 
 /* mesage board */
-.hand-controls{
+.hand-controls {
     display: flex;
     flex-direction: column;
 }
+
 .game-message {
     background-color: #5f2f45;
     color: #f5ddbc;
@@ -348,12 +353,12 @@ header{
     border-radius: 10px;
     font-weight: bold;
     width: 200px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     flex-grow: 1;
 }
 
 /* Speel knop */
-.play-btn, .nope-btn, .pass-btn  {
+.play-btn, .nope-btn, .pass-btn {
     display: flex;
     flex-shrink: 1;
     justify-content: center;
@@ -364,7 +369,7 @@ header{
     border-radius: 10px;
     font-family: 'Abel';
     font-size: 1.5rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .play-btn:hover, .nope-btn:hover, .pass-btn:hover {
@@ -382,13 +387,13 @@ header{
     opacity: 0.5;
 }
 
-.own-card.clickable{
+.own-card.clickable {
     cursor: pointer;
 }
 
-.own-card.clickable:hover{
+.own-card.clickable:hover {
     transform: translate(-50px) scale(2.0);
-    color: #f5ddbc ;
+    color: #f5ddbc;
 }
 
 .backend-error {
@@ -396,11 +401,11 @@ header{
     margin: 0 0 0 1rem;
     color: red;
 }
+
 .own-card.highlight_me {
     border: 2px solid #f5ddbc;
     box-shadow: 0 0 12px 4px rgba(245, 221, 188, 0.8);
     transform: translateY(-8px);
-    /*transition: transform 0.2s ease, box-shadow 0.2s ease;*/
 }
 
 
