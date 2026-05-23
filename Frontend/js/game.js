@@ -138,18 +138,24 @@ function buildTableInfo(){
     const lastDiscardedCard = document.getElementById("lastDiscardedCard");
     if (gameModel.discardPile.length === 0) {
         lastDiscardedCard.textContent = "LEEG";
-    } else {
-        const lastCard = gameModel.discardPile[gameModel.discardPile.length - 1];
-        lastDiscardedCard.textContent = lastCard.discardPile.getName();
+    }
+    else {
+    const lastCard = gameModel.discardPile[gameModel.discardPile.length - 1];
+    lastDiscardedCard.textContent = "";
+        console.log(lastCard.discardPile.typeNr, CardImage[lastCard.discardPile.typeNr]);
+    lastDiscardedCard.style.backgroundImage = `url('${CardImage[lastCard.discardPile.typeNr]}')`;
+
     }
 }
 
 function buildNopePrompt(){
     const hasPendingAction = gameModel.pendingAction != null;
     const isMyAction = gameModel.pendingAction?.playerId === user.id;
+    const hasNopeCard = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Nope);
+
 
     //CHECK IF YOU HAVE A NOPE CARD IN HAND
-    if(hasPendingAction && !isMyAction){
+    if(hasPendingAction && !isMyAction && hasNopeCard){
         nopePrompt.style.display = "block";
         userDeskMessageBoard.textContent = "Een speler speelde:" + gameModel.pendingAction + "wil je NOPE spelen?";
         //console.log("PendingAction shizzle:", gameModel.pendingAction)
@@ -292,13 +298,18 @@ nopeButton.addEventListener("click", async() => {
     userDeskMessageBoard.textContent = "Nope gespeeld";
     setGameState(`${user.name} heeft genoped!`)
     nopePrompt.style.display ="none";
+    BuildGameTable();
+
 });
 passButton.addEventListener("click", async() => {
     gameModel = await confirmNotNoppingPlay();
+    console.log("pendingAction na pass:", gameModel.pendingAction);
     userDeskMessageBoard.textContent = "Pass gespeeld";
     setGameState(`${user.name} doet niet mee aan de nope vraag`)
     nopePrompt.style.display = "none";
+    BuildGameTable();
 });
+
 playButton.addEventListener("click", async () => {
 
 

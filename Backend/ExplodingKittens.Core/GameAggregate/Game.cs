@@ -78,6 +78,10 @@ internal class Game : IGame
             throw new InvalidOperationException("Er is geen actie in behandeling.");
         }
         _pendingAction.ConfirmNotNoping(playerId);
+        if (_pendingAction.IsExecuted)
+        {
+            _pendingAction = null;
+        }
     }
 
     public void DrawCard(Guid playerId)
@@ -152,6 +156,10 @@ internal class Game : IGame
 
         _discardPile.Add(Card.Nope);
         _pendingAction.Nope(playerId);
+        if (_pendingAction.IsExecuted)
+        {
+            _pendingAction = null;
+        }
     }
 
     public void PlayAction(Guid playerId, IReadOnlyList<Card> cards, Guid? targetPlayerId, Card? targetCard, int? drawPileIndex)
@@ -192,7 +200,6 @@ internal class Game : IGame
                 action.ConfirmNotNoping(player.Id);
             }
         }
-        _pendingAction = action;
     }
 
     public void SelectCardToGiveAsAFavor(Guid playerId, Card card)

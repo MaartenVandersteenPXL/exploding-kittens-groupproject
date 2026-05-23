@@ -211,7 +211,8 @@ header {
     display: flex;
     width: 100px;
     height: 130px;
-    background: #f86f53;
+    background-image: url("../assets/AchterkantDek.jpeg");
+    background-size: 100% 100%;
     border-radius: 8px;
     position: relative;
     align-items: center;
@@ -224,13 +225,11 @@ header {
     width: 100px;
     height: 130px;
     background-color: #bdc3c7;
-    border: 2px dashed #5f2f45;
     border-radius: 8px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     margin-right: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 0;
+    overflow: hidden;
 }
 
 .discard-pile span {
@@ -245,6 +244,15 @@ header {
     color: #5f2f45;
     text-transform: uppercase;
     font-weight: bold;
+}
+
+#lastDiscardedCard {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
 }
 
 .nr-cards-left-deck {
@@ -271,7 +279,7 @@ header {
     min-height: 250px;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 120px; /* Geeft berichtenvak ruimte */
+    gap: 10px; /* Geeft berichtenvak ruimte */
 }
 
 .hand-container {
@@ -291,19 +299,18 @@ header {
     width: 80px;
     height: 120px;
     background-color: #f5ddbc;
-    border: 2px solid #5f2f45;
+    border: 1px solid #f5ddbc;
     border-radius: 10px;
     align-items: center;
     padding: 10px;
     transition: transform 0.2s;
-    background-size: contain;
+    background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .own-card:hover {
-    z-index: 100; /* Kaart komt naar voren */
-    transform: translateY(-50px) scale(2.0);
+    transform: scale(1.3);
     background-color: #f5ddbc;
 }
 
@@ -330,20 +337,19 @@ header {
     border: 1px solid #5f2f45;
 }
 
-
-/* Zorgt dat de kaarten op de 2de rij gelijk met de eerste beginnen */
-.own-card:nth-child(n+1) {
-    margin-left: -45px; /* DIT ZORGT VOOR DE OVERLAP */
+.card-name {
+    display: none;
 }
 
-.own-card:first-child, .own-card:nth-child(10) {
-    margin-left: 10px;
-}
 
 /* mesage board */
 .hand-controls {
     display: flex;
     flex-direction: column;
+}
+
+.hand-container {
+    gap: 3px;
 }
 
 .game-message {
@@ -392,7 +398,7 @@ header {
 }
 
 .own-card.clickable:hover {
-    transform: translate(-50px) scale(2.0);
+    transform: scale(1.3);
     color: #f5ddbc;
 }
 
