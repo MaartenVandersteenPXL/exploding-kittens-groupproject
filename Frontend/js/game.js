@@ -15,6 +15,7 @@ let intros = ["This is amazing! Prrt!",
 let userAsPlayer;
 let selectedUserPlayerCardsId = [];
 let autoPassInProgress = false;
+let isChoosingDefuseIndex = false;
 const NopeDecision = Object.freeze({
     NotDecided: 0,
     Nope: 1,
@@ -231,6 +232,9 @@ function buildNopePrompt(){
 
 function buildTurnControls(){
     //dynamische gebouwd - hier pas asignen
+    if(isChoosingDefuseIndex){
+        return;
+    }
     const myCards = document.querySelectorAll(".own-card");
     const isMyTurn = gameModel.playerToPlayId === user.id;
 
@@ -282,19 +286,7 @@ function buildTurnControls(){
 //// ACTIONS -> see events!!!
 //PLAY-ACTIONS METHODS
 async function defuseExplodingKitten(){
-    const drawPileIndexInput = prompt("Waar wil je de Exploding Kitten terugleggen? 0 = bovenaan", "0");
-    const drawPileIndex = parseInt(drawPileIndexInput);
-
-    gameModel = await playAction(
-        selectedUserPlayerCardsId,
-        null,
-        CardType.ExplodingKitten,
-        isNaN(drawPileIndex) ? 0 : drawPileIndex
-    );
-
-    selectedUserPlayerCardsId = [];
-    setGameState(`${user.name} speelde Defuse`);
-    BuildGameTable();
+    showDefuseIndexQuestion();
 }
 async function playSkipCard(){
     //SKIP CARD - ONLY SEND CARD ENUM
@@ -337,20 +329,27 @@ async function playSeeTheFutureCard(){
 
 //DRAW CARD
 async function drawCardFromPile(){
-    gameModel = await drawAction();/*
+    gameModel = await drawAction();
+    userAsPlayer = gameModel.players.find(p => p.id === user.id);
 
-    //WANNNEER WEET JE DAT JE EEN EXPLODING KITTEN HEBT GETROKKEN ?
-    if(explodingkitten){
-        userHandCardContainer.forEach( cardElement => {
-            if ((parseInt(cardElement.querySelector(".card-enum").textContent) === 1)){
-                defuseExplodingKitten();
-                setGameState(`${user.name} ENDED PLAY ROUND`)
-                //END PLAYER ROUND
-                return;
-            }
-        });
-        setGameState(`${user.name} EXPLODED IN 100 BLOODY MEATY PIECES`)
-    }*/
+    const hasExplodingKitten = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.ExplodingKitten);
+    const hasDefuse = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Defuse);
+
+    if(hasExplodingKitten && hasDefuse){
+        selectedUserPlayerCardsId = [CardType.Defuse];
+        BuildGameTable();
+        showDefuseIndexQuestion();
+        return;
+    }
+
+    if(hasExplodingKitten && !hasDefuse){
+        userDeskMessageBoard.textContent = "Je trok een Exploding Kitten en hebt geen Defuse.";
+        BuildGameTable();
+        return;
+    }
+
+    selectedUserPlayerCardsId = [];
+    BuildGameTable();
 }
 
 ///HELPERS
@@ -359,6 +358,43 @@ function setGameState(newText){
     gameState.textContent = gameState.textContent.replace(
         gameState.textContent,
         newText);
+}
+
+function showDefuseIndexQuestion(){
+    isChoosingDefuseIndex = true;
+    userDeskMessageBoard.replaceChildren();
+
+    const text = document.createElement("span");
+    text.textContent = "Waar wil je de Exploding Kitten terugleggen? 0 = bovenaan ";
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.min = "0";
+    input.max = gameModel.drawPileCount;
+    input.value = "0";
+
+    const button = document.createElement("button");
+    button.textContent = "Defuse";
+
+    button.addEventListener("click", async () => {
+        const drawPileIndex = parseInt(input.value);
+
+        gameModel = await playAction(
+            [CardType.Defuse],
+            null,
+            CardType.ExplodingKitten,
+            isNaN(drawPileIndex) ? 0 : drawPileIndex
+        );
+
+        isChoosingDefuseIndex = false;
+        selectedUserPlayerCardsId = [];
+        setGameState(`${user.name} speelde Defuse`);
+        BuildGameTable();
+    });
+
+    userDeskMessageBoard.appendChild(text);
+    userDeskMessageBoard.appendChild(input);
+    userDeskMessageBoard.appendChild(button);
 }
 
 function buildDiscardPile(selectedUserPlayerCards){
@@ -404,7 +440,6 @@ passButton.addEventListener("click", async() => {
     nopePrompt.style.display = "none";
     BuildGameTable();
 });
-
 playButton.addEventListener("click", async () => {
 
 
