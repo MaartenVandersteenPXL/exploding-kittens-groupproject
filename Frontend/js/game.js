@@ -246,7 +246,7 @@ function buildTurnControls(){
     if (isMyTurn) {
 
         if(selectedUserPlayerCardsId.length === 0){
-            userDeskMessageBoard.textContent = "jouw beurt";
+            userDeskMessageBoard.textContent = getTurnText();
         } else {
             const allSame = selectedUserPlayerCardsId.every(c => c === selectedUserPlayerCardsId[0]);
             if(selectedUserPlayerCardsId.length === 1 || (selectedUserPlayerCardsId.length >= 2 && allSame)){
@@ -275,7 +275,7 @@ function buildTurnControls(){
 
 
     } else {
-        userDeskMessageBoard.textContent = "wachten op andere spelers"
+        userDeskMessageBoard.textContent = getTurnText()
         selectedUserPlayerCardsId = [];
         playButton.disabled = true;
         playButton.classList.add("disabled");
@@ -486,6 +486,23 @@ function selectedCardsAreStillInHand(){
     return true;
 }
 
+function getTurnText(){
+    const playerToPlay = gameModel.players.find(p => p.id === gameModel.playerToPlayId);
+
+    if(!playerToPlay){
+        return "";
+    }
+
+    const drawText = gameModel.pendingDraws === 1
+        ? "1 kaart"
+        : `${gameModel.pendingDraws} kaarten`;
+
+    if(playerToPlay.id === user.id){
+        return `Je moet nog ${drawText} nemen.`;
+    }
+
+    return `${playerToPlay.name} moet nog ${drawText} nemen.`;
+}
 ///// EVENTS
 nopeButton.addEventListener("click", async() => {
     gameModel = await nopeAction();
