@@ -16,6 +16,9 @@ let userAsPlayer;
 let selectedUserPlayerCardsId = [];
 let autoPassInProgress = false;
 let isChoosingDefuseIndex = false;
+let isChosingFavorPlayer = false;
+let isGivingFavorCard = false;
+
 const NopeDecision = Object.freeze({
     NotDecided: 0,
     Nope: 1,
@@ -91,13 +94,14 @@ async function startGameLoop(){
 function BuildGameTable(){
     buildMyCards();
     buildOpponents();
-    buildTableInfo()
+    buildTableInfo();
 
     if(handleGameEndedOrEliminated()){
         return;
     }
 
-    buildFutureCards()
+    buildFutureCards();
+    buildFavorAction();
     buildTurnControls();
     buildNopePrompt();
 }
@@ -245,6 +249,12 @@ function buildTurnControls(){
     if(isChoosingDefuseIndex){
         return;
     }
+    if(isChosingFavorPlayer){
+        return;
+    }
+    if(isGivingFavorCard){
+        return;
+    }
     const myCards = document.querySelectorAll(".own-card");
     const isMyTurn = gameModel.playerToPlayId === user.id;
 
@@ -313,6 +323,19 @@ function buildFutureCards(){
     });
 }
 
+function buildFavorAction() {
+    const hasPendingFavor = gameModel.pendingAction?.cards?.includes(CardType.Favor);
+    const favorTargetIsMe = gameModel.pendingAction?.targetPlayerId?.toLowerCase() === user.id.toLowerCase();
+    const isExecuted = gameModel.pendingAction?.isExecuted;
+
+
+    if(hasPendingFavor && favorTargetIsMe && !isGivingFavorCard && !isExecuted){
+        showGiveFavorCardQuestion();
+    } else {
+        isGivingFavorCard = false;
+    }
+}
+
 //// ACTIONS -> see events!!!
 //PLAY-ACTIONS METHODS
 async function defuseExplodingKitten(){
@@ -332,13 +355,39 @@ async function playAttackCard(){
     BuildGameTable();
 }
 async function playFavorCard(){
-    //playerID SELECT ELEMENT WITH PLAYER ID
-    /*while(PLAYER ID == null){
-        userDeskMessageBoard.textContent = "Kies een speler"
-        setGameState(`${user.name} NEEDS TO ASK A FAVOR CARD - WHO WILL BE CHOOSEN?`)
-    }
-    setGameState(`${user.name} ASKS A FAVOR OF ....`)
-    //gameModel = await playAction(selectedUserPlayerCardsId, PLAYER ID)*/
+    isChosingFavorPlayer = true;
+    userDeskMessageBoard.replaceChildren();
+
+    const text = document.createElement("span");
+    text.textContent = `welke speler kies je om een kaart van te krijgen?`;
+
+    const select = document.createElement("select");
+
+    gameModel.players.forEach(player => {
+        if(player.id !== user.id) {
+            const option = document.createElement('option');
+            option.value = player.id;
+            option.textContent = player.name;
+            select.appendChild(option);
+        }
+    });
+
+    const button = document.createElement("button");
+    button.textContent = 'kies speler';
+
+    button.addEventListener("click", async () => {
+        const targetPlayerId = select.value;
+        gameModel = await playAction(selectedUserPlayerCardsId, targetPlayerId);
+        isChosingFavorPlayer = false;
+        selectedUserPlayerCardsId = [];
+        setGameState(`${userAsPlayer.name} vraagt favor aan ${select.options[select.selectedIndex].text}`);
+        BuildGameTable();
+    });
+
+    userDeskMessageBoard.appendChild(text);
+    userDeskMessageBoard.appendChild(select);
+    userDeskMessageBoard.appendChild(button);
+
 }
 async function playShuffleCard(){
     gameModel = await playAction(selectedUserPlayerCardsId);
@@ -594,6 +643,26 @@ function clearGameStateWhenTurnChanged(previousGame, newGame){
     if(previousGame.playerToPlayId !== newGame.playerToPlayId){
         setGameState("");
     }
+}
+function showGiveFavorCardQuestion(){
+    isGivingFavorCard = true;
+    userDeskMessageBoard.replaceChildren();
+    const text = document.createElement("span");
+    text.textContent = "kies een kaart om te geven:";
+    userDeskMessageBoard.appendChild(text);
+
+    userAsPlayer.cardsInHand.forEach(element => {
+        const button = document.createElement("button");
+        button.textContent = element.card.getName();
+        button.addEventListener("click", async () => {
+            gameModel = await selectCardAsFavor(element.card.typeNr);
+            userAsPlayer = gameModel.players.find(p => p.id === user.id);
+            isGivingFavorCard = false;
+            setGameState(`${userAsPlayer.name} gaf een kaart als favor`);
+            BuildGameTable();
+        })
+        userDeskMessageBoard.appendChild(button);
+    })
 }
 
 ///// EVENTS
@@ -873,7 +942,7 @@ async function selectCardAsFavor(cardId){
             card: cardId,
         };
 
-        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/select-card-to-give-as-favor`, {
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/select-card-to-give-as-a-favor`, {
             method: "POST",
             headers: {
                 'Content-type': 'Application/json',
