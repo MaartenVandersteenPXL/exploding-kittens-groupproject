@@ -41,7 +41,8 @@ const futureCardsPanel = document.getElementById("futureCardsPanel");
 const futureCardsList = document.getElementById("futureCardsList");
 
 //Gamestate
-const gameState = document.getElementById("gameState");
+let statusMessage = document.getElementById("statusMessage");
+let gameState = document.getElementById("gameState");
 let groupGameState = document.getElementById("groupGameState");
 let playerCount = 0;
 
@@ -74,9 +75,9 @@ document.addEventListener("DOMContentLoaded", async() => {
 async function gameInit(){
     gameModel = await fetchGame(gameIdfromURL);
     headerTitle.textContent=titels[0];
-    headerIntro.textContent=intros[0];
     userDeskMessageBoard.textContent = "Het spel wordt geladen";
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
+    headerIntro.textContent=userAsPlayer.name;
     playerCount = gameModel.players.length;
 }
 async function startGameLoop(){
@@ -169,7 +170,6 @@ function buildTableInfo(){
     else {
     const lastCard = gameModel.discardPile[gameModel.discardPile.length - 1];
     lastDiscardedCard.textContent = "";
-        console.log(lastCard.discardPile.typeNr, CardImage[lastCard.discardPile.typeNr]);
     lastDiscardedCard.style.backgroundImage = `url('${CardImage[lastCard.discardPile.typeNr]}')`;
 
     }
@@ -362,11 +362,6 @@ async function playSeeTheFutureCard(){
     BuildGameTable();
 }
 
-//INCOMMING-ACTION METHODS
-//giveFavorCard()
-//NOPE A NOPING CARD()
-//...
-
 //DRAW CARD
 async function drawCardFromPile(){
     gameModel = await drawAction();
@@ -405,30 +400,32 @@ function setGameState(newText){
         newText);
 }
 function updateGroupGameState(){
+    groupGameState.textContent="";
     if(gameModel.players.length !== playerCount){
         groupGameState.textContent = "Een speler heeft de tafel verlaten";
     }
     gameModel.players.forEach(c => {
         if(c.hasExplodingKitten){
-            groupGameState.textContent=`${c.name} heeft  een exploding kitten gaat defusen!`
+            groupGameState.textContent=`${c.name} heeft een exploding kitten en gaat defusen!`
         }
     });
 }
 function showDefuseIndexQuestion(){
+
     isChoosingDefuseIndex = true;
     userDeskMessageBoard.replaceChildren();
 
-    const text = document.createElement("span");
-    text.textContent = `Waar wil je de Exploding Kitten terugleggen? Kies 0 tot ${gameModel.drawPileCount}. 0 = bovenaan. `;
+    statusMessage.textContent = `Waar wil je de Exploding Kitten terugleggen? Kies 0 tot ${gameModel.drawPileCount}. 0 = bovenaan. `;
     const input = document.createElement("input");
+    input.classList.add(("defuse-input"));
     input.type = "number";
     input.min = "0";
     input.max = gameModel.drawPileCount;
     input.value = "0";
 
     const button = document.createElement("button");
+    button.classList.add(("defuse-button"));
     button.textContent = "Defuse";
-
     button.addEventListener("click", async () => {
         const drawPileIndex = parseInt(input.value);
         const maxIndex = gameModel.drawPileCount;
@@ -453,9 +450,9 @@ function showDefuseIndexQuestion(){
         isChoosingDefuseIndex = false;
         selectedUserPlayerCardsId = [];
         setGameState(`${userAsPlayer.name} speelde Defuse`);
-        BuildGameTable();
+        //BuildGameTable();
     });
-    userDeskMessageBoard.appendChild(text);
+
     userDeskMessageBoard.appendChild(input);
     userDeskMessageBoard.appendChild(button);
 }

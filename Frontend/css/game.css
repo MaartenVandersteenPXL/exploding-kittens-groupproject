@@ -323,6 +323,21 @@ header {
     text-align: center;
 }
 
+.own-card.clickable {
+    cursor: pointer;
+}
+
+.own-card.clickable:hover {
+    transform: scale(1.3);
+    color: #f5ddbc;
+}
+
+.own-card.highlight_me {
+    border: 2px solid #f5ddbc;
+    box-shadow: 0 0 12px 4px rgba(245, 221, 188, 0.8);
+    transform: translateY(-8px);
+}
+
 .card-enum {
     display: none;
     background: #f8ddb7;
@@ -372,7 +387,6 @@ header {
     border: 1px solid #f5ddbc;
 }
 
-
 /* mesage board */
 .hand-controls {
     display: flex;
@@ -388,15 +402,23 @@ header {
     color: #f5ddbc;
     padding: 0 15px;
     border-radius: 10px;
-    /*font-weight: bold;*/
     width: 100%;
-    height: 120px;
+    min-height: 120px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+.game-state{
+    display: flex;
+    flex-direction: column;
+}
+
+#statusMessage{
+    font-size: 1rem;
 }
 
 /* Speel knop */
@@ -422,20 +444,40 @@ header {
     transform: scale(0.95);
 }
 
-/* Voor later: als je niet aan de beurt bent */
 .play-btn:disabled, .nope-btn:disabled, .pass-btn:disabled {
     background-color: grey;
     cursor: not-allowed;
     opacity: 0.5;
 }
 
-.own-card.clickable {
-    cursor: pointer;
+/* DEFUSE */
+
+.defuse-input{
+    height: 1.2em;
+    width: 60%;
+    background-color: #f5ddbc;
+    border-style: none ;
+    font-family: 'Abel';
+    font-size: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    margin: 0 0 0 1rem;
 }
 
-.own-card.clickable:hover {
-    transform: scale(1.3);
-    color: #f5ddbc;
+.defuse-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.2em;
+    border-radius: 10px;
+    font-size: 1em;
+    font-family: 'Abel';
+    background-color: #a02f40;
+    color: #f8ddb7;
+    cursor: pointer;
+    padding: 1rem;
+    margin: 1rem 0 0 0;
+
 }
 
 .backend-error {
@@ -444,10 +486,5 @@ header {
     color: red;
 }
 
-.own-card.highlight_me {
-    border: 2px solid #f5ddbc;
-    box-shadow: 0 0 12px 4px rgba(245, 221, 188, 0.8);
-    transform: translateY(-8px);
-}
 
 
