@@ -297,6 +297,7 @@ async function playSkipCard(){
     //SKIP CARD - ONLY SEND CARD ENUM
     gameModel = await playAction(selectedUserPlayerCardsId)
     setGameState(`${user.name} IS A PUSSY, SKIPPING A CARD DRAW`)
+    selectedUserPlayerCardsId = [];
     BuildGameTable();
 }
 async function playAttackCard(){
@@ -459,6 +460,23 @@ function buildDiscardPile(selectedUserPlayerCards){
 
 }
 
+function selectedCardsAreStillInHand(){
+    const handCards = userAsPlayer.cardsInHand.map(c => c.card.typeNr);
+    const selectedCards = [...selectedUserPlayerCardsId];
+
+    for(const selectedCard of selectedCards){
+        const handIndex = handCards.indexOf(selectedCard);
+
+        if(handIndex === -1){
+            return false;
+        }
+
+        handCards.splice(handIndex, 1);
+    }
+
+    return true;
+}
+
 ///// EVENTS
 nopeButton.addEventListener("click", async() => {
     gameModel = await nopeAction();
@@ -477,9 +495,15 @@ passButton.addEventListener("click", async() => {
     BuildGameTable();
 });
 playButton.addEventListener("click", async () => {
-
-
+    userAsPlayer = gameModel.players.find(p => p.id === user.id);
     console.log("Selected Array", selectedUserPlayerCardsId);
+
+    if(selectedUserPlayerCardsId.length !== 0 && !selectedCardsAreStillInHand()){
+        selectedUserPlayerCardsId = [];
+        backendError.textContent = "Deze kaart zit niet meer in je hand.";
+        BuildGameTable();
+        return;
+    }
 
     if(selectedUserPlayerCardsId.length !== 0){
         switch(selectedUserPlayerCardsId[0]){
@@ -488,31 +512,32 @@ playButton.addEventListener("click", async () => {
                 break;
             case CardType.Skip:
                 await playSkipCard();
-                break
+                break;
             case CardType.Attack:
                 await playAttackCard();
-                break
+                break;
             case CardType.Favor:
                 await playFavorCard();
-                break
+                break;
             case CardType.Shuffle:
                 await playShuffleCard();
-                break
+                break;
             case CardType.SeeTheFuture:
                 await playSeeTheFutureCard();
-                break
+                break;
             default:
                 //kattenpaar, meer dan 1 kaart
                 await playAction(selectedUserPlayerCardsId);
+                selectedUserPlayerCardsId = [];
+                BuildGameTable();
                 break;
         }
     } else {
-        drawCardFromPile();
+        await drawCardFromPile();
     }
-    buildDiscardPile(selectedUserPlayerCardsId)
-    //selectedCardDivs.forEach(card => card.classList.remove("selected"));
-});
-drawButton.addEventListener("click", async () => {
+
+    buildDiscardPile(selectedUserPlayerCardsId);
+});drawButton.addEventListener("click", async () => {
     console.log("kaart trekken klik")
     drawCardFromPile();
 })
