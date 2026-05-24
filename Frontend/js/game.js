@@ -307,14 +307,18 @@ async function playFavorCard(){
     setGameState(`${user.name} ASKS A FAVOR OF ....`)
     //gameModel = await playAction(selectedUserPlayerCardsId, PLAYER ID)*/
 }
-
 async function playShuffleCard(){
     gameModel = await playAction(selectedUserPlayerCardsId);
     selectedUserPlayerCardsId = [];
     setGameState(`${user.name} speelt Shuffle`);
     BuildGameTable();
 }
-
+async function playSeeTheFutureCard(){
+    gameModel = await playAction(selectedUserPlayerCardsId);
+    selectedUserPlayerCardsId = [];
+    setGameState(`${user.name} speelt See The Future`);
+    BuildGameTable();
+}
 
 //INCOMMING-ACTION METHODS
 //giveFavorCard()
