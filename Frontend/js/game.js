@@ -376,8 +376,7 @@ function showDefuseIndexQuestion(){
     userDeskMessageBoard.replaceChildren();
 
     const text = document.createElement("span");
-    text.textContent = "Waar wil je de Exploding Kitten terugleggen? 0 = bovenaan ";
-
+    text.textContent = `Waar wil je de Exploding Kitten terugleggen? Kies 0 tot ${gameModel.drawPileCount}. 0 = bovenaan. `;
     const input = document.createElement("input");
     input.type = "number";
     input.min = "0";
@@ -389,20 +388,30 @@ function showDefuseIndexQuestion(){
 
     button.addEventListener("click", async () => {
         const drawPileIndex = parseInt(input.value);
+        const maxIndex = gameModel.drawPileCount;
+
+        if(isNaN(drawPileIndex) || drawPileIndex < 0 || drawPileIndex > maxIndex){
+            backendError.textContent = `Kies een positie tussen 0 en ${maxIndex}.`;
+            return;
+        }
 
         gameModel = await playAction(
             [CardType.Defuse],
             null,
             CardType.ExplodingKitten,
-            isNaN(drawPileIndex) ? 0 : drawPileIndex
+            drawPileIndex
         );
+
+        if(!gameModel){
+            backendError.textContent = `Kies een positie tussen 0 en ${maxIndex}.`;
+            return;
+        }
 
         isChoosingDefuseIndex = false;
         selectedUserPlayerCardsId = [];
         setGameState(`${user.name} speelde Defuse`);
         BuildGameTable();
     });
-
     userDeskMessageBoard.appendChild(text);
     userDeskMessageBoard.appendChild(input);
     userDeskMessageBoard.appendChild(button);
