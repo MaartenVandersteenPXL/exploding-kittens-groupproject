@@ -352,15 +352,26 @@ header {
     gap: 3px;
 }
 
-.game-message {
+.game-message, #gameState {
     background-color: #5f2f45;
     color: #f5ddbc;
-    padding: 10px 25px;
+    padding: 0 15px;
     border-radius: 10px;
-    font-weight: bold;
+    /*font-weight: bold;*/
     width: 200px;
+    height: 120px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     flex-grow: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#gameState {
+    height: 60px;
+    /*background-color: transparent;*/
 }
 
 /* Speel knop */

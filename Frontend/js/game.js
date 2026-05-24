@@ -69,12 +69,19 @@ async function gameInit(){
     userDeskMessageBoard.textContent = "Het spel wordt geladen";
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
 }
-
 async function startGameLoop(){
     while(!gameModel.hasEnded){
         await new Promise(resolve => setTimeout(resolve, 3000));
-        gameModel = await fetchGame(gameIdfromURL);
+
+        const previousGameModel = gameModel;
+        const newGameModel = await fetchGame(gameIdfromURL);
+
+        gameModel = newGameModel;
         userAsPlayer = gameModel.players.find(p => p.id === user.id);
+
+        clearGameStateWhenTurnChanged(previousGameModel, gameModel);
+        updateGameStateFromPlayedCard(previousGameModel, gameModel);
+        updateGameStateFromNopeChanges(previousGameModel, gameModel);
         BuildGameTable();
     }
 }
@@ -91,7 +98,6 @@ function BuildGameTable(){
     buildTurnControls();
     buildNopePrompt();
 }
-
 function buildMyCards(){
     userHandCardContainer.replaceChildren();
     userAsPlayer.cardsInHand.forEach(element => {
@@ -122,7 +128,6 @@ function buildMyCards(){
         });
     });
 }
-
 function buildOpponents() {
     const opponentDivs = document.querySelectorAll(".opponent");
     let opponentIndex = 0;
@@ -141,7 +146,6 @@ function buildOpponents() {
         opponentIndex++;
     }
 }
-
 function buildTableInfo(){
     const drawPileCountNow = document.querySelector(".nr-cards-left-deck");
     drawPileCountNow.textContent= gameModel.drawPileCount;
@@ -158,7 +162,6 @@ function buildTableInfo(){
 
     }
 }
-
 function buildNopePrompt(){
     const hasPendingAction = gameModel.pendingAction != null;
 
@@ -234,7 +237,6 @@ function buildNopePrompt(){
         nopePrompt.style.display = "none";
     }
 }
-
 function buildTurnControls(){
     //dynamische gebouwd - hier pas asignen
     if(isChoosingDefuseIndex){
@@ -296,14 +298,14 @@ async function defuseExplodingKitten(){
 async function playSkipCard(){
     //SKIP CARD - ONLY SEND CARD ENUM
     gameModel = await playAction(selectedUserPlayerCardsId)
-    setGameState(`${user.name} IS A PUSSY, SKIPPING A CARD DRAW`)
+    setGameState(`${userAsPlayer.name} IS A PUSSY, SKIPPING A CARD DRAW`)
     selectedUserPlayerCardsId = [];
     BuildGameTable();
 }
 async function playAttackCard(){
     gameModel = await playAction(selectedUserPlayerCardsId);
     selectedUserPlayerCardsId = [];
-    setGameState(`${user.name} speelt Attack`);
+    setGameState(`${userAsPlayer.name} speelt Attack`);
     BuildGameTable();
 }
 async function playFavorCard(){
@@ -318,13 +320,13 @@ async function playFavorCard(){
 async function playShuffleCard(){
     gameModel = await playAction(selectedUserPlayerCardsId);
     selectedUserPlayerCardsId = [];
-    setGameState(`${user.name} speelt Shuffle`);
+    setGameState(`${userAsPlayer.name} speelt Shuffle`);
     BuildGameTable();
 }
 async function playSeeTheFutureCard(){
     gameModel = await playAction(selectedUserPlayerCardsId);
     selectedUserPlayerCardsId = [];
-    setGameState(`${user.name} speelt See The Future`);
+    setGameState(`${userAsPlayer.name} speelt See The Future`);
     BuildGameTable();
 }
 
@@ -370,7 +372,6 @@ function setGameState(newText){
         gameState.textContent,
         newText);
 }
-
 function showDefuseIndexQuestion(){
     isChoosingDefuseIndex = true;
     userDeskMessageBoard.replaceChildren();
@@ -409,14 +410,13 @@ function showDefuseIndexQuestion(){
 
         isChoosingDefuseIndex = false;
         selectedUserPlayerCardsId = [];
-        setGameState(`${user.name} speelde Defuse`);
+        setGameState(`${userAsPlayer.name} speelde Defuse`);
         BuildGameTable();
     });
     userDeskMessageBoard.appendChild(text);
     userDeskMessageBoard.appendChild(input);
     userDeskMessageBoard.appendChild(button);
 }
-
 function handleGameEndedOrEliminated(){
     if(gameModel.hasEnded){
         const winner = gameModel.players.find(p => !p.eliminated);
@@ -442,7 +442,6 @@ function handleGameEndedOrEliminated(){
 
     return false;
 }
-
 function buildDiscardPile(selectedUserPlayerCards){
 
     console.log("what is discardPile", gameModel.discardPile)
@@ -468,7 +467,6 @@ function buildDiscardPile(selectedUserPlayerCards){
     */
 
 }
-
 function selectedCardsAreStillInHand(){
     const handCards = userAsPlayer.cardsInHand.map(c => c.card.typeNr);
     const selectedCards = [...selectedUserPlayerCardsId];
@@ -485,7 +483,6 @@ function selectedCardsAreStillInHand(){
 
     return true;
 }
-
 function getTurnText(){
     const playerToPlay = gameModel.players.find(p => p.id === gameModel.playerToPlayId);
 
@@ -503,11 +500,84 @@ function getTurnText(){
 
     return `${playerToPlay.name} moet nog ${drawText} nemen.`;
 }
+function getPlayerNameById(playerId){
+    if(playerId?.toLowerCase() === userAsPlayer?.id?.toLowerCase()){
+        return "Je";
+    }
+
+    return gameModel.players.find(p => p.id === playerId)?.name ?? "Een speler";
+}
+function getCardName(cardType){
+    return Object.keys(CardType).find(key => CardType[key] === cardType) ?? "kaart";
+}
+function updateGameStateFromPlayedCard(previousGame, newGame){
+    if(!previousGame || !newGame){
+        return;
+    }
+
+    if(newGame.discardPile.length <= previousGame.discardPile.length){
+        return;
+    }
+
+    const playedCardObject = newGame.discardPile[newGame.discardPile.length - 1];
+    const playedCardType = playedCardObject.discardPile?.typeNr ?? playedCardObject;
+    const cardName = getCardName(playedCardType);
+
+    const playerToPlay = newGame.players.find(p => p.id === previousGame.playerToPlayId);
+    const playerName = playerToPlay?.id === userAsPlayer?.id
+        ? "Je"
+        : playerToPlay?.name ?? "Een speler";
+
+    if(playedCardType === CardType.Defuse){
+        setGameState(`${playerName} speelde Defuse`);
+        return;
+    }
+
+    setGameState(`${playerName} speelde ${cardName}`);
+}
+function updateGameStateFromNopeChanges(previousGame, newGame){
+    const oldDecisions = previousGame?.pendingAction?.playerNopeDecisions;
+    const newDecisions = newGame?.pendingAction?.playerNopeDecisions;
+
+    if(!oldDecisions || !newDecisions){
+        return;
+    }
+
+    for(const [playerId, newDecision] of Object.entries(newDecisions)){
+        const oldDecision = oldDecisions[playerId];
+
+        if(oldDecision === newDecision){
+            continue;
+        }
+
+        const playerName = getPlayerNameById(playerId);
+
+        if(newDecision === 1 || newDecision === "1" || newDecision === "Nope"){
+            setGameState(`${playerName} heeft genoped!`);
+            return;
+        }
+
+        if(newDecision === 2 || newDecision === "2" || newDecision === "NotNoping"){
+            setGameState(`${playerName} doet niet mee aan de nope vraag`);
+            return;
+        }
+    }
+}
+function clearGameStateWhenTurnChanged(previousGame, newGame){
+    if(!previousGame || !newGame){
+        return;
+    }
+
+    if(previousGame.playerToPlayId !== newGame.playerToPlayId){
+        setGameState("");
+    }
+}
+
 ///// EVENTS
 nopeButton.addEventListener("click", async() => {
     gameModel = await nopeAction();
     userDeskMessageBoard.textContent = "Nope gespeeld";
-    setGameState(`${user.name} heeft genoped!`)
+    setGameState(`${userAsPlayer.name} heeft genoped!`)
     nopePrompt.style.display ="none";
     BuildGameTable();
 
@@ -516,7 +586,7 @@ passButton.addEventListener("click", async() => {
     gameModel = await confirmNotNoppingPlay();
     console.log("pendingAction na pass:", gameModel.pendingAction);
     userDeskMessageBoard.textContent = "Pass gespeeld";
-    setGameState(`${user.name} doet niet mee aan de nope vraag`)
+    setGameState(`${userAsPlayer.name} doet niet mee aan de nope vraag`)
     nopePrompt.style.display = "none";
     BuildGameTable();
 });
@@ -567,7 +637,6 @@ playButton.addEventListener("click", async () => {
     console.log("kaart trekken klik")
     drawCardFromPile();
 })
-
 userHandCardContainer.addEventListener('click', (event) => {
     console.log("state array begin", selectedUserPlayerCardsId);
     const selectedCardDiv = event.target.closest('.own-card');
