@@ -290,6 +290,7 @@ async function playSkipCard(){
     //SKIP CARD - ONLY SEND CARD ENUM
     gameModel = await playAction(selectedUserPlayerCardsId)
     setGameState(`${user.name} IS A PUSSY, SKIPPING A CARD DRAW`)
+    BuildGameTable();
 }
 async function playAttackCard(){
     gameModel = await playAction(selectedUserPlayerCardsId);
@@ -307,9 +308,13 @@ async function playFavorCard(){
     //gameModel = await playAction(selectedUserPlayerCardsId, PLAYER ID)*/
 }
 
-//playShuffleCard()
-//playSeeTheFutureCard()
-//...
+async function playShuffleCard(){
+    gameModel = await playAction(selectedUserPlayerCardsId);
+    selectedUserPlayerCardsId = [];
+    setGameState(`${user.name} speelt Shuffle`);
+    BuildGameTable();
+}
+
 
 //INCOMMING-ACTION METHODS
 //giveFavorCard()
