@@ -36,9 +36,15 @@ const drawButton = document.getElementById("drawActionBtn");
 const nopePrompt = document.getElementById("nopePrompt");
 const nopeButton = document.getElementById("nopeBtn");
 const passButton = document.getElementById("passBtn");
-const gameState = document.getElementById("gameState");
+
 const futureCardsPanel = document.getElementById("futureCardsPanel");
 const futureCardsList = document.getElementById("futureCardsList");
+
+//Gamestate
+const gameState = document.getElementById("gameState");
+let groupGameState = document.getElementById("groupGameState");
+let playerCount = 0;
+
 //Error
 const backendError = document.getElementById("backendError");
 /*
@@ -71,6 +77,7 @@ async function gameInit(){
     headerIntro.textContent=intros[0];
     userDeskMessageBoard.textContent = "Het spel wordt geladen";
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
+    playerCount = gameModel.players.length;
 }
 async function startGameLoop(){
     while(!gameModel.hasEnded){
@@ -86,6 +93,7 @@ async function startGameLoop(){
         updateGameStateFromPlayedCard(previousGameModel, gameModel);
         updateGameStateFromNopeChanges(previousGameModel, gameModel);
         BuildGameTable();
+        updateGroupGameState();
     }
 }
 
@@ -396,6 +404,11 @@ function setGameState(newText){
         gameState.textContent,
         newText);
 }
+function updateGroupGameState(){
+    if(gameModel.players.length === playerCount){
+        groupGameState.textContent = "Een speler heeft de tafel verlaten";
+    }
+}
 function showDefuseIndexQuestion(){
     isChoosingDefuseIndex = true;
     userDeskMessageBoard.replaceChildren();
@@ -693,7 +706,6 @@ logout.addEventListener("click", async (Event) => {
     Token.delete();
     User.delete();
 })
-
 leaveTableNav.addEventListener("click", async () => {
     await playerLeaveTable(userAsPlayer.id);
     window.location.href="lobby.html";
