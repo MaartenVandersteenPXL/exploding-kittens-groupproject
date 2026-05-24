@@ -36,6 +36,8 @@ const nopePrompt = document.getElementById("nopePrompt");
 const nopeButton = document.getElementById("nopeBtn");
 const passButton = document.getElementById("passBtn");
 const gameState = document.getElementById("gameState");
+const futureCardsPanel = document.getElementById("futureCardsPanel");
+const futureCardsList = document.getElementById("futureCardsList");
 //Error
 const backendError = document.getElementById("backendError");
 /*
@@ -95,6 +97,7 @@ function BuildGameTable(){
         return;
     }
 
+    buildFutureCards()
     buildTurnControls();
     buildNopePrompt();
 }
@@ -288,6 +291,26 @@ function buildTurnControls(){
             card.classList.remove("highlight_me")
         });
     }
+}
+function buildFutureCards(){
+    futureCardsList.replaceChildren();
+
+    if(!userAsPlayer.futureCards || userAsPlayer.futureCards.length === 0){
+        futureCardsPanel.style.display = "none";
+        return;
+    }
+
+    futureCardsPanel.style.display = "block";
+
+    userAsPlayer.futureCards.forEach(element => {
+        const cardDiv = document.createElement("div");
+        cardDiv.classList.add("future-card");
+
+        const cardType = element.futureCard.typeNr;
+        cardDiv.style.backgroundImage = `url('${CardImage[cardType]}')`;
+
+        futureCardsList.appendChild(cardDiv);
+    });
 }
 
 //// ACTIONS -> see events!!!

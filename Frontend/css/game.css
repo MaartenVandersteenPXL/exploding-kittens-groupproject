@@ -341,6 +341,37 @@ header {
     display: none;
 }
 
+.future-cards-panel {
+    background-color: #5f2f45;
+    color: #f5ddbc;
+    padding: 10px;
+    border-radius: 10px;
+    width: 200px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.future-cards-panel p {
+    margin: 0 0 8px 0;
+    font-weight: bold;
+}
+
+.future-cards-list {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.future-card {
+    width: 45px;
+    height: 68px;
+    border-radius: 6px;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #f5ddbc;
+}
+
 
 /* mesage board */
 .hand-controls {
