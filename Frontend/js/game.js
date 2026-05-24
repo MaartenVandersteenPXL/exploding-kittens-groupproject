@@ -292,10 +292,10 @@ async function playSkipCard(){
     setGameState(`${user.name} IS A PUSSY, SKIPPING A CARD DRAW`)
 }
 async function playAttackCard(){
-    //ENDS TURN - NEW PLAYER 2 CARDS
-    let targetPlayer = 0 // NEEDS TO BE SET???
-    gameModel = await playAction(selectedUserPlayerCardsId, targetPlayer )
-    setGameState(`${user.name} ATTACKS`)
+    gameModel = await playAction(selectedUserPlayerCardsId);
+    selectedUserPlayerCardsId = [];
+    setGameState(`${user.name} speelt Attack`);
+    BuildGameTable();
 }
 async function playFavorCard(){
     //playerID SELECT ELEMENT WITH PLAYER ID
