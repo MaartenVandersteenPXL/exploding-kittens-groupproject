@@ -1,4 +1,5 @@
 import { CardType, CardImage } from '../Enums/cardEnums.js';
+
 //Game Model
 export class Card {
     constructor(typeNr){
@@ -60,11 +61,11 @@ export class GameModel {
     constructor(id, players, discardPile, drawPileCount, playerToPlayId, pendingDraws, pendingAction, hasEnded){
         this.id = id;
         this.players = players.map(p => new Player(p.id, p.name, p.birthDate, p.hasExplodingKitten, p.eliminated, p.futureCards, p.cardsInHandCount, p.cardsInHand));
-        this.discardPile = discardPile.map(d => new DiscardPile(d.typeNr));
+        this.discardPile = discardPile.map(d => new DiscardPile(d));
         this.drawPileCount = drawPileCount;
         this.playerToPlayId = playerToPlayId;
         this.pendingDraws = pendingDraws;
-        this.pendingAction = pendingAction?.map(p => new PendingAction(p));
+        this.pendingAction = pendingAction
         this.hasEnded = hasEnded;
     }
 }
