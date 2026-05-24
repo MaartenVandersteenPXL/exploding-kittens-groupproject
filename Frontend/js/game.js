@@ -14,6 +14,7 @@ let intros = ["This is amazing! Prrt!",
     "You saw that, right? Im incredible. Meow!"];
 let userAsPlayer;
 let selectedUserPlayerCardsId = [];
+let cardsToPlay = [];
 let autoPassInProgress = false;
 let isChoosingDefuseIndex = false;
 let isChosingFavorPlayer = false;
@@ -108,7 +109,7 @@ function BuildGameTable(){
 }
 function buildMyCards(){
     userHandCardContainer.replaceChildren();
-    userAsPlayer.cardsInHand.forEach(element => {
+    userAsPlayer.cardsInHand.forEach((element, index) => {
         let cardContainer = document.createElement("div");
         let cardEnum = document.createElement("p");
         let cardName = document.createElement("p");
@@ -126,7 +127,8 @@ function buildMyCards(){
         cardContainer.appendChild(cardName);
         cardContainer.appendChild(cardEnum);
         userHandCardContainer.appendChild(cardContainer);
-        if(selectedUserPlayerCardsId.includes(element.card.typeNr)){
+        cardContainer.dataset.index = index;
+        if(selectedUserPlayerCardsId.includes(index)){
             cardContainer.classList.add("highlight_me");
         }
         cardContainer.addEventListener("click", () => {
@@ -266,17 +268,26 @@ function buildTurnControls(){
 
         if(selectedUserPlayerCardsId.length === 0){
             userDeskMessageBoard.textContent = getTurnText();
+            playButton.disabled = false;
+            playButton.classList.remove("disabled");
         } else {
-            const allSame = selectedUserPlayerCardsId.every(c => c === selectedUserPlayerCardsId[0]);
-            if(selectedUserPlayerCardsId.length === 1 || (selectedUserPlayerCardsId.length >= 2 && allSame)){
-                const cardName = Object.keys(CardType).find(key => CardType[key] === selectedUserPlayerCardsId[0]);
-                userDeskMessageBoard.textContent = `${cardName} gekozen`;
+            cardsToPlay = selectedUserPlayerCardsId.map(index => userAsPlayer.cardsInHand[index].card.typeNr);
+            const allSame = cardsToPlay.every(c => c === cardsToPlay[0]);
+            const allCats = cardsToPlay.every(c => c > 99);
+
+            const isValid = (cardsToPlay.length === 1 && !allCats) || (cardsToPlay.length === 2 && allSame && allCats) || (cardsToPlay.length === 3 &&allCats && !allSame)
+            if(isValid){
+                const cardName = Object.keys(CardType).find(key => CardType[key] === cardsToPlay[0]);
+                userDeskMessageBoard.textContent = cardsToPlay.length === 1? `${cardName} gekozen` : `${cardsToPlay.length} katkaarten gekozen`
+                playButton.disabled = false;
+                playButton.classList.remove("disabled");
             } else {
-                userDeskMessageBoard.textContent = "foute combinatie";
+                userDeskMessageBoard.textContent = "foute combinatie, deselecteer een kaart";
+                playButton.disabled = true;
+                playButton.classList.add("disabled");
             }
         }
-        playButton.disabled = false;
-        playButton.classList.remove("disabled");
+
 
         myCards.forEach(card => {
             card.classList.add("clickable");
@@ -347,13 +358,13 @@ async function defuseExplodingKitten(){
 }
 async function playSkipCard(){
     //SKIP CARD - ONLY SEND CARD ENUM
-    gameModel = await playAction(selectedUserPlayerCardsId)
+    gameModel = await playAction(cardsToPlay)
     setGameState(`${userAsPlayer.name} IS A PUSSY, SKIPPING A CARD DRAW`)
     selectedUserPlayerCardsId = [];
     BuildGameTable();
 }
 async function playAttackCard(){
-    gameModel = await playAction(selectedUserPlayerCardsId);
+    gameModel = await playAction(cardsToPlay);
     selectedUserPlayerCardsId = [];
     setGameState(`${userAsPlayer.name} speelt Attack`);
     BuildGameTable();
@@ -381,7 +392,7 @@ async function playFavorCard(){
 
     button.addEventListener("click", async () => {
         const targetPlayerId = select.value;
-        gameModel = await playAction(selectedUserPlayerCardsId, targetPlayerId);
+        gameModel = await playAction(cardsToPlay, targetPlayerId);
         isChosingFavorPlayer = false;
         selectedUserPlayerCardsId = [];
         setGameState(`${userAsPlayer.name} vraagt favor aan ${select.options[select.selectedIndex].text}`);
@@ -394,13 +405,13 @@ async function playFavorCard(){
 
 }
 async function playShuffleCard(){
-    gameModel = await playAction(selectedUserPlayerCardsId);
+    gameModel = await playAction(cardsToPlay);
     selectedUserPlayerCardsId = [];
     setGameState(`${userAsPlayer.name} speelt Shuffle`);
     BuildGameTable();
 }
 async function playSeeTheFutureCard(){
-    gameModel = await playAction(selectedUserPlayerCardsId);
+    gameModel = await playAction(cardsToPlay);
     selectedUserPlayerCardsId = [];
     setGameState(`${userAsPlayer.name} speelt See The Future`);
     BuildGameTable();
@@ -429,7 +440,7 @@ async function playCatPair() {
 
     button.addEventListener("click", async () => {
         const targetPlayerId = select.value;
-        gameModel = await playAction(selectedUserPlayerCardsId, targetPlayerId);
+        gameModel = await playAction(cardsToPlay, targetPlayerId);
         isChoosingCatTarget = false;
         selectedUserPlayerCardsId = [];
         setGameState(`${userAsPlayer.name} steelt een willekeurige kaart`);
@@ -441,7 +452,51 @@ async function playCatPair() {
     userDeskMessageBoard.appendChild(button);
 }
 async function playCatTriple() {
+    isChoosingCatTarget = true;
+    userDeskMessageBoard.replaceChildren();
 
+    const text = document.createElement("span");
+    text.textContent = "welke speler kies je?";
+
+    const selectPlayer = document.createElement("select");
+    gameModel.players.forEach(player => {
+        if(player.id !== user.id) {
+            const option = document.createElement("option");
+            option.value = player.id;
+            option.textContent = player.name;
+            selectPlayer.appendChild(option);
+        }
+    });
+
+    const textCard = document.createElement("span");
+    textCard.textContent = "welke kaart wil je stelen";
+
+    const selectCard = document.createElement("select");
+    Object.entries(CardType).forEach(([name, value]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = name;
+        selectCard.appendChild(option);
+    });
+
+    const button = document.createElement("button");
+    button.textContent = "steel kaart";
+
+    button.addEventListener("click", async () => {
+        const targetPlayerId = selectPlayer.value;
+        const targetCard = parseInt(selectCard.value);
+        gameModel = await playAction(cardsToPlay, targetPlayerId, targetCard);
+        isChoosingCatTarget = false;
+        selectedUserPlayerCardsId = [];
+        setGameState(`${userAsPlayer.name} steelt een specifieke kaart`);
+        BuildGameTable();
+    })
+
+    userDeskMessageBoard.appendChild(text);
+    userDeskMessageBoard.appendChild(selectPlayer);
+    userDeskMessageBoard.appendChild(textCard);
+    userDeskMessageBoard.appendChild(selectCard);
+    userDeskMessageBoard.appendChild(button);
 }
 
 //INCOMMING-ACTION METHODS
@@ -463,7 +518,8 @@ async function drawCardFromPile(){
     const hasDefuse = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Defuse);
 
     if(hasExplodingKitten && hasDefuse){
-        selectedUserPlayerCardsId = [CardType.Defuse];
+        const defuseIndex = userAsPlayer.cardsInHand.findIndex(c => c.card.typeNr === CardType.Defuse);
+        selectedUserPlayerCardsId = [defuseIndex];
         BuildGameTable();
         showDefuseIndexQuestion();
         return;
@@ -582,21 +638,8 @@ function buildDiscardPile(selectedUserPlayerCards){
 
 }
 function selectedCardsAreStillInHand(){
-    const handCards = userAsPlayer.cardsInHand.map(c => c.card.typeNr);
-    const selectedCards = [...selectedUserPlayerCardsId];
+    return selectedUserPlayerCardsId.every(index => index < userAsPlayer.cardsInHand.length);}
 
-    for(const selectedCard of selectedCards){
-        const handIndex = handCards.indexOf(selectedCard);
-
-        if(handIndex === -1){
-            return false;
-        }
-
-        handCards.splice(handIndex, 1);
-    }
-
-    return true;
-}
 function getTurnText(){
     const playerToPlay = gameModel.players.find(p => p.id === gameModel.playerToPlayId);
 
@@ -727,6 +770,7 @@ passButton.addEventListener("click", async() => {
 playButton.addEventListener("click", async () => {
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
     console.log("Selected Array", selectedUserPlayerCardsId);
+    cardsToPlay = selectedUserPlayerCardsId.map(index => userAsPlayer.cardsInHand[index].card.typeNr)
 
     if(selectedUserPlayerCardsId.length !== 0 && !selectedCardsAreStillInHand()){
         selectedUserPlayerCardsId = [];
@@ -736,7 +780,7 @@ playButton.addEventListener("click", async () => {
     }
 
     if(selectedUserPlayerCardsId.length !== 0){
-        switch(selectedUserPlayerCardsId[0]){
+        switch(cardsToPlay[0]){
             case CardType.Defuse:
                 await defuseExplodingKitten();
                 break;
@@ -757,9 +801,9 @@ playButton.addEventListener("click", async () => {
                 break;
             default:
                 if(selectedUserPlayerCardsId.length === 2) {
-                    await playCatPair();
+                    await playCatPair(cardsToPlay);
                 } else if(selectedUserPlayerCardsId.length === 3) {
-                    await playCatTriple();
+                    await playCatTriple(cardsToPlay);
                 } else {
                     // ongeldige combinatie
                     backendError.textContent = "ongeldige kaart combinatie";
@@ -772,31 +816,36 @@ playButton.addEventListener("click", async () => {
 
     buildDiscardPile(selectedUserPlayerCardsId);
 });drawButton.addEventListener("click", async () => {
-    console.log("kaart trekken klik")
     drawCardFromPile();
 })
 userHandCardContainer.addEventListener('click', (event) => {
-    console.log("state array begin", selectedUserPlayerCardsId);
     const selectedCardDiv = event.target.closest('.own-card');
     if(selectedCardDiv === null){return}
     if(!selectedCardDiv.classList.contains("clickable")){return}
-    let selectedCardId = selectedCardDiv.querySelector(".card-enum").textContent;
+    //let selectedCardId = selectedCardDiv.querySelector(".card-enum").textContent;
+    let selectedCardIndex = parseInt(selectedCardDiv.dataset.index);
     let selectedCardName = selectedCardDiv.querySelector(".card-name").textContent;
 
-    if(selectedUserPlayerCardsId.includes(parseInt(selectedCardId))){
+    if(selectedUserPlayerCardsId.includes(selectedCardIndex)) {
+        selectedUserPlayerCardsId = selectedUserPlayerCardsId.filter(c => c !== selectedCardIndex);
+        selectedCardDiv.classList.remove("highlight_me")
+    } else {
+        selectedUserPlayerCardsId.push(selectedCardIndex);
+        selectedCardDiv.classList.add("highlight_me");
+        userDeskMessageBoard.textContent = (`${selectedCardName} gekozen`)
+    }
+
+    /*if(selectedUserPlayerCardsId.includes(parseInt(selectedCardId))){
         selectedUserPlayerCardsId = selectedUserPlayerCardsId.filter(
             card => card !== parseInt(selectedCardId)
         );
         selectedCardDiv.classList.remove("highlight_me");
 
-        console.log("card removed");
     }else{
         selectedUserPlayerCardsId.push(parseInt(selectedCardId));
         selectedCardDiv.classList.add("highlight_me");
         userDeskMessageBoard.textContent = (`${selectedCardName} gekozen`)
-        console.log("card added");
-    }
-    console.log("state array end", selectedUserPlayerCardsId)
+    }*/
 
 });
 
