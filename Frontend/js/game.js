@@ -346,7 +346,7 @@ function buildFavorAction() {
 
     if(hasPendingFavor && favorTargetIsMe && !isGivingFavorCard && !isExecuted){
         showGiveFavorCardQuestion();
-    } else {
+    } else if(!hasPendingFavor || isExecuted){
         isGivingFavorCard = false;
     }
 }
@@ -485,10 +485,17 @@ async function playCatTriple() {
     button.addEventListener("click", async () => {
         const targetPlayerId = selectPlayer.value;
         const targetCard = parseInt(selectCard.value);
+        const handSizeBefore = userAsPlayer.cardsInHand.length;
         gameModel = await playAction(cardsToPlay, targetPlayerId, targetCard);
+        userAsPlayer = gameModel.players.find(p => p.id === user.id);
+        const handSizeAfter = userAsPlayer.cardsInHand.length;
+
+        if(handSizeAfter>handSizeBefore){
+            setGameState(`${userAsPlayer.name} steelt een specifieke kaart`);
+        } else { setGameState(`${userAsPlayer.name}, gekozen kaart niet aanwezig in hand van tegenspeler`);}
         isChoosingCatTarget = false;
         selectedUserPlayerCardsId = [];
-        setGameState(`${userAsPlayer.name} steelt een specifieke kaart`);
+        cardsToPlay = [];
         BuildGameTable();
     })
 
@@ -732,22 +739,33 @@ function clearGameStateWhenTurnChanged(previousGame, newGame){
 function showGiveFavorCardQuestion(){
     isGivingFavorCard = true;
     userDeskMessageBoard.replaceChildren();
+
     const text = document.createElement("span");
     text.textContent = "kies een kaart om te geven:";
-    userDeskMessageBoard.appendChild(text);
 
-    userAsPlayer.cardsInHand.forEach(element => {
-        const button = document.createElement("button");
-        button.textContent = element.card.getName();
-        button.addEventListener("click", async () => {
-            gameModel = await selectCardAsFavor(element.card.typeNr);
-            userAsPlayer = gameModel.players.find(p => p.id === user.id);
-            isGivingFavorCard = false;
-            setGameState(`${userAsPlayer.name} gaf een kaart als favor`);
-            BuildGameTable();
-        })
-        userDeskMessageBoard.appendChild(button);
-    })
+    const select = document.createElement("select");
+    userAsPlayer.cardsInHand.forEach((element, index) => {
+        const option = document.createElement("option");
+        option.value = element.card.typeNr;
+        option.textContent = element.card.getName();
+        select.appendChild(option);
+    });
+
+    const button = document.createElement("button");
+    button.textContent = "geef kaart";
+
+    button.addEventListener("click", async () => {
+        const cardTypeNr = parseInt(select.value);
+        gameModel = await selectCardAsFavor(cardTypeNr);
+        userAsPlayer = gameModel.players.find(p => p.id === user.id);
+        isGivingFavorCard = false;
+        setGameState(`${userAsPlayer.name} gaf een kaart als favor`);
+        BuildGameTable();
+    });
+
+    userDeskMessageBoard.appendChild(text);
+    userDeskMessageBoard.appendChild(select);
+    userDeskMessageBoard.appendChild(button)
 }
 
 ///// EVENTS
