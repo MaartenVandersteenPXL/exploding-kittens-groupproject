@@ -282,9 +282,19 @@ function buildTurnControls(){
 //// ACTIONS -> see events!!!
 //PLAY-ACTIONS METHODS
 async function defuseExplodingKitten(){
-    //DEFUSE A EXPLODING KITTEN - ONLY SEND CARD ENUM
-    gameModel = await playAction(selectedUserPlayerCardsId)
-    setGameState(`${user.name} DEFUSED THA BOMB`)
+    const drawPileIndexInput = prompt("Waar wil je de Exploding Kitten terugleggen? 0 = bovenaan", "0");
+    const drawPileIndex = parseInt(drawPileIndexInput);
+
+    gameModel = await playAction(
+        selectedUserPlayerCardsId,
+        null,
+        CardType.ExplodingKitten,
+        isNaN(drawPileIndex) ? 0 : drawPileIndex
+    );
+
+    selectedUserPlayerCardsId = [];
+    setGameState(`${user.name} speelde Defuse`);
+    BuildGameTable();
 }
 async function playSkipCard(){
     //SKIP CARD - ONLY SEND CARD ENUM
