@@ -15,9 +15,8 @@
     </div>
     <nav class="sidebar-menu">
         <a id="logout" href="index.html">LOG OUT</a>
-        <a id="XXX" href="">XXX</a>
-        <a id="XXX1" href="">XXX</a>
-        <a id="XXX2" href="">XXX</a>
+        <a id="lobby" href="lobby.html">lobby</a>
+        <a id="verlaatTafel">verlaat tafel</a>
     </nav>
 </aside>
 
@@ -55,30 +54,37 @@
     </section>
 
     <!-- Dashboard onderaan -->
-    <section class="hand-area">
-        <div class="hand-container" id="userCardHand">
-            <!-- inject cards -->
-        </div>
-        <div class="hand-controls">
-            <div class="game-message">
-                <p id="statusMessage"></p>
-                <p class="backend-error" id="backendErrorPlayersTable"></p>
+    <section class="dashbord">
+        <section class="hand-area">
+            <div class="hand-container" id="userCardHand">
+                <!-- inject cards -->
             </div>
-            <p class="backend-error" id="backendError"></p>
-            <button id="playActionBtn" class="play-btn">SPEEL / RAAP</button>
-            <button id="drawActionBtn" class="draw-btn" style="display: none">NEEM KAART</button>
+            <div class="hand-controls">
+                <div class="game-message">
+                    <p id="statusMessage"></p>
+                    <p class="backend-error" id="backendErrorPlayersTable"></p>
+                </div>
+                <p class="backend-error" id="backendError"></p>
+                <button id="playActionBtn" class="play-btn">SPEEL / RAAP</button>
+                <button id="drawActionBtn" class="draw-btn" style="display: none">NEEM KAART</button>
+
+                <div id="futureCardsPanel" class="future-cards-panel" style="display:none">
+                    <p>Toekomstige kaarten</p>
+                    <div id="futureCardsList" class="future-cards-list"></div>
+                </div>
+                <div id="nopePrompt" style="display:none">
+                    <button id="nopeBtn" class="nope-btn">NOPE!</button>
+                    <button id="passBtn" class="pass-btn">PASS</button>
+                </div>
+            </div>
+        </section>
+        <div class="game-state">
             <p id="gameState"></p>
-            <div id="futureCardsPanel" class="future-cards-panel" style="display:none">
-                <p>Toekomstige kaarten</p>
-                <div id="futureCardsList" class="future-cards-list"></div>
-            </div>
-            <!-- NEEDS DRAW BUTTION -->
-            <div id="nopePrompt" style="display:none">
-                <button id="nopeBtn" class="nope-btn">NOPE!</button>
-                <button id="passBtn" class="pass-btn">PASS</button>
-            </div>
+            <p id="groupGameState"></p>
         </div>
     </section>
+
+
 </main>
 
 </body>

@@ -27,6 +27,7 @@ const headerTitle = document.getElementById("headerTitle");
 const headerIntro = document.getElementById("headerIntro");
 //nav
 const logout = document.getElementById("logout");
+const leaveTableNav = document.getElementById("verlaatTafel");
 //table
 const discardPile = document.getElementById("discardPile");
 //game
@@ -693,6 +694,11 @@ logout.addEventListener("click", async (Event) => {
     User.delete();
 })
 
+leaveTableNav.addEventListener("click", async () => {
+    await playerLeaveTable(userAsPlayer.id);
+    window.location.href="lobby.html";
+})
+
 ///////// BACKEND CALLS
 //Fetch Game
 async function fetchGame(filterData){
@@ -898,6 +904,30 @@ async function selectCardAsFavor(cardId){
             playSelectFavorData.hasEnded
         );
 
+    }catch(error){
+        backendError.textContent = error.message;
+    }
+}
+
+async function playerLeaveTable(tableId){
+    try{
+        //REAL API CALL
+        const response = await fetch(`https://localhost:5051/api/tables/${tableId}/leave`,{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + Token.load(),
+            }
+        });
+        //TEST DATA
+        // Geen test endpoint
+        // END TEST DATA
+        if(!response.ok){
+            const dataLeavedTable = await response.json();
+            const problemDetails = new ProblemDetails(dataLeavedTable)
+            console.log("TROUBLES"+ toString(problemDetails));
+            throw new Error(dataLeavedTable.message );
+        }
     }catch(error){
         backendError.textContent = error.message;
     }
