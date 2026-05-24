@@ -83,6 +83,11 @@ function BuildGameTable(){
     buildMyCards();
     buildOpponents();
     buildTableInfo()
+
+    if(handleGameEndedOrEliminated()){
+        return;
+    }
+
     buildTurnControls();
     buildNopePrompt();
 }
@@ -332,6 +337,11 @@ async function drawCardFromPile(){
     gameModel = await drawAction();
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
 
+    if(handleGameEndedOrEliminated()){
+        BuildGameTable();
+        return;
+    }
+
     const hasExplodingKitten = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.ExplodingKitten);
     const hasDefuse = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Defuse);
 
@@ -395,6 +405,32 @@ function showDefuseIndexQuestion(){
     userDeskMessageBoard.appendChild(text);
     userDeskMessageBoard.appendChild(input);
     userDeskMessageBoard.appendChild(button);
+}
+
+function handleGameEndedOrEliminated(){
+    if(gameModel.hasEnded){
+        const winner = gameModel.players.find(p => !p.eliminated);
+
+        playButton.disabled = true;
+        drawButton.disabled = true;
+        nopePrompt.style.display = "none";
+
+        userDeskMessageBoard.textContent = winner
+            ? `${winner.name} heeft gewonnen!`
+            : "Het spel is afgelopen.";
+
+        return true;
+    }
+
+    if(userAsPlayer?.eliminated){
+        playButton.disabled = true;
+        drawButton.disabled = true;
+        nopePrompt.style.display = "none";
+        userDeskMessageBoard.textContent = "Je bent ontploft en ligt uit het spel.";
+        return true;
+    }
+
+    return false;
 }
 
 function buildDiscardPile(selectedUserPlayerCards){
