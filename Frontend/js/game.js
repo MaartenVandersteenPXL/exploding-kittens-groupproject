@@ -405,9 +405,14 @@ function setGameState(newText){
         newText);
 }
 function updateGroupGameState(){
-    if(gameModel.players.length === playerCount){
+    if(gameModel.players.length !== playerCount){
         groupGameState.textContent = "Een speler heeft de tafel verlaten";
     }
+    gameModel.players.forEach(c => {
+        if(c.hasExplodingKitten){
+            groupGameState.textContent=`${c.name} heeft  een exploding kitten gaat defusen!`
+        }
+    });
 }
 function showDefuseIndexQuestion(){
     isChoosingDefuseIndex = true;
@@ -937,7 +942,7 @@ async function playerLeaveTable(tableId){
         if(!response.ok){
             const dataLeavedTable = await response.json();
             const problemDetails = new ProblemDetails(dataLeavedTable)
-            console.log("TROUBLES"+ toString(problemDetails));
+            console.log("TROUBLES", problemDetails.status);
             throw new Error(dataLeavedTable.message );
         }
     }catch(error){
