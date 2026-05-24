@@ -18,6 +18,7 @@ let autoPassInProgress = false;
 let isChoosingDefuseIndex = false;
 let isChosingFavorPlayer = false;
 let isGivingFavorCard = false;
+let isChoosingCatTarget = false;
 
 const NopeDecision = Object.freeze({
     NotDecided: 0,
@@ -255,6 +256,9 @@ function buildTurnControls(){
     if(isGivingFavorCard){
         return;
     }
+    if(isChoosingCatTarget){
+        return;
+    }
     const myCards = document.querySelectorAll(".own-card");
     const isMyTurn = gameModel.playerToPlayId === user.id;
 
@@ -400,6 +404,44 @@ async function playSeeTheFutureCard(){
     selectedUserPlayerCardsId = [];
     setGameState(`${userAsPlayer.name} speelt See The Future`);
     BuildGameTable();
+}
+
+async function playCatPair() {
+    isChoosingCatTarget = true;
+    userDeskMessageBoard.replaceChildren();
+
+    const text = document.createElement("span");
+    text.textContent = `welke speler kies je om een kaart van te krijgen?`;
+
+    const select = document.createElement("select");
+
+    gameModel.players.forEach(player => {
+        if(player.id !== user.id) {
+            const option = document.createElement('option');
+            option.value = player.id;
+            option.textContent = player.name;
+            select.appendChild(option);
+        }
+    });
+
+    const button = document.createElement("button");
+    button.textContent = 'kies speler';
+
+    button.addEventListener("click", async () => {
+        const targetPlayerId = select.value;
+        gameModel = await playAction(selectedUserPlayerCardsId, targetPlayerId);
+        isChoosingCatTarget = false;
+        selectedUserPlayerCardsId = [];
+        setGameState(`${userAsPlayer.name} steelt een willekeurige kaart`);
+        BuildGameTable();
+    });
+
+    userDeskMessageBoard.appendChild(text);
+    userDeskMessageBoard.appendChild(select);
+    userDeskMessageBoard.appendChild(button);
+}
+async function playCatTriple() {
+
 }
 
 //INCOMMING-ACTION METHODS
@@ -714,10 +756,14 @@ playButton.addEventListener("click", async () => {
                 await playSeeTheFutureCard();
                 break;
             default:
-                //kattenpaar, meer dan 1 kaart
-                await playAction(selectedUserPlayerCardsId);
-                selectedUserPlayerCardsId = [];
-                BuildGameTable();
+                if(selectedUserPlayerCardsId.length === 2) {
+                    await playCatPair();
+                } else if(selectedUserPlayerCardsId.length === 3) {
+                    await playCatTriple();
+                } else {
+                    // ongeldige combinatie
+                    backendError.textContent = "ongeldige kaart combinatie";
+                }
                 break;
         }
     } else {
