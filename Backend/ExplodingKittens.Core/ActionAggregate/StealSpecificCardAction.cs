@@ -27,8 +27,7 @@ internal class StealSpecificCardAction : ActionBase
             
             actionPlayer.Hand.InsertCard(stolenCard.Value);
         }
-        //else er gebeurt niets
+      
        
-        
     }
 }

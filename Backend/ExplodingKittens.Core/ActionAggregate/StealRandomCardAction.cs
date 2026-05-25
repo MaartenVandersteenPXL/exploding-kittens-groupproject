@@ -21,21 +21,10 @@ internal class StealRandomCardAction : ActionBase
         Card? randomCard = targetPlayer.Hand.PickRandomCard();
         IPlayer actionPlayer = CurrentGame.GetPlayerById(PlayerId);
 
-        // Bij trow gaat de app vastlopen bij een legale actie
+
         if (randomCard != null)
         {
             actionPlayer.Hand.InsertCard(randomCard.Value);
         }
-
-        /*
-        if(randomCard == null)
-        {
-            throw new InvalidOperationException("speler is uitgeschakeld");
-        } else
-        {
-            actionPlayer.Hand.InsertCard(randomCard.Value);
-        }
-        */
-
     }
 }
