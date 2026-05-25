@@ -19,7 +19,6 @@ internal class TableFactory : ITableFactory
         ITable createdTable = new Table(Guid.NewGuid(), preferences);
         createdTable.Join(user);
 
-        // Laat virtuele spelers toe om aan tafel aan te schuiven indien dit is gespecificeerd in de voorkeuren.
         for (int i = 0; i < preferences.NumberOfArtificialPlayers; i++)
         {
             createdTable.LetArtificialPlayersJoin(_gamePlayStrategy);

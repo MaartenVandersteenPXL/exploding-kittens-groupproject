@@ -26,14 +26,11 @@ internal class GameFactory : IGameFactory
     {
         IPlayer[] players = table.SeatedPlayers.ToArray();
 
-        // 1. Maak het deck
         ICardDeck deck = _cardDeckFactory.CreateStandardDeckWithoutExplodingKittens(players.Length);
 
-        // 2. Het dek een eerste keer schudden
         deck.Shuffle();
-        
 
-        // 3. Deel kaarten uit (7 per persoon + 1 Defuse)
+
         foreach (IPlayer player in players)
         {
             for (int i = 0; i < 7; i++)
@@ -43,24 +40,20 @@ internal class GameFactory : IGameFactory
             player.Hand.InsertCard(Card.Defuse);
         }
 
-        // 4. Verwijder 1/3 van de kaarten (bij 2 of 3 spelers)
         if (players.Length <= 3)
         {
             int toRemove = deck.CardCount / 3;
             for (int i = 0; i < toRemove; i++) deck.DrawTopCard();
         }
 
-        // 5. Kittens toevoegen (Aantal spelers - 1)
         int kittenCount = players.Length - 1;
         for (int i = 0; i < kittenCount; i++)
         {
             deck.InsertCard(Card.ExplodingKitten, 0);
         }
 
-        // 6. Schudden (voor de tweede keer, nadat de kittens erin zitten)
         deck.Shuffle();
 
-        // 7. Jongste speler bepalen
         IPlayer? startingPlayer = players.OrderByDescending(p => p.BirthDate).FirstOrDefault();
 
         if (startingPlayer == null)
@@ -68,7 +61,6 @@ internal class GameFactory : IGameFactory
             throw new InvalidOperationException("Kan geen spelers vinden om het spel te starten.");
         }
 
-        // 8. Maak het spel aan
         return new Game(Guid.NewGuid(), players, deck, startingPlayer.Id, _actionFactory);
     }
 }
