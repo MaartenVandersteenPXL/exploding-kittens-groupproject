@@ -88,16 +88,18 @@ async function gameInit(){
 async function startGameLoop(){
     while(!gameModel.hasEnded){
         await new Promise(resolve => setTimeout(resolve, 3000));
+        gameModel = await fetchGame(gameIdfromURL);
+        console.log("game Model", gameModel.playerToPlayId);
+        //const previousGameModel = gameModel;
+        //const newGameModel = await fetchGame(gameIdfromURL);
 
-        const previousGameModel = gameModel;
-        const newGameModel = await fetchGame(gameIdfromURL);
+        //gameModel = newGameModel;
 
-        gameModel = newGameModel;
         userAsPlayer = gameModel.players.find(p => p.id === user.id);
 
-        clearGameStateWhenTurnChanged(previousGameModel, gameModel);
-        updateGameStateFromPlayedCard(previousGameModel, gameModel);
-        updateGameStateFromNopeChanges(previousGameModel, gameModel);
+        //clearGameStateWhenTurnChanged(previousGameModel, gameModel);
+        //updateGameStateFromPlayedCard(previousGameModel, gameModel);
+        //updateGameStateFromNopeChanges(previousGameModel, gameModel);
         BuildGameTable();
         updateGroupGameState();
     }
@@ -181,28 +183,87 @@ function buildTableInfo(){
 
     }
 }
-function buildNopePrompt(){
+async function buildNopePrompt(){
 
-    console.log("START NOPING:", gameModel.pendingAction);
-
+    //console.log("START NOPING:", gameModel.pendingAction);
+    if(!gameModel.pendingAction){
+        return;
+    }
+    const nopeObject = gameModel.pendingAction.playerNopeDecisions ?? {};
+    const hasNopeCard = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Nope);
+    const isMyAction = gameModel.pendingAction.playerId === user.id;
     if(!gameModel.pendingAction.canBeNoped){
         nopePrompt.style.display = "none";
         return;
     }
-
-    const isMyAction = gameModel.pendingAction.playerId === user.id;
-    const hasNopeCard = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Nope);
-
-    if(hasNopeCard){
+    else if(gameModel.pendingAction.isExecuted){
+        nopePrompt.style.display = "none";
         return;
     }
+    else if(!hasNopeCard){
+        await confirmNotNoppingPlay()
+        nopePrompt.style.display = "none";
+        return
+    }
+    else if(isMyAction){
+        if(Object.values(nopeObject).find(x => x === 1)){
+            nopePrompt.style.display = "block";
+            //playButton.display = "none";
+            nopeButton.disabled = false;
+            passButton.disabled = false;
+            return;
+        } else {
+            nopePrompt.style.display = "none";
+            return;
+        }
+    }
+    console.log("////START")
+    console.log("playerNopeDescisions - after nopping:", nopeObject)
+    //index of player - next index for prompting
+    const startIndex = Object.keys(nopeObject).indexOf(gameModel.playerToPlayId);
+    const nopeArrLength = Object.keys(nopeObject).length;
+    for(let i = 0; i < nopeArrLength; i++){
+        const index = (startIndex + i)  % nopeArrLength;
+        if(i > 0 && index === startIndex){
+            break;
+        }
+        const playerToRespond =  Object.keys(nopeObject)[index];
+        const playerResponse = Object.values(nopeObject)[index];
+        let myTurnToRespond;
+        console.log("Index loop:", index);
+        if(index === 0 ){
+            myTurnToRespond = Object.values(nopeObject)[nopeArrLength - 2] !== 0;
+            console.log(`MyTurnToRespond on index ${index} - guid:`, Object.keys(nopeObject)[index]);
+            console.log(`MyTurnToRespond on index ${index} - value:`, Object.values(nopeObject)[index]);
+        } else {
+            myTurnToRespond = Object.values(nopeObject)[index - 1] !== 0;
+            console.log(`MyTurnToRespond on index ${index}- guid:`, Object.keys(nopeObject)[index]);
+            console.log(`MyTurnToRespond on index ${index}- value:`, Object.values(nopeObject)[index]);
+        }
 
-    const nopeDecisions = gameModel.pendingAction.playerNopeDecisions ?? {};
-    console.log("playerNopeDescisions:", nopeDecisions);
+        if(!myTurnToRespond){
+            console.log(`Nog niet mijn beurt ${index} - object`, nopeObject);
+            console.log("/////END")
+            console.log("        ")
+        }
+        else if(playerToRespond === user.id && playerResponse === 0 ){
+            console.log("///MY TURN TO PLAY")
+            console.log("playerToRespondse is me:", playerToRespond);
+            console.log("My current decision should be 0: ", playerResponse)
 
-    const myNopeDecision = Object.entries(nopeDecisions)
-        .find(([playerId]) => playerId.toLowerCase() === user.id.toLowerCase())?.[1];
+            nopePrompt.style.display = "block";
+            nopeButton.disabled = false;
+            passButton.disabled = false;
+        }
+        console.log("gameModel pendingAction", gameModel.pendingAction);
+        console.log("/////END")
+        console.log("        ")
+    }
 
+
+    //const myNopeDecision = Object.entries(nopeDecisions)
+        //.find(([playerId]) => playerId.toLowerCase() === user.id.toLowerCase())?.[1];
+    /*
     const isMyDecisionPending =
         myNopeDecision === 0 ||
         myNopeDecision === "0" ||
@@ -262,6 +323,7 @@ function buildNopePrompt(){
     } else {
         nopePrompt.style.display = "none";
     }
+    */
 }
 function buildTurnControls(){
     //dynamische gebouwd - hier pas asignen
@@ -279,7 +341,12 @@ function buildTurnControls(){
     }
     const myCards = document.querySelectorAll(".own-card");
     const isMyTurn = gameModel.playerToPlayId === user.id;
-
+    console.log("START")
+    console.log("Ben ik aan de beurt?", isMyTurn);
+    //console.log("gamemodel player to play:", gameModel.playerToPlayId);
+    //console.log("userID:", user.id);
+    console.log("END")
+    console.log("     ")
     if (isMyTurn) {
 
         if(selectedUserPlayerCardsId.length === 0){
@@ -353,7 +420,6 @@ function buildFutureCards(){
         futureCardsList.appendChild(cardDiv);
     });
 }
-
 function buildFavorAction() {
     const hasPendingFavor = gameModel.pendingAction?.cards?.includes(CardType.Favor);
     const favorTargetIsMe = gameModel.pendingAction?.targetPlayerId?.toLowerCase() === user.id.toLowerCase();
@@ -377,7 +443,7 @@ async function playSkipCard(){
     gameModel = await playAction(cardsToPlay)
     setGameState(`${userAsPlayer.name} IS A PUSSY, SKIPPING A CARD DRAW`)
     selectedUserPlayerCardsId = [];
-    BuildGameTable();
+    //BuildGameTable();
 }
 async function playAttackCard(){
     gameModel = await playAction(cardsToPlay);
@@ -432,7 +498,6 @@ async function playSeeTheFutureCard(){
     setGameState(`${userAsPlayer.name} speelt See The Future`);
     BuildGameTable();
 }
-
 async function playCatPair() {
     isChoosingCatTarget = true;
     userDeskMessageBoard.replaceChildren();
@@ -545,7 +610,7 @@ async function drawCardFromPile(){
 
     if(hasExplodingKitten && !hasDefuse){
         userDeskMessageBoard.textContent = "Je trok een Exploding Kitten en hebt geen Defuse.";
-        BuildGameTable();
+        //BuildGameTable();
         return;
     }
 
@@ -570,6 +635,15 @@ function updateGroupGameState(){
             groupGameState.textContent=`${c.name} heeft een exploding kitten en gaat defusen!`
         }
     });
+    if(gameModel.pendingAction != null){
+        let stringBuilder = []
+        Object.entries(gameModel.pendingAction.playerNopeDecisions)
+            .forEach(([player, playerDecision]) => {
+                stringBuilder.push(
+                    `${player} heeft als nope beslissing: ${playerDecision}`
+                );
+            });
+    }
 }
 
 function showDefuseIndexQuestion(){
@@ -642,12 +716,12 @@ function handleGameEndedOrEliminated(){
 
     return false;
 }
+
+
 function buildDiscardPile(selectedUserPlayerCards){
 
-    console.log("what is discardPile", gameModel.discardPile)
+    //console.log("what is discardPile", gameModel.discardPile)
     let discaredPileLastEnum= gameModel.discardPile.at(-1);
-
-    /*
     let cardDiscardPileContainer = document.createElement("div");
     let discardPileCardEnum = document.createElement("p");
     let discardPileCardName = document.createElement("p");
@@ -663,9 +737,7 @@ function buildDiscardPile(selectedUserPlayerCards){
     discardPileCardEnum.textContent = discaredPileLastEnum.toString();
 
     discardPile.appendChild(discardPileCardName);
-    discardPile.appendChild(discardPileCardEnum);
-    */
-
+    discardPile.appendChild(discardPileCardEnum)
 }
 function selectedCardsAreStillInHand(){
     return selectedUserPlayerCardsId.every(index => index < userAsPlayer.cardsInHand.length);}
@@ -797,7 +869,9 @@ nopeButton.addEventListener("click", async() => {
     userDeskMessageBoard.textContent = "Nope gespeeld";
     setGameState(`${userAsPlayer.name} heeft genoped!`)
     nopePrompt.style.display ="none";
-    BuildGameTable();
+    nopeButton.disabled = true;
+    passButton.disabled = true;
+    //BuildGameTable();
 
 });
 passButton.addEventListener("click", async() => {
@@ -806,7 +880,9 @@ passButton.addEventListener("click", async() => {
     userDeskMessageBoard.textContent = "Pass gespeeld";
     setGameState(`${userAsPlayer.name} doet niet mee aan de nope vraag`)
     nopePrompt.style.display = "none";
-    BuildGameTable();
+    nopeButton.disabled = true;
+    passButton.disabled = true;
+    //BuildGameTable();
 });
 playButton.addEventListener("click", async () => {
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
@@ -856,7 +932,8 @@ playButton.addEventListener("click", async () => {
     }
 
     buildDiscardPile(selectedUserPlayerCardsId);
-});drawButton.addEventListener("click", async () => {
+});
+drawButton.addEventListener("click", async () => {
     drawCardFromPile();
 })
 userHandCardContainer.addEventListener('click', (event) => {
