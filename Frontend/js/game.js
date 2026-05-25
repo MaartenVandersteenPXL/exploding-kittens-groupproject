@@ -103,9 +103,10 @@ function BuildGameTable(){
     }
 
     buildFutureCards();
+    buildNopePrompt();
     buildFavorAction();
     buildTurnControls();
-    buildNopePrompt();
+
 }
 function buildMyCards(){
     userHandCardContainer.replaceChildren();
@@ -339,14 +340,18 @@ function buildFutureCards(){
 }
 
 function buildFavorAction() {
-    const hasPendingFavor = gameModel.pendingAction?.cards?.includes(CardType.Favor);
-    const favorTargetIsMe = gameModel.pendingAction?.targetPlayerId?.toLowerCase() === user.id.toLowerCase();
-    const isExecuted = gameModel.pendingAction?.isExecuted;
+    const pendingAction = gameModel.pendingAction;
 
+    if(!pendingAction?.cards?.includes(CardType.Favor)){
+        isGivingFavorCard = false;
+        return;
+    }
 
-    if(hasPendingFavor && favorTargetIsMe && !isGivingFavorCard && !isExecuted){
+    const favorTargetIsMe = pendingAction.targetPlayerId?.toLowerCase() === user.id.toLowerCase();
+
+    if(favorTargetIsMe && !pendingAction.isExecuted && !isGivingFavorCard && nopePrompt.style.display !== "block"){
         showGiveFavorCardQuestion();
-    } else if(!hasPendingFavor || isExecuted){
+    } else if(pendingAction.isExecuted){
         isGivingFavorCard = false;
     }
 }
