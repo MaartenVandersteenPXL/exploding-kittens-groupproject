@@ -464,7 +464,19 @@ header {
     margin: 0 0 0 1rem;
 }
 
-.defuse-button {
+.favor-select, .carPair-select, .catTriple-player-select, .catTriple-card-select, .Favor-toGive-select{
+    height: 1.2em;
+    width: 60%;
+    background-color: #f5ddbc;
+    border-style: none ;
+    font-family: 'Abel';
+    font-size: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    margin: 0 0 0 1rem;
+}
+
+.defuse-button, .favor-button, .catPair-button, .catTriple-button, .Favor-toGive-button {
     display: flex;
     align-items: center;
     justify-content: center;

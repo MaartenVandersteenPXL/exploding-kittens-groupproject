@@ -342,12 +342,12 @@ function buildTurnControls(){
     }
     const myCards = document.querySelectorAll(".own-card");
     const isMyTurn = gameModel.playerToPlayId === user.id;
-    console.log("START")
-    console.log("Ben ik aan de beurt?", isMyTurn);
+    //console.log("START")
+    //console.log("Ben ik aan de beurt?", isMyTurn);
     //console.log("gamemodel player to play:", gameModel.playerToPlayId);
     //console.log("userID:", user.id);
-    console.log("END")
-    console.log("     ")
+    //console.log("END")
+    //console.log("     ")
     if (isMyTurn) {
 
         if(selectedUserPlayerCardsId.length === 0){
@@ -371,23 +371,9 @@ function buildTurnControls(){
                 playButton.classList.add("disabled");
             }
         }
-
-
         myCards.forEach(card => {
             card.classList.add("clickable");
         });
-
-        ///INCOMMING REQUEST
-        //WANNEER FAVOR VRAAG KOMT -> KAART SELECTEREN -> selectCardAsFavor(cardId)
-        // setGameState(`${user.name} IS CHOOSING A CARD TO FAVOR`)
-        //WANNEER DOUBLE KOMT -> ...
-        // setGameState(`${user.name} ???`)
-        //WANNEER TRIPLE KOMT -> ...
-        // setGameState(`${user.name} ???`)
-        //WANNNER EEN NOPE KOMT
-        // setGameState(`${user.name} IS THINKING ABOUT NOPPING THE NOPE CARD`)
-
-
     } else {
         userDeskMessageBoard.textContent = getTurnText()
         selectedUserPlayerCardsId = [];
@@ -464,6 +450,7 @@ async function playFavorCard(){
     text.textContent = `welke speler kies je om een kaart van te krijgen?`;
 
     const select = document.createElement("select");
+    select.classList.add("favor-select");
 
     gameModel.players.forEach(player => {
         if(player.id !== user.id) {
@@ -476,6 +463,7 @@ async function playFavorCard(){
 
     const button = document.createElement("button");
     button.textContent = 'kies speler';
+    button.classList.add("favor-button");
 
     button.addEventListener("click", async () => {
         const targetPlayerId = select.value;
@@ -511,6 +499,7 @@ async function playCatPair() {
     text.textContent = `welke speler kies je om een kaart van te krijgen?`;
 
     const select = document.createElement("select");
+    select.classList.add("catPair-select");
 
     gameModel.players.forEach(player => {
         if(player.id !== user.id) {
@@ -523,6 +512,7 @@ async function playCatPair() {
 
     const button = document.createElement("button");
     button.textContent = 'kies speler';
+    button.classList.add("catPair-button");
 
     button.addEventListener("click", async () => {
         const targetPlayerId = select.value;
@@ -545,6 +535,7 @@ async function playCatTriple() {
     text.textContent = "welke speler kies je?";
 
     const selectPlayer = document.createElement("select");
+    select.classList.add("catTriple-player-select");
     gameModel.players.forEach(player => {
         if(player.id !== user.id) {
             const option = document.createElement("option");
@@ -558,6 +549,7 @@ async function playCatTriple() {
     textCard.textContent = "welke kaart wil je stelen";
 
     const selectCard = document.createElement("select");
+    selectCard.classList.add("catTriple-card-select");
     Object.entries(CardType).forEach(([name, value]) => {
         const option = document.createElement("option");
         option.value = value;
@@ -567,6 +559,7 @@ async function playCatTriple() {
 
     const button = document.createElement("button");
     button.textContent = "steel kaart";
+    button.classList.add("catTriple-button");
 
     button.addEventListener("click", async () => {
         const targetPlayerId = selectPlayer.value;
@@ -844,6 +837,7 @@ function showGiveFavorCardQuestion(){
     text.textContent = "kies een kaart om te geven:";
 
     const select = document.createElement("select");
+    select.classList.add("Favor-toGive-select");
     userAsPlayer.cardsInHand.forEach((element, index) => {
         const option = document.createElement("option");
         option.value = element.card.typeNr;
@@ -853,6 +847,7 @@ function showGiveFavorCardQuestion(){
 
     const button = document.createElement("button");
     button.textContent = "geef kaart";
+    button.classList.add("Favor-toGive-button");
 
     button.addEventListener("click", async () => {
         const cardTypeNr = parseInt(select.value);
