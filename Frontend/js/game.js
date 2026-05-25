@@ -175,9 +175,10 @@ function buildTableInfo(){
     }
 }
 function buildNopePrompt(){
-    const hasPendingAction = gameModel.pendingAction != null;
 
-    if(!hasPendingAction){
+    console.log("START NOPING:", gameModel.pendingAction);
+
+    if(!gameModel.pendingAction.canBeNoped){
         nopePrompt.style.display = "none";
         return;
     }
@@ -185,7 +186,13 @@ function buildNopePrompt(){
     const isMyAction = gameModel.pendingAction.playerId === user.id;
     const hasNopeCard = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Nope);
 
+    if(hasNopeCard){
+        return;
+    }
+
     const nopeDecisions = gameModel.pendingAction.playerNopeDecisions ?? {};
+    console.log("playerNopeDescisions:", nopeDecisions);
+
     const myNopeDecision = Object.entries(nopeDecisions)
         .find(([playerId]) => playerId.toLowerCase() === user.id.toLowerCase())?.[1];
 
