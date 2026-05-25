@@ -50,14 +50,11 @@ internal class CardDeck: ICardDeck
 
     public void Shuffle()
     {
-        //maak random
         Random index = new Random();
-        // ga achterwaards door je deck
+        
         for (int i = _cards.Count-1; i > 0; i--)
         {
-            //random toewijzen, per loop andere index tussen nul en _cards.Count
             int j = index.Next(i + 1);
-            // kaart op laatste plek (i) wisselen met kaart op plek van randomgetal (j)
             (_cards[i], _cards[j]) = (_cards[j], _cards[i]);
         }
     }
