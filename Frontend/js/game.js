@@ -14,8 +14,13 @@ let intros = ["This is amazing! Prrt!",
     "You saw that, right? Im incredible. Meow!"];
 let userAsPlayer;
 let selectedUserPlayerCardsId = [];
+let cardsToPlay = [];
 let autoPassInProgress = false;
 let isChoosingDefuseIndex = false;
+let isChosingFavorPlayer = false;
+let isGivingFavorCard = false;
+let isChoosingCatTarget = false;
+
 const NopeDecision = Object.freeze({
     NotDecided: 0,
     Nope: 1,
@@ -101,19 +106,20 @@ async function startGameLoop(){
 function BuildGameTable(){
     buildMyCards();
     buildOpponents();
-    buildTableInfo()
+    buildTableInfo();
 
     if(handleGameEndedOrEliminated()){
         return;
     }
 
-    buildFutureCards()
+    buildFutureCards();
+    buildFavorAction();
     buildTurnControls();
     buildNopePrompt();
 }
 function buildMyCards(){
     userHandCardContainer.replaceChildren();
-    userAsPlayer.cardsInHand.forEach(element => {
+    userAsPlayer.cardsInHand.forEach((element, index) => {
         let cardContainer = document.createElement("div");
         let cardEnum = document.createElement("p");
         let cardName = document.createElement("p");
@@ -131,7 +137,8 @@ function buildMyCards(){
         cardContainer.appendChild(cardName);
         cardContainer.appendChild(cardEnum);
         userHandCardContainer.appendChild(cardContainer);
-        if(selectedUserPlayerCardsId.includes(element.card.typeNr)){
+        cardContainer.dataset.index = index;
+        if(selectedUserPlayerCardsId.includes(index)){
             cardContainer.classList.add("highlight_me");
         }
         cardContainer.addEventListener("click", () => {
@@ -261,6 +268,15 @@ function buildTurnControls(){
     if(isChoosingDefuseIndex){
         return;
     }
+    if(isChosingFavorPlayer){
+        return;
+    }
+    if(isGivingFavorCard){
+        return;
+    }
+    if(isChoosingCatTarget){
+        return;
+    }
     const myCards = document.querySelectorAll(".own-card");
     const isMyTurn = gameModel.playerToPlayId === user.id;
 
@@ -268,17 +284,26 @@ function buildTurnControls(){
 
         if(selectedUserPlayerCardsId.length === 0){
             userDeskMessageBoard.textContent = getTurnText();
+            playButton.disabled = false;
+            playButton.classList.remove("disabled");
         } else {
-            const allSame = selectedUserPlayerCardsId.every(c => c === selectedUserPlayerCardsId[0]);
-            if(selectedUserPlayerCardsId.length === 1 || (selectedUserPlayerCardsId.length >= 2 && allSame)){
-                const cardName = Object.keys(CardType).find(key => CardType[key] === selectedUserPlayerCardsId[0]);
-                userDeskMessageBoard.textContent = `${cardName} gekozen`;
+            cardsToPlay = selectedUserPlayerCardsId.map(index => userAsPlayer.cardsInHand[index].card.typeNr);
+            const allSame = cardsToPlay.every(c => c === cardsToPlay[0]);
+            const allCats = cardsToPlay.every(c => c > 99);
+
+            const isValid = (cardsToPlay.length === 1 && !allCats) || (cardsToPlay.length === 2 && allSame && allCats) || (cardsToPlay.length === 3 &&allCats && !allSame)
+            if(isValid){
+                const cardName = Object.keys(CardType).find(key => CardType[key] === cardsToPlay[0]);
+                userDeskMessageBoard.textContent = cardsToPlay.length === 1? `${cardName} gekozen` : `${cardsToPlay.length} katkaarten gekozen`
+                playButton.disabled = false;
+                playButton.classList.remove("disabled");
             } else {
-                userDeskMessageBoard.textContent = "foute combinatie";
+                userDeskMessageBoard.textContent = "foute combinatie, deselecteer een kaart";
+                playButton.disabled = true;
+                playButton.classList.add("disabled");
             }
         }
-        playButton.disabled = false;
-        playButton.classList.remove("disabled");
+
 
         myCards.forEach(card => {
             card.classList.add("clickable");
@@ -329,6 +354,19 @@ function buildFutureCards(){
     });
 }
 
+function buildFavorAction() {
+    const hasPendingFavor = gameModel.pendingAction?.cards?.includes(CardType.Favor);
+    const favorTargetIsMe = gameModel.pendingAction?.targetPlayerId?.toLowerCase() === user.id.toLowerCase();
+    const isExecuted = gameModel.pendingAction?.isExecuted;
+
+
+    if(hasPendingFavor && favorTargetIsMe && !isGivingFavorCard && !isExecuted){
+        showGiveFavorCardQuestion();
+    } else if(!hasPendingFavor || isExecuted){
+        isGivingFavorCard = false;
+    }
+}
+
 //// ACTIONS -> see events!!!
 //PLAY-ACTIONS METHODS
 async function defuseExplodingKitten(){
@@ -336,37 +374,152 @@ async function defuseExplodingKitten(){
 }
 async function playSkipCard(){
     //SKIP CARD - ONLY SEND CARD ENUM
-    gameModel = await playAction(selectedUserPlayerCardsId)
+    gameModel = await playAction(cardsToPlay)
     setGameState(`${userAsPlayer.name} IS A PUSSY, SKIPPING A CARD DRAW`)
     selectedUserPlayerCardsId = [];
     BuildGameTable();
 }
 async function playAttackCard(){
-    gameModel = await playAction(selectedUserPlayerCardsId);
+    gameModel = await playAction(cardsToPlay);
     selectedUserPlayerCardsId = [];
     setGameState(`${userAsPlayer.name} speelt Attack`);
     BuildGameTable();
 }
 async function playFavorCard(){
-    //playerID SELECT ELEMENT WITH PLAYER ID
-    /*while(PLAYER ID == null){
-        userDeskMessageBoard.textContent = "Kies een speler"
-        setGameState(`${user.name} NEEDS TO ASK A FAVOR CARD - WHO WILL BE CHOOSEN?`)
-    }
-    setGameState(`${user.name} ASKS A FAVOR OF ....`)
-    //gameModel = await playAction(selectedUserPlayerCardsId, PLAYER ID)*/
+    isChosingFavorPlayer = true;
+    userDeskMessageBoard.replaceChildren();
+
+    const text = document.createElement("span");
+    text.textContent = `welke speler kies je om een kaart van te krijgen?`;
+
+    const select = document.createElement("select");
+
+    gameModel.players.forEach(player => {
+        if(player.id !== user.id) {
+            const option = document.createElement('option');
+            option.value = player.id;
+            option.textContent = player.name;
+            select.appendChild(option);
+        }
+    });
+
+    const button = document.createElement("button");
+    button.textContent = 'kies speler';
+
+    button.addEventListener("click", async () => {
+        const targetPlayerId = select.value;
+        gameModel = await playAction(cardsToPlay, targetPlayerId);
+        isChosingFavorPlayer = false;
+        selectedUserPlayerCardsId = [];
+        setGameState(`${userAsPlayer.name} vraagt favor aan ${select.options[select.selectedIndex].text}`);
+        BuildGameTable();
+    });
+
+    userDeskMessageBoard.appendChild(text);
+    userDeskMessageBoard.appendChild(select);
+    userDeskMessageBoard.appendChild(button);
+
 }
 async function playShuffleCard(){
-    gameModel = await playAction(selectedUserPlayerCardsId);
+    gameModel = await playAction(cardsToPlay);
     selectedUserPlayerCardsId = [];
     setGameState(`${userAsPlayer.name} speelt Shuffle`);
     BuildGameTable();
 }
 async function playSeeTheFutureCard(){
-    gameModel = await playAction(selectedUserPlayerCardsId);
+    gameModel = await playAction(cardsToPlay);
     selectedUserPlayerCardsId = [];
     setGameState(`${userAsPlayer.name} speelt See The Future`);
     BuildGameTable();
+}
+
+async function playCatPair() {
+    isChoosingCatTarget = true;
+    userDeskMessageBoard.replaceChildren();
+
+    const text = document.createElement("span");
+    text.textContent = `welke speler kies je om een kaart van te krijgen?`;
+
+    const select = document.createElement("select");
+
+    gameModel.players.forEach(player => {
+        if(player.id !== user.id) {
+            const option = document.createElement('option');
+            option.value = player.id;
+            option.textContent = player.name;
+            select.appendChild(option);
+        }
+    });
+
+    const button = document.createElement("button");
+    button.textContent = 'kies speler';
+
+    button.addEventListener("click", async () => {
+        const targetPlayerId = select.value;
+        gameModel = await playAction(cardsToPlay, targetPlayerId);
+        isChoosingCatTarget = false;
+        selectedUserPlayerCardsId = [];
+        setGameState(`${userAsPlayer.name} steelt een willekeurige kaart`);
+        BuildGameTable();
+    });
+
+    userDeskMessageBoard.appendChild(text);
+    userDeskMessageBoard.appendChild(select);
+    userDeskMessageBoard.appendChild(button);
+}
+async function playCatTriple() {
+    isChoosingCatTarget = true;
+    userDeskMessageBoard.replaceChildren();
+
+    const text = document.createElement("span");
+    text.textContent = "welke speler kies je?";
+
+    const selectPlayer = document.createElement("select");
+    gameModel.players.forEach(player => {
+        if(player.id !== user.id) {
+            const option = document.createElement("option");
+            option.value = player.id;
+            option.textContent = player.name;
+            selectPlayer.appendChild(option);
+        }
+    });
+
+    const textCard = document.createElement("span");
+    textCard.textContent = "welke kaart wil je stelen";
+
+    const selectCard = document.createElement("select");
+    Object.entries(CardType).forEach(([name, value]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = name;
+        selectCard.appendChild(option);
+    });
+
+    const button = document.createElement("button");
+    button.textContent = "steel kaart";
+
+    button.addEventListener("click", async () => {
+        const targetPlayerId = selectPlayer.value;
+        const targetCard = parseInt(selectCard.value);
+        const handSizeBefore = userAsPlayer.cardsInHand.length;
+        gameModel = await playAction(cardsToPlay, targetPlayerId, targetCard);
+        userAsPlayer = gameModel.players.find(p => p.id === user.id);
+        const handSizeAfter = userAsPlayer.cardsInHand.length;
+
+        if(handSizeAfter>handSizeBefore){
+            setGameState(`${userAsPlayer.name} steelt een specifieke kaart`);
+        } else { setGameState(`${userAsPlayer.name}, gekozen kaart niet aanwezig in hand van tegenspeler`);}
+        isChoosingCatTarget = false;
+        selectedUserPlayerCardsId = [];
+        cardsToPlay = [];
+        BuildGameTable();
+    })
+
+    userDeskMessageBoard.appendChild(text);
+    userDeskMessageBoard.appendChild(selectPlayer);
+    userDeskMessageBoard.appendChild(textCard);
+    userDeskMessageBoard.appendChild(selectCard);
+    userDeskMessageBoard.appendChild(button);
 }
 
 //DRAW CARD
@@ -383,7 +536,8 @@ async function drawCardFromPile(){
     const hasDefuse = userAsPlayer.cardsInHand.some(c => c.card.typeNr === CardType.Defuse);
 
     if(hasExplodingKitten && hasDefuse){
-        selectedUserPlayerCardsId = [CardType.Defuse];
+        const defuseIndex = userAsPlayer.cardsInHand.findIndex(c => c.card.typeNr === CardType.Defuse);
+        selectedUserPlayerCardsId = [defuseIndex];
         BuildGameTable();
         showDefuseIndexQuestion();
         return;
@@ -417,8 +571,8 @@ function updateGroupGameState(){
         }
     });
 }
-function showDefuseIndexQuestion(){
 
+function showDefuseIndexQuestion(){
     isChoosingDefuseIndex = true;
     userDeskMessageBoard.replaceChildren();
 
@@ -514,21 +668,8 @@ function buildDiscardPile(selectedUserPlayerCards){
 
 }
 function selectedCardsAreStillInHand(){
-    const handCards = userAsPlayer.cardsInHand.map(c => c.card.typeNr);
-    const selectedCards = [...selectedUserPlayerCardsId];
+    return selectedUserPlayerCardsId.every(index => index < userAsPlayer.cardsInHand.length);}
 
-    for(const selectedCard of selectedCards){
-        const handIndex = handCards.indexOf(selectedCard);
-
-        if(handIndex === -1){
-            return false;
-        }
-
-        handCards.splice(handIndex, 1);
-    }
-
-    return true;
-}
 function getTurnText(){
     const playerToPlay = gameModel.players.find(p => p.id === gameModel.playerToPlayId);
 
@@ -618,6 +759,37 @@ function clearGameStateWhenTurnChanged(previousGame, newGame){
         setGameState("");
     }
 }
+function showGiveFavorCardQuestion(){
+    isGivingFavorCard = true;
+    userDeskMessageBoard.replaceChildren();
+
+    const text = document.createElement("span");
+    text.textContent = "kies een kaart om te geven:";
+
+    const select = document.createElement("select");
+    userAsPlayer.cardsInHand.forEach((element, index) => {
+        const option = document.createElement("option");
+        option.value = element.card.typeNr;
+        option.textContent = element.card.getName();
+        select.appendChild(option);
+    });
+
+    const button = document.createElement("button");
+    button.textContent = "geef kaart";
+
+    button.addEventListener("click", async () => {
+        const cardTypeNr = parseInt(select.value);
+        gameModel = await selectCardAsFavor(cardTypeNr);
+        userAsPlayer = gameModel.players.find(p => p.id === user.id);
+        isGivingFavorCard = false;
+        setGameState(`${userAsPlayer.name} gaf een kaart als favor`);
+        BuildGameTable();
+    });
+
+    userDeskMessageBoard.appendChild(text);
+    userDeskMessageBoard.appendChild(select);
+    userDeskMessageBoard.appendChild(button)
+}
 
 ///// EVENTS
 nopeButton.addEventListener("click", async() => {
@@ -639,6 +811,7 @@ passButton.addEventListener("click", async() => {
 playButton.addEventListener("click", async () => {
     userAsPlayer = gameModel.players.find(p => p.id === user.id);
     console.log("Selected Array", selectedUserPlayerCardsId);
+    cardsToPlay = selectedUserPlayerCardsId.map(index => userAsPlayer.cardsInHand[index].card.typeNr)
 
     if(selectedUserPlayerCardsId.length !== 0 && !selectedCardsAreStillInHand()){
         selectedUserPlayerCardsId = [];
@@ -648,7 +821,7 @@ playButton.addEventListener("click", async () => {
     }
 
     if(selectedUserPlayerCardsId.length !== 0){
-        switch(selectedUserPlayerCardsId[0]){
+        switch(cardsToPlay[0]){
             case CardType.Defuse:
                 await defuseExplodingKitten();
                 break;
@@ -668,10 +841,14 @@ playButton.addEventListener("click", async () => {
                 await playSeeTheFutureCard();
                 break;
             default:
-                //kattenpaar, meer dan 1 kaart
-                await playAction(selectedUserPlayerCardsId);
-                selectedUserPlayerCardsId = [];
-                BuildGameTable();
+                if(selectedUserPlayerCardsId.length === 2) {
+                    await playCatPair(cardsToPlay);
+                } else if(selectedUserPlayerCardsId.length === 3) {
+                    await playCatTriple(cardsToPlay);
+                } else {
+                    // ongeldige combinatie
+                    backendError.textContent = "ongeldige kaart combinatie";
+                }
                 break;
         }
     } else {
@@ -680,31 +857,36 @@ playButton.addEventListener("click", async () => {
 
     buildDiscardPile(selectedUserPlayerCardsId);
 });drawButton.addEventListener("click", async () => {
-    console.log("kaart trekken klik")
     drawCardFromPile();
 })
 userHandCardContainer.addEventListener('click', (event) => {
-    console.log("state array begin", selectedUserPlayerCardsId);
     const selectedCardDiv = event.target.closest('.own-card');
     if(selectedCardDiv === null){return}
     if(!selectedCardDiv.classList.contains("clickable")){return}
-    let selectedCardId = selectedCardDiv.querySelector(".card-enum").textContent;
+    //let selectedCardId = selectedCardDiv.querySelector(".card-enum").textContent;
+    let selectedCardIndex = parseInt(selectedCardDiv.dataset.index);
     let selectedCardName = selectedCardDiv.querySelector(".card-name").textContent;
 
-    if(selectedUserPlayerCardsId.includes(parseInt(selectedCardId))){
+    if(selectedUserPlayerCardsId.includes(selectedCardIndex)) {
+        selectedUserPlayerCardsId = selectedUserPlayerCardsId.filter(c => c !== selectedCardIndex);
+        selectedCardDiv.classList.remove("highlight_me")
+    } else {
+        selectedUserPlayerCardsId.push(selectedCardIndex);
+        selectedCardDiv.classList.add("highlight_me");
+        userDeskMessageBoard.textContent = (`${selectedCardName} gekozen`)
+    }
+
+    /*if(selectedUserPlayerCardsId.includes(parseInt(selectedCardId))){
         selectedUserPlayerCardsId = selectedUserPlayerCardsId.filter(
             card => card !== parseInt(selectedCardId)
         );
         selectedCardDiv.classList.remove("highlight_me");
 
-        console.log("card removed");
     }else{
         selectedUserPlayerCardsId.push(parseInt(selectedCardId));
         selectedCardDiv.classList.add("highlight_me");
         userDeskMessageBoard.textContent = (`${selectedCardName} gekozen`)
-        console.log("card added");
-    }
-    console.log("state array end", selectedUserPlayerCardsId)
+    }*/
 
 });
 
@@ -900,7 +1082,7 @@ async function selectCardAsFavor(cardId){
             card: cardId,
         };
 
-        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/select-card-to-give-as-favor`, {
+        const response = await fetch(`https://localhost:5051/api/Games/${gameModel.id}/select-card-to-give-as-a-favor`, {
             method: "POST",
             headers: {
                 'Content-type': 'Application/json',

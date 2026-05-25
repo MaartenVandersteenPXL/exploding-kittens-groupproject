@@ -62,7 +62,7 @@ internal class ActionFactory : IActionFactory
 
 
 
-        else if(AreAllTheSameCats(cards) && cards.All(IsSpecialCatCard))
+        else if(IsValidCatCardCombination(cards) && cards.All(IsSpecialCatCard))
         {
             if (cards.Count == 2)
             {
@@ -92,8 +92,8 @@ internal class ActionFactory : IActionFactory
         return (int)card >= 100 && (int)card <= 104;
     }
 
-    private static bool AreAllTheSameCats(IReadOnlyList<Card> cards)
+    private static bool IsValidCatCardCombination(IReadOnlyList<Card> cards)
     {
-        return cards.Distinct().Count() == 1;
+        return cards.Distinct().Count() == 1 || (cards.Count == 3 && cards.Distinct().Count() == 3);
     }
 }
