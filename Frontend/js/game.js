@@ -89,6 +89,7 @@ async function startGameLoop(){
     while(!gameModel.hasEnded){
         await new Promise(resolve => setTimeout(resolve, 3000));
         gameModel = await fetchGame(gameIdfromURL);
+        userAsPlayer = gameModel.players.find(p => p.id === user.id);
         console.log("game Model", gameModel.playerToPlayId);
         //const previousGameModel = gameModel;
         //const newGameModel = await fetchGame(gameIdfromURL);
