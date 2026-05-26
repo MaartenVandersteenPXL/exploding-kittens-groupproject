@@ -491,6 +491,9 @@ header {
     margin: 1rem 0 0 0;
 
 }
+#groupGameState {
+    white-space: pre-line;
+}
 
 .backend-error {
     height: 1.8rem;

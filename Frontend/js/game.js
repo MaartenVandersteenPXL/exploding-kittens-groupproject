@@ -197,14 +197,28 @@ async function buildNopePrompt(){
         nopePrompt.style.display = "none";
         return;
     }
-    else if(gameModel.pendingAction.isExecuted){
-        nopePrompt.style.display = "none";
-        return;
-    }
+    /*
     else if(!hasNopeCard){
         await confirmNotNoppingPlay()
         nopePrompt.style.display = "none";
         return
+    }
+    */
+    else if(!hasNopeCard){
+        const myDecision = nopeObject[user.id];
+
+        const stillNeedsToDecide =
+            myDecision === 0 ||
+            myDecision === "0" ||
+            myDecision === "NotDecided";
+
+        if(stillNeedsToDecide){
+            gameModel = await confirmNotNoppingPlay();
+            userAsPlayer = gameModel.players.find(p => p.id === user.id);
+        }
+
+        nopePrompt.style.display = "none";
+        return;
     }
     else if(isMyAction){
         if(Object.values(nopeObject).find(x => x === 1)){
@@ -217,6 +231,10 @@ async function buildNopePrompt(){
             nopePrompt.style.display = "none";
             return;
         }
+    }
+    else if(gameModel.pendingAction.isExecuted){
+        nopePrompt.style.display = "none";
+        return;
     }
     console.log("////START")
     console.log("playerNopeDescisions - after nopping:", nopeObject)
@@ -637,10 +655,12 @@ function updateGroupGameState(){
         let stringBuilder = []
         Object.entries(gameModel.pendingAction.playerNopeDecisions)
             .forEach(([player, playerDecision]) => {
+                player = player.substring(0,5);
                 stringBuilder.push(
                     `${player} heeft als nope beslissing: ${playerDecision}`
                 );
             });
+        groupGameState.textContent = stringBuilder.join("\n");
     }
 }
 
