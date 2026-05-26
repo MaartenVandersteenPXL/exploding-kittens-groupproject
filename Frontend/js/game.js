@@ -535,7 +535,7 @@ async function playCatTriple() {
     text.textContent = "welke speler kies je?";
 
     const selectPlayer = document.createElement("select");
-    select.classList.add("catTriple-player-select");
+    selectPlayer.classList.add("catTriple-player-select");
     gameModel.players.forEach(player => {
         if(player.id !== user.id) {
             const option = document.createElement("option");
