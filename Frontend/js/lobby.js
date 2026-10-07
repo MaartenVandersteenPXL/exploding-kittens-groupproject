@@ -364,7 +364,6 @@ async function createTable(players, ai){
             dataCreatedTable.gameId
         )
         return createdTable;
-        console.log("//INFO: Tafel gemaakt",createdTable);// voor mijn debug
     }catch(error){
         backendError.textContent = error.message;
         return null;

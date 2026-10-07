@@ -3,9 +3,10 @@
 * {
     box-sizing: border-box;
 }
+
 /* FONTS */
 
-h1{
+h1 {
     font-family: 'Abel';
     font-weight: 400;
     font-variant-caps: all-small-caps;
@@ -13,7 +14,8 @@ h1{
     color: #5f2f45;
     margin: 0;
 }
-h2{
+
+h2 {
     font-family: 'Abel';
     font-weight: 200;
     font-size: 2em;
@@ -28,7 +30,7 @@ p {
     font-size: 1.5em;
 }
 
-label{
+label {
     font-family: 'Abel';
     font-weight: 400;
     font-size: 1.8em;
@@ -39,39 +41,39 @@ label{
 /* END FONTS */
 
 
-html{
+html {
     display: flex;
     justify-content: center;
     background-color: #ab2d48;
 }
 
 
-body{
+body {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    background-color:#fabb64;
-    min-height:768px;
+    background-color: #fabb64;
+    min-height: 768px;
     min-width: 1024px;
     gap: 2em;
 }
 
-aside{
+aside {
     display: flex;
     flex-direction: column;
-    margin: 0 0 0 3em ;
+    margin: 0 0 0 3em;
     align-items: center;
     max-width: 12em;
 }
 
-main{
+main {
     display: flex;
     flex: 1;
     flex-direction: column;
-    margin: 0 3em 1rem 0 ;
+    margin: 0 3em 1rem 0;
 }
 
-header{
+header {
     display: flex;
     height: 150px;
     align-items: center;
@@ -83,7 +85,7 @@ header{
     justify-content: center;
 }
 
-.logo img{
+.logo img {
     width: auto;
     height: 150px;
     display: block;
@@ -99,29 +101,30 @@ header{
     align-self: stretch;
     flex: 1;
     border-radius: 15px 15px 0 0;
-    padding: 3rem 1rem  3rem;
+    padding: 3rem 1rem 3rem;
 }
+
 .sidebar-menu a {
     font-family: Abel;
-    font-size:  2em;
+    font-size: 2em;
     text-decoration: none;
-    color: #5f2f45 ;
+    color: #5f2f45;
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.sidebar-menu a:first-child{
+.sidebar-menu a:first-child {
     margin-bottom: 2rem;
 }
 
-.sidebar-menu a:hover{
+.sidebar-menu a:hover {
     transform: scale(1.2);
-    color: #f5ddbc ;
+    color: #f5ddbc;
 }
 
 /* adjust id to the id of the page */
-#XXX{
+#XXX {
     color: #f5ddbc;
-    text-shadow:#000000 4px 4px 10px;
+    text-shadow: #000000 4px 4px 10px;
 }
 
 /* END TEMPLATE SKELETON*/
@@ -154,7 +157,7 @@ header{
     background-image: url("../assets/AchterkantDek.jpeg");
     background-size: 100% 100%;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .p2 {
@@ -208,12 +211,13 @@ header{
     display: flex;
     width: 100px;
     height: 130px;
-    background: #f86f53;
+    background-image: url("../assets/AchterkantDek.jpeg");
+    background-size: 100% 100%;
     border-radius: 8px;
     position: relative;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .discard-pile {
@@ -221,13 +225,11 @@ header{
     width: 100px;
     height: 130px;
     background-color: #bdc3c7;
-    border: 2px dashed #5f2f45;
     border-radius: 8px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     margin-right: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 0;
+    overflow: hidden;
 }
 
 .discard-pile span {
@@ -242,6 +244,15 @@ header{
     color: #5f2f45;
     text-transform: uppercase;
     font-weight: bold;
+}
+
+#lastDiscardedCard {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
 }
 
 .nr-cards-left-deck {
@@ -261,20 +272,20 @@ header{
 /* Eigen hand */
 .hand-area {
     display: flex;
-    direction: row;
+    flex-direction: row;
     background-color: #a02f40;
     padding: 15px;
     border-radius: 20px;
     min-height: 250px;
     justify-content: flex-start;
     align-items: flex-start;
-    gap:120px;/* Geeft berichtenvak ruimte */
+    gap: 10px; /* Geeft berichtenvak ruimte */
 }
 
 .hand-container {
     display: flex;
     flex-wrap: wrap;
-    height: 100%;
+    height: 50%;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -285,21 +296,21 @@ header{
 .own-card {
     display: flex;
     flex-direction: column;
-    height: 100px;
+    width: 80px;
+    height: 120px;
     background-color: #f5ddbc;
-    border: 2px solid #5f2f45;
+    border: 1px solid #f5ddbc;
     border-radius: 10px;
     align-items: center;
     padding: 10px;
     transition: transform 0.2s;
-    background-size: contain;
+    background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .own-card:hover {
-    z-index: 100; /* Kaart komt naar voren */
-    transform: translateY(-50px);
+    transform: scale(1.3);
     background-color: #f5ddbc;
 }
 
@@ -312,44 +323,106 @@ header{
     text-align: center;
 }
 
+.own-card.clickable {
+    cursor: pointer;
+}
+
+.own-card.clickable:hover {
+    transform: scale(1.3);
+    color: #f5ddbc;
+}
+
+.own-card.highlight_me {
+    border: 2px solid #f5ddbc;
+    box-shadow: 0 0 12px 4px rgba(245, 221, 188, 0.8);
+    transform: translateY(-8px);
+}
+
 .card-enum {
+    display: none;
     background: #f8ddb7;
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    display: flex;
+    /* display: flex; */
     align-items: center;
     justify-content: center;
     color: #5f2f45;
     font-weight: bold;
     border: 1px solid #5f2f45;
 }
-/* Zorgt dat de kaarten op de 2de rij gelijk met de eerste beginnen */
-.own-card:nth-child(n+1){
-    margin-left: -35px; /* DIT ZORGT VOOR DE OVERLAP */
+
+.card-name {
+    display: none;
 }
-.own-card:first-child, .own-card:nth-child(10){
-    margin-left: 10px;
+
+.future-cards-panel {
+    background-color: #5f2f45;
+    color: #f5ddbc;
+    padding: 10px;
+    border-radius: 10px;
+    width: 200px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.future-cards-panel p {
+    margin: 0 0 8px 0;
+    font-weight: bold;
+}
+
+.future-cards-list {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.future-card {
+    width: 45px;
+    height: 68px;
+    border-radius: 6px;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #f5ddbc;
 }
 
 /* mesage board */
-.hand-controls{
+.hand-controls {
     display: flex;
     flex-direction: column;
 }
-.game-message {
+
+.hand-container {
+    gap: 3px;
+}
+
+.game-message, .game-state {
     background-color: #5f2f45;
     color: #f5ddbc;
-    padding: 10px 25px;
+    padding: 0 15px;
     border-radius: 10px;
-    font-weight: bold;
-    width: 200px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    width: 100%;
+    min-height: 120px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.game-state{
+    display: flex;
+    flex-direction: column;
+}
+
+#statusMessage{
+    font-size: 1rem;
 }
 
 /* Speel knop */
-.play-btn {
+.play-btn, .nope-btn, .pass-btn {
     display: flex;
     flex-shrink: 1;
     justify-content: center;
@@ -360,10 +433,10 @@ header{
     border-radius: 10px;
     font-family: 'Abel';
     font-size: 1.5rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.play-btn:hover {
+.play-btn:hover, .nope-btn:hover, .pass-btn:hover {
     transform: scale(1.05);
 }
 
@@ -371,9 +444,62 @@ header{
     transform: scale(0.95);
 }
 
-/* Voor later: als je niet aan de beurt bent */
-.play-btn:disabled {
+.play-btn:disabled, .nope-btn:disabled, .pass-btn:disabled {
     background-color: grey;
     cursor: not-allowed;
     opacity: 0.5;
 }
+
+/* DEFUSE */
+
+.defuse-input{
+    height: 1.2em;
+    width: 60%;
+    background-color: #f5ddbc;
+    border-style: none ;
+    font-family: 'Abel';
+    font-size: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    margin: 0 0 0 1rem;
+}
+
+.favor-select, .carPair-select, .catTriple-player-select, .catTriple-card-select, .Favor-toGive-select{
+    height: 1.2em;
+    width: 60%;
+    background-color: #f5ddbc;
+    border-style: none ;
+    font-family: 'Abel';
+    font-size: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    margin: 0 0 0 1rem;
+}
+
+.defuse-button, .favor-button, .catPair-button, .catTriple-button, .Favor-toGive-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.2em;
+    border-radius: 10px;
+    font-size: 1em;
+    font-family: 'Abel';
+    background-color: #a02f40;
+    color: #f8ddb7;
+    cursor: pointer;
+    padding: 1rem;
+    margin: 1rem 0 0 0;
+
+}
+#groupGameState {
+    white-space: pre-line;
+}
+
+.backend-error {
+    height: 1.8rem;
+    margin: 0 0 0 1rem;
+    color: red;
+}
+
+
+
