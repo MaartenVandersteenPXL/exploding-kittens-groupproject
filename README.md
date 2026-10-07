@@ -1,43 +1,77 @@
-# explodingkittens-startcode
+# Exploding Kittens – Webversie
 
-Start code voor het 1TIN project 2025-2026 (Exploding Kittens)
+Digitale versie van het kaartspel **Exploding Kittens**, gebouwd als groepsproject in het eerste jaar
+Toegepaste Informatica aan **Hogeschool PXL** (2025-2026).
 
-# Branches
-Commit naming should adhear to the following (semantic) naming convention `<type>/<scope>-<subject>`.
-[source](https://gist.github.com/seunggabi/87f8c722d35cd07deb3f649d45a31082)
+Het project is volledig in team uitgewerkt: elk teamlid werkte zowel aan de backend als aan de frontend.
 
-## Example
-feat/0001-vue-setup
+<!-- Tip: voeg hier een screenshot van het spel toe, bv. ![Spelbord](docs/screenshot.png) -->
 
-## Types
-- `feat`: new feature for the user
-- `fix`: bug fixe
-- `docs`: changes to the documentation
-- `style`: formatting, missing semi colons, etc; no production code change
-- `refactor`: refactoring production code, eg. renaming a variable
-- `test`: (adding missing tests, refactoring tests; no production code change)
-- `chore`: (updating grunt tasks etc; no production code change)
+## Functionaliteiten
 
-## Scope
-Scope is the issue number that is related to the work.
+- Registreren en inloggen met een beveiligd account (JWT-authenticatie)
+- Lobby om een speltafel aan te maken of aan te sluiten bij een tafel met vrije plaatsen
+- Spelen tegen andere spelers aan dezelfde tafel
+- Volledige spelregels, met onder meer de kaarten Attack, Skip, Favor, Shuffle, See the Future, Nope en Defuse
 
-## Subject
-A present tense description of the work done. Keep it short but descriptive. Dash seperated since spaces aren't allow in branchnames.f the work done. Keep it short but descriptive. Dash seperated since spaces aren't allow in branchnames.
+## Technologieën
 
-# Commits
-Commit naming should adhear to the following (semantic) naming convention `<type>(#<scope>): <subject>`.
+**Backend**
+- C# / ASP.NET Core Web API (.NET 10)
+- Entity Framework Core met SQL Server en ASP.NET Core Identity
+- JWT-authenticatie
+- Swagger voor API-documentatie
+- Unit- en integratietests met NUnit en Moq
+- Docker-ondersteuning
 
-## Example
-feat(#0001): vue setup
+**Frontend**
+- HTML, CSS en JavaScript (zonder framework)
+- Communicatie met de backend via de REST API
 
-## Types
-- `feat`: new feature for the user
-- `hotfix`: hotfix
-- `fix`: bug fix
-- `refactor`: refactoring code
-- `chore`: grunt tasks that don't alter production code
-## Scope
-Scope is the issue number that is related to the work, **INCLUDE THE HASHTAG**
+**Werkwijze**
+- Git en GitHub met feature branches, pull requests en issues
+- Vaste afspraken voor branch- en commitnamen (zie onderaan)
 
-## Subject
-A present tense description of the work done. Keep it short but descriptive. Space seperated sentence.
+## Architectuur
+
+De backend is opgedeeld in lagen, zodat de spellogica los staat van de API en de opslag:
+
+| Project | Rol |
+|---|---|
+| `ExplodingKittens.Core` | Spellogica: spelers, kaarten, acties, tafels en spelverloop |
+| `ExplodingKittens.Infrastructure` | Opslag van gegevens (database en in-memory) |
+| `ExplodingKittens.Api` | REST API met controllers voor authenticatie, tafels en spellen |
+| `ExplodingKittens.Bootstrapper` | Configuratie en dependency injection |
+| `*.Tests` | Automatische tests per laag |
+
+## Project lokaal starten
+
+**Vereisten:** Visual Studio of JetBrains Rider met de .NET 10 SDK en SQL Server LocalDB, en WebStorm voor de frontend.
+
+1. Clone de repository:
+   ```
+   git clone https://github.com/MaartenVandersteenPXL/exploding-kittens-groupproject.git
+   ```
+2. **Backend:** open `Backend/ExplodingKittens.slnx` in Visual Studio of Rider en start het project
+   `ExplodingKittens.Api`. De API draait op `https://localhost:5051`.
+3. **Frontend:** open de map `Frontend` in WebStorm, open `index.html` en start de pagina via de
+   ingebouwde lokale server (browsericoon rechtsboven in de editor).
+
+## Werkafspraken
+
+### Branches
+Naamgeving: `<type>/<scope>-<subject>`, bv. `feat/0001-vue-setup`
+([bron](https://gist.github.com/seunggabi/87f8c722d35cd07deb3f649d45a31082)).
+
+- **type:** `feat` (nieuwe functionaliteit), `fix` (bugfix), `docs` (documentatie),
+  `style` (opmaak, geen codewijziging), `refactor` (code herschrijven),
+  `test` (tests toevoegen of aanpassen), `chore` (onderhoud, geen productiecode)
+- **scope:** het nummer van de bijhorende issue
+- **subject:** korte beschrijving in de tegenwoordige tijd, woorden gescheiden door koppeltekens
+
+### Commits
+Naamgeving: `<type>(#<scope>): <subject>`, bv. `feat(#0001): vue setup`
+
+- **type:** `feat`, `hotfix`, `fix`, `refactor`, `chore`
+- **scope:** het nummer van de bijhorende issue, **inclusief het hekje (#)**
+- **subject:** korte beschrijving in de tegenwoordige tijd, als gewone zin met spaties
